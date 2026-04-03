@@ -1,0 +1,63 @@
+{
+    "layer": "top",
+    "position": "top",
+    "height": 34,
+    "margin-top": 5,
+    "margin-left": 10,
+    "margin-right": 10,
+
+    // 模块布局
+    "modules-left": ["niri/workspaces", "niri/window"],
+    "modules-center": ["clock"],
+    "modules-right": ["pulseaudio", "network", "battery"],
+
+    // Niri 工作区设置 (修复空心/实心圆问题)
+    "niri/workspaces": {
+        "format": "{icon}",
+        "format-icons": {
+            // "active" 代表当前正在看的工作区 -> 实心圆 (Nerd Font: )
+            "active": "",
+            // "default" 代表有窗口但没被激活的工作区 -> 空心圆 (Nerd Font: )
+            "default": ""
+        }
+    },
+
+    "niri/window": {
+        "format": "{title}",
+        "max-length": 40
+    },
+
+    "clock": {
+        "format": " {:%H:%M}",
+        "tooltip-format": "{:%Y-%m-%d %A}"
+    },
+
+    "modules-right": ["pulseaudio/slider", "pulseaudio", "network", "battery"],
+
+    "pulseaudio": {
+        "format": "{icon} {volume}%",
+        "format-muted": " 静音",
+        "format-icons": ["", "", ""],
+        // 核心：左键点击直接打开图形化音量面板
+        "on-click": "pavucontrol",
+        // 右键点击静音
+        "on-click-right": "pamixer -t"
+    },
+
+    "pulseaudio/slider": {
+        "min": 0,
+        "max": 100,
+        "orientation": "horizontal"
+    },
+
+    "network": {
+        "format-wifi": " {essid}",
+        "format-ethernet": " 有线网络",
+        "format-disconnected": " 未连接"
+    },
+
+    "battery": {
+        "format": "{icon} {capacity}%",
+        "format-icons": ["", "", "", "", ""]
+    }
+}
