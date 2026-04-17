@@ -4,6 +4,8 @@
 
 这是我的个人 NixOS 配置仓库，核心主线是 **Niri + Noctalia**：
 
+![](https://cdn.jsdelivr.net/gh/Eurekaimer/MyIMGs@main/img/20260417160052566.png)
+
 - **Niri**：负责窗口管理与日常操作流（当前主力桌面体验）。
 - **Noctalia**：负责壳层交互体验（状态栏/控制中心这一类能力）。
 - **Flake + Home Manager**：保证配置可声明、可复现、可迁移。

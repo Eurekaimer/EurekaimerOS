@@ -4,6 +4,8 @@ Language: English | [中文说明 (README_zh-CN.md)](README_zh-CN.md)
 
 A personal NixOS setup centered on **Niri + Noctalia**.
 
+![](https://cdn.jsdelivr.net/gh/Eurekaimer/MyIMGs@main/img/20260417160052566.png)
+
 This repository is my daily-driver configuration:
 
 - **Niri** handles the window-management workflow.
