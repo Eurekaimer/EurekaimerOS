@@ -3,32 +3,37 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-25.11";
-
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
-    
-    niri.url = "git+https://github.com/YaLTeR/niri";
 
     noctalia = {
-    url = "git+https://github.com/noctalia-dev/noctalia-shell";
-    inputs.nixpkgs.follows = "nixpkgs";
+      url = "github:noctalia-dev/noctalia-shell";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
 
     home-manager = {
-      url = "git+https://github.com/nix-community/home-manager?ref=release-25.11";
+      url = "github:nix-community/home-manager/release-25.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    nix-flatpak.url = "github:gmodena/nix-flatpak";
   };
 
-  outputs = { self, nixpkgs, home-manager, ... }@inputs: {
+  outputs = { self, nixpkgs, home-manager, nix-flatpak, ... }@inputs: {
     nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
       system = "x86_64-linux";
       specialArgs = { inherit inputs; };
+
       modules = [
         ./hosts/nixos/configuration.nix
+        nix-flatpak.nixosModules.nix-flatpak
+
         home-manager.nixosModules.home-manager
         {
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
+          home-manager.sharedModules = [
+            nix-flatpak.homeManagerModules.nix-flatpak
+          ];
           home-manager.users.eurekaimer = import ./home/eurekaimer/home.nix;
           home-manager.extraSpecialArgs = { inherit inputs; };
           home-manager.backupFileExtension = "backup";

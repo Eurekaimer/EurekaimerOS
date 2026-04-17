@@ -3,12 +3,8 @@
 {
   home.packages = with pkgs; [
     xwayland-satellite
-    rofi
-    swww
-    swaynotificationcenter
     pamixer
     brightnessctl
-    libnotify
     grim
     slurp
     wl-clipboard
@@ -17,7 +13,6 @@
     pavucontrol
   ];
 
-  services.swayosd.enable = true;
-
-  xdg.configFile."niri/config.kdl".source = ./config/niri-config/config.kdl;
+  services.swayosd.enable = false;
+  xdg.configFile."niri/config.kdl".source = ../config/niri-config/config.kdl;
 }

@@ -1,0 +1,29 @@
+# System 层次图（注释版）
+# 入口文件：hosts/nixos/configuration.nix
+# 作用：这是系统配置入口，建议只保留“硬件 + 主机本地 + 通用系统层”三类导入。
+
+# configuration.nix 导入关系：
+# 1) hosts/nixos/hardware-configuration.nix
+#    含义：硬件扫描结果（磁盘、文件系统、内核模块），与机器强绑定。
+# 2) hosts/nixos/host-local.nix
+#    含义：主机本地差异配置（主机名、代理、特殊内核参数、防火墙端口）。
+# 3) modules/system/system.nix
+#    含义：可复用的系统通用层（尽量机器无关，便于迁移）。
+
+# 通用系统层结构：
+# /etc/nixos/modules/system
+# ├── system.nix            # 总入口，负责组合各子模块
+# ├── base.nix              # Nix 基础设置、GC、引导、网络基础、时区、系统版本
+# ├── users.nix             # 用户与默认 shell
+# ├── locale.nix            # 字体、语言、输入法（fcitx5）
+# ├── desktop.nix           # 桌面会话服务（niri/xserver/sddm/plasma/音频/电源等）
+# ├── graphics.nix          # 通用图形能力（硬件加速基础 + 调试工具）
+# ├── gaming.nix            # 游戏相关（steam/gamemode/wine/lutris）
+# ├── packages.nix          # 系统级通用软件包
+# └── graphics-intel.nix    # Intel 可选增强（按需启用，不默认导入）
+
+# 迁移策略说明：
+# - 跨机器复用时优先复用 modules/system/*
+# - 新机器只需替换 hosts/<new-host>/hardware-configuration.nix
+# - 主机差异统一放到 hosts/<new-host>/host-local.nix
+# - 某厂商驱动优化（如 Intel）保持“可选模块”模式，避免绑死到所有机器

@@ -1,0 +1,101 @@
+/* ================================================= */
+/* 1. 全局行为配置 */
+/* ================================================= */
+configuration {
+    modi:                      "drun";
+    show-icons:                true;
+    display-drun:              " Apps";
+    drun-display-format:       "{name}";
+    font:                      "FiraCode Nerd Font Mono 14";
+}
+
+/* ================================================= */
+/* 2. 全局颜色变量 */
+/* ================================================= */
+* {
+    /* 原有的深色背景和列表选中颜色 */
+    base-bg:                   rgba(30, 30, 46, 0.85);
+    selected-bg:               #6c7086;
+    border-color:              #f4b8e4;
+    text-color:                #cdd6f4;
+
+    /* ========== 新增：亮色系搜索栏专用颜色 ========== */
+    input-bg:                  #fdfdfd;      /* 搜索栏整体亮色背景 (纯净白) */
+    prompt-bg:                 #e6e6ed;      /* 左侧 "Apps" 稍微区分一下的亮灰/浅紫，增加层次感 */
+    input-text:                #1e1e2e;      /* 亮色背景下的深色文字，确保能看清 */
+    placeholder-col:           #a6adc8;      /* "Search..." 提示词的浅灰色 */
+
+    background-color:          transparent;
+}
+
+/* ================================================= */
+/* 3. 布局与样式设置 */
+/* ================================================= */
+
+window {
+    width:                     30%;
+    border:                    2px;
+    border-radius:             1.2em;
+    border-color:              @border-color;
+    background-color:          @base-bg;
+    location:                  center;
+}
+
+mainbox {
+    spacing:                   1em;
+    margin:                    2em;
+    children:                  [ "inputbar", "listview" ];
+}
+
+/* --- 修改：搜索栏整体背景变成亮色 --- */
+inputbar {
+    border-radius:             100%;
+    background-color:          @input-bg;
+    children:                  [ "prompt", "entry" ];
+}
+
+/* --- 修改：左侧提示词区域的背景和深色文字 --- */
+prompt {
+    padding:                   15px;
+    border-radius:             100%;
+    background-color:          @prompt-bg;
+    text-color:                @input-text;
+}
+
+/* --- 修改：输入框文字变成深色 --- */
+entry {
+    padding:                   15px 15px;
+    cursor:                    text;
+    placeholder:               "Search for applications...";
+    text-color:                @input-text;
+    placeholder-color:         @placeholder-col;
+}
+
+listview {
+    lines:                     6;
+    columns:                   1;
+    cycle:                     true;
+    scrollbar:                 false;
+    layout:                    vertical;
+    spacing:                   10px;
+}
+
+element {
+    spacing:                   10px;
+    padding:                   10px;
+    border-radius:             10px;
+    orientation:               horizontal;
+}
+
+element selected.normal {
+    border-radius:             100%;
+    background-color:          @selected-bg;
+}
+
+element-icon {
+    size:                      1.8em;
+}
+
+element-text {
+    vertical-align:            0.5;
+}

@@ -1,13 +1,16 @@
 { pkgs, inputs, ... }:
 
 let
-  # 在这里引入 unstable 分支，供下面的游戏软件使用
   pkgs-unstable = import inputs.nixpkgs-unstable {
-    system = pkgs.system;
+    system = pkgs.stdenv.hostPlatform.system;
     config.allowUnfree = true;
   };
 in
 {
+  hardware.graphics = {
+    enable32Bit = true;
+  };
+
   programs.steam = {
     enable = true;
     remotePlay.openFirewall = true;
@@ -15,15 +18,12 @@ in
     extest.enable = true;
   };
 
-  # gamemode
   programs.gamemode.enable = true;
 
   environment.systemPackages = with pkgs; [
-    # WINE for Galgame
     mangohud
     wine
   ] ++ [
-    # LUTRIS for Arknights
     pkgs-unstable.lutris
     pkgs-unstable.protonplus
     pkgs-unstable.umu-launcher

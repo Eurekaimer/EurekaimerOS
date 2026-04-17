@@ -1,64 +1,61 @@
 * {
-    border: none;
-    font-family: "JetBrainsMono Nerd Font", "Noto Sans CJK SC", sans-serif;
-    font-size: 14px;
-    font-weight: bold;
+/* 统一个字体，确保图标正常显示 */
+font-family: "FiraCode Nerd Font Mono", "sans-serif";
+font-size: 14px;
+border: none;
+border-radius: 0;
 }
 
+/* 这就是那个“盖住底下的背景”的方框 */
 window#waybar {
-    background: transparent;
+    background-color: #1e1e2e; /* Catppuccin 深色基调 */
+    color: #cdd6f4;            /* 默认亮色文字 */
+    border-radius: 12px;       /* 整体圆角，如果你 margin 是 0 可以把这里改成 0 */
+    border: 2px solid #f4b8e4; /* 呼应你 Rofi 的粉色边框，不喜欢可以删掉这行 */
 }
 
-/* 左右中三个大模块的底色 */
+/* 清除内部模块的独立背景，让它们融入主方框 */
 .modules-left, .modules-center, .modules-right {
-    background: #1e1e2e;
-    color: #cdd6f4;
-    border-radius: 12px;
-    padding: 0 15px;
-    margin: 0 5px;
-}
-
-/* --- 工作区 (Workspaces) 样式 --- */
-#workspaces button {
-    /* 默认未选中状态下的颜色（暗灰色） */
-    color: #585b70; 
     background: transparent;
-    padding: 0 6px;
-    transition: color 0.2s ease;
 }
 
-#workspaces button:hover {
-    color: #bac2de;
+/* 给各个小组件一点内边距，不要挤在一起 */
+#workspaces, #window, #mpris, #cava, #taskbar, #pulseaudio, #network, #battery, #clock {
+padding: 0 12px;
+margin: 4px 2px;
+border-radius: 8px;
 }
 
-#workspaces button.active {
-    /* 选中状态下的颜色（亮蓝色），配合实心圆会非常显眼 */
-    color: #89b4fa; 
+/* ====== 任务栏 (Taskbar) 悬停效果 ====== */
+#taskbar button {
+padding: 0 4px;
+margin: 0 2px;
+background: transparent;
 }
-
-/* --- 其他模块样式 --- */
-#clock { color: #fab387; }
-#pulseaudio { color: #a6e3a1; margin: 0 10px; }
-#network { color: #f9e2af; margin: 0 10px; }
-#battery { color: #f38ba8; margin: 0 10px; }
-
-/* 给音量滑块加一点样式 */
-#pulseaudio-slider {
-min-width: 100px; /* 滑块长度 */
-margin: 0 5px;
-}
-#pulseaudio-slider slider {
-min-height: 12px;
-min-width: 12px;
+#taskbar button:hover {
+background: #313244;
 border-radius: 6px;
-background-color: #cdd6f4;
 }
-#pulseaudio-slider trough {
-min-height: 6px;
-border-radius: 3px;
-background-color: #313244;
+#taskbar button.active {
+background: #45475a;
+border-radius: 6px;
 }
-#pulseaudio-slider highlight {
-border-radius: 3px;
-background-color: #89b4fa; /* 蓝色进度条 */
+
+/* ====== 海浪与音乐 ====== */
+#cava {
+color: #89b4fa; /* 给海浪一个清新的蓝色 */
 }
+#mpris {
+color: #f5c2e7; /* 给音乐标题一个粉色 */
+}
+
+/* ====== 右侧信息区颜色 ====== */
+#pulseaudio { color: #a6e3a1; } /* 绿色音量 */
+#network { color: #89dceb; }    /* 青色网络 */
+#battery { color: #f9e2af; }    /* 黄色电池 */
+#clock { color: #cba6f7; font-weight: bold; } /* 紫色时钟 */
+
+/* 电池低电量变红警示 */
+#battery.warning { color: #fab387; }
+#battery.critical { color: #f38ba8; animation-name: blink; animation-duration: 0.5s; animation-timing-function: linear; animation-iteration-count: infinite; animation-direction: alternate; }
+@keyframes blink { to { background-color: #f38ba8; color: #1e1e2e; } }

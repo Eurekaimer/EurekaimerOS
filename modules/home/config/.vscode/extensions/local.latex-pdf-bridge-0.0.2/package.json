@@ -1,0 +1,43 @@
+{
+  "name": "latex-pdf-bridge",
+  "displayName": "LaTeX PDF Bridge",
+  "description": "Open LaTeX PDF with vscode-pdf viewer.",
+  "version": "0.0.2",
+  "publisher": "local",
+  "license": "UNLICENSED",
+  "engines": {
+    "vscode": "^1.95.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onCommand:latexPdfBridge.openPdfWithVscodePdf"
+  ],
+  "main": "./extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "latexPdfBridge.openPdfWithVscodePdf",
+        "title": "LaTeX PDF Bridge: Open PDF with vscode-pdf",
+        "icon": "$(file-media)"
+      }
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "command": "latexPdfBridge.openPdfWithVscodePdf",
+          "when": "resourceExtname == .tex",
+          "group": "navigation@9"
+        }
+      ]
+    },
+    "keybindings": [
+      {
+        "command": "latexPdfBridge.openPdfWithVscodePdf",
+        "key": "ctrl+alt+v",
+        "when": "editorTextFocus && resourceExtname == .tex"
+      }
+    ]
+  }
+}

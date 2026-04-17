@@ -1,24 +1,121 @@
-# EurekaimerOS ❄️
+# EurekaimerOS
 
-**Eurekaimer 的 NixOS 系统配置**
-*(阅读 [English Version](README.md))*
+语言：中文 | [English (README.md)](README.md)
 
-欢迎来到 EurekaimerOS！这是我个人使用的 NixOS 声明式系统配置仓库。
+这是我的个人 NixOS 配置仓库，核心主线是 **Niri + Noctalia**：
 
-### 📝 背景故事
-这个仓库是对我之前 NixOS 配置的一次全面推倒重写。我终于决定站出来，重新夺回对我自己系统的控制权。简而言之：**我成功地把这个项目从“由 AI 意识流 (vibe-coding) 生成的电子垃圾”，升级成了“由我自己纯手工雕琢的电子垃圾”。** 🎉
+- **Niri**：负责窗口管理与日常操作流（当前主力桌面体验）。
+- **Noctalia**：负责壳层交互体验（状态栏/控制中心这一类能力）。
+- **Flake + Home Manager**：保证配置可声明、可复现、可迁移。
 
-### ✨ 核心特性
+如果你也想搭一套“结构清晰、以 Niri/Noctalia 为中心”的 NixOS 配置，这个仓库就是按这个目标整理的。
 
-* **双桌面环境并存：**
-    * **KDE Plasma:** 作为稳定、全功能的后备桌面环境保留。
-    * **Niri:** 极其优雅的无限卷轴平铺式 Wayland 混成器。这是我目前的主力桌面，配置了丝滑的动画和定制的快捷键系统。
-* **彻底的模块化配置管理：** 现在的配置将 Nix 声明逻辑与原生配置文件严格分离。所有的原生配置（如 `.kdl`, `.jsonc`, `.css`）都被统一存放在 `config/` 文件夹下，并通过 `xdg.configFile` 进行软链接。这让 `.nix` 文件变得极其干净纯粹。
-* **定制化 UI 与工具链：**
-    * **状态栏:** Waybar（高度定制，包含鼠标可拖拽的音量滑块与 Niri 工作区指示器）。
-    * **启动器:** Rofi-wayland。
-    * **壁纸引擎:** 使用 `swww`，并结合自写脚本实现了带随机过渡动画的“一键换壁纸”菜单。
-    * **工作流:** `kitty` 终端，以及由 `grim` + `slurp` + `wl-clipboard` 组成的无缝截图体验。
+## 这个仓库在意什么
+
+- 分层清楚：避免把所有逻辑塞进一个大文件。
+- 可迁移：把“可复用模块”和“主机专属差异”分开。
+- 可维护：入口固定，读配置时路径稳定。
 
 ---
-*伴随着 ❤️ 与无数次 NixOS rebuild 生成。*
+
+## 入口文件
+
+- 系统入口：`hosts/nixos/configuration.nix`
+- 用户入口：`home/eurekaimer/home.nix`
+
+`home.nix` 只导入 4 个顶层模块：
+
+1. `modules/home/desktop.nix`
+2. `modules/home/core.nix`
+3. `modules/home/development.nix`
+4. `modules/home/applications.nix`
+
+---
+
+## Home 层次（重点：Niri/Noctalia）
+
+```text
+modules/home
+├── desktop.nix
+│   ├── desktop/noctalia.nix
+│   ├── desktop/niri.nix
+│   ├── desktop/rofi.nix       （可选，默认不启用）
+│   └── desktop/waybar.nix     （可选，默认不启用）
+├── core.nix
+│   ├── core/shell.nix
+│   ├── core/kitty.nix
+│   ├── core/fastfetch.nix
+│   ├── core/ui.nix
+│   └── core/yazi.nix
+├── development.nix
+│   └── development/toolchain.nix
+└── applications.nix
+    ├── applications/knowledge.nix
+    ├── applications/documents.nix
+    ├── applications/media.nix
+    ├── applications/web.nix
+    ├── applications/transfer.nix
+    ├── applications/communication.nix
+    └── applications/flathub.nix
+```
+
+说明：
+
+- `desktop`：桌面会话层（Noctalia + Niri）
+- `core`：命令行与基础 UI 体验
+- `development`：开发工具链
+- `applications`：日常应用集合
+
+---
+
+## System 层次
+
+`configuration.nix` 只保留三类导入：
+
+1. `./hardware-configuration.nix`
+2. `./host-local.nix`
+3. `../../modules/system/system.nix`
+
+```text
+modules/system
+├── system.nix
+├── base.nix
+├── users.nix
+├── locale.nix
+├── desktop.nix
+├── graphics.nix
+├── gaming.nix
+├── packages.nix
+└── graphics-intel.nix   （可选，Intel 机器按需启用）
+```
+
+---
+
+## 硬件文件放置（非常重要）
+
+`hardware-configuration.nix` 是**机器绑定文件**，应放在：
+
+- `hosts/<hostname>/hardware-configuration.nix`
+
+当前仓库示例：
+
+- `hosts/nixos/hardware-configuration.nix`
+
+迁移到新电脑时：
+
+1. 在新机器生成硬件文件。
+2. 放到 `hosts/<new-host>/hardware-configuration.nix`。
+3. 新建 `hosts/<new-host>/configuration.nix` 与 `hosts/<new-host>/host-local.nix`。
+4. 复用 `modules/system/*` 与 `modules/home/*` 通用层。
+
+建议把主机差异（主机名、代理、端口、特殊内核参数）统一收敛到 `host-local.nix`。
+
+---
+
+## 重建命令
+
+```bash
+sudo nixos-rebuild switch --flake .#nixos
+```
+
+---

@@ -1,18 +1,17 @@
 // ==========================================
 // 1. 系统与自启动 (Startup & Environment)
 // ==========================================
-prefer-no-csd // 尝试移除应用的客户端装饰（如原生标题栏），让窗口更纯粹
+prefer-no-csd
 
-// 自启动程序：替换了原配置中奇怪的 shell，改为标准组件
-spawn-at-startup "swww-daemon"         // 壁纸后台
 spawn-at-startup "sh" "-c" "sleep 1 && swww img /etc/nixos/modules/home/swww/Muzomi.png --transition-type wipe"
 
-spawn-at-startup "waybar"              // 状态栏
-spawn-at-startup "fcitx5" "-d"         // 输入法
-spawn-at-startup "xwayland-satellite"  // X11 兼容层
+spawn-at-startup "noctalia-shell"
 
-environment {  
-    LANG "zh_CN.UTF-8"  
+spawn-at-startup "fcitx5" "-d"
+spawn-at-startup "xwayland-satellite"
+
+environment {
+    LANG "zh_CN.UTF-8"
     LC_ALL "zh_CN.UTF-8"
 }
 
@@ -21,14 +20,13 @@ environment {
 // ==========================================
 input {
     keyboard {
-        xkb { options "caps:escape"; } // 将大写锁定键映射为 ESC，对写代码非常友好
-        numlock // 默认开启数字小键盘
+        xkb { options "caps:escape"; }
+        numlock
     }
-    
-    // 针对你的笔记本触摸板优化
+
     touchpad {
-        tap             // 开启轻触点击
-        natural-scroll  // 开启自然滚动（与手机滑动方向一致）
+        tap
+        natural-scroll
     }
 }
 
@@ -36,40 +34,35 @@ input {
 // 3. 窗口布局与外观 (Layout & Visuals)
 // ==========================================
 layout {
-    gaps 8 // 窗口之间的缝隙宽度
-    center-focused-column "never" // 聚焦的窗口是否永远居中
+    gaps 8
+    center-focused-column "never"
 
-    // 预设的窗口宽度比例 (按快捷键切换时会在这些比例中循环)
     preset-column-widths {
         proportion 0.33333
         proportion 0.5
         proportion 0.66667
     }
-    default-column-width { proportion 0.5; } // 新窗口默认占据一半屏幕
+    default-column-width { proportion 0.5; }
 
-    // 焦点窗口的边框环
     focus-ring {
         width 3
-        active-color "#8FBCBB"    // 选中窗口的边框颜色
-        inactive-color "#4C566A"  // 未选中窗口的边框颜色
+        active-color "#8FBCBB"
+        inactive-color "#4C566A"
     }
 
-    // 窗口阴影设置
     shadow {
         softness 30
         spread 5
         offset x=0 y=5
-        color "#00000070" // 带透明度的黑色阴影
+        color "#00000070"
     }
 }
 
-// 截图保存路径
 screenshot-path "~/Pictures/Screenshots/Screenshot_%Y-%m-%d_%H-%M-%S.png"
 
 // ==========================================
 // 4. 动画效果 (Animations)
 // ==========================================
-// 这里保留了原配置中优秀的弹簧(spring)动画设定，手感非常丝滑
 animations {
     workspace-switch {
         spring damping-ratio=1.0 stiffness=1000 epsilon=0.0001
@@ -94,42 +87,50 @@ animations {
 // 5. 窗口规则 (Window Rules)
 // ==========================================
 window-rule {
-    // 全局窗口圆角设置
     geometry-corner-radius 12
     clip-to-geometry true
 }
 
 window-rule {
-    // 匹配火狐的画中画模式，使其默认浮动
     match app-id=r#"firefox$"# title="^Picture-in-Picture$"
     open-floating true
+}
+
+window-rule {
+    match app-id="steam"
+    default-column-width { proportion 0.7; }
 }
 
 // ==========================================
 // 6. 快捷键绑定 (Keybinds)
 // ==========================================
-// Mod 键默认是 Super/Win 键
 binds {
     // --- 核心应用启动 ---
-    Mod+Shift+Slash { show-hotkey-overlay; } // 显示快捷键帮助面板
-    Mod+Return { spawn "kitty"; }            // 打开终端
-    Mod+Space  { spawn "rofi" "-show" "drun" "-show-icons"; } // 打开应用启动器
-    Mod+B      { spawn "firefox"; }          // 打开浏览器
+    Mod+Shift+Slash { show-hotkey-overlay; }
+    Mod+Return { spawn "kitty"; }
 
-    // --- 硬件控制 (音量与亮度) ---
-    XF86AudioRaiseVolume allow-when-locked=true { spawn "pamixer" "-i" "5"; }
-    XF86AudioLowerVolume allow-when-locked=true { spawn "pamixer" "-d" "5"; }
-    XF86AudioMute        allow-when-locked=true { spawn "pamixer" "-t"; }
-    XF86MonBrightnessUp   allow-when-locked=true { spawn "brightnessctl" "set" "+5%"; }
-    XF86MonBrightnessDown allow-when-locked=true { spawn "brightnessctl" "set" "5%-"; }
+    // Noctalia 官方推荐 IPC 方式
+    Mod+Space { spawn "noctalia-shell" "ipc" "call" "launcher" "toggle"; }
+    Mod+S { spawn "noctalia-shell" "ipc" "call" "controlCenter" "toggle"; }
+    Mod+Comma { spawn "noctalia-shell" "ipc" "call" "settings" "toggle"; }
+
+    Mod+B { spawn "firefox"; }
+
+    // --- 硬件控制 (切到 Noctalia IPC，统一 OSD/状态) ---
+    XF86AudioRaiseVolume allow-when-locked=true { spawn "noctalia-shell" "ipc" "call" "volume" "increase"; }
+    XF86AudioLowerVolume allow-when-locked=true { spawn "noctalia-shell" "ipc" "call" "volume" "decrease"; }
+    XF86AudioMute        allow-when-locked=true { spawn "noctalia-shell" "ipc" "call" "volume" "muteOutput"; }
+
+    XF86MonBrightnessUp   allow-when-locked=true { spawn "noctalia-shell" "ipc" "call" "brightness" "increase"; }
+    XF86MonBrightnessDown allow-when-locked=true { spawn "noctalia-shell" "ipc" "call" "brightness" "decrease"; }
 
     // --- 窗口操作 ---
-    Mod+Q { close-window; } // 关闭当前窗口
-    Mod+V { toggle-window-floating; } // 切换窗口浮动/平铺状态
-    Mod+F { maximize-column; } // 最大化当前列
-    Mod+Shift+F { fullscreen-window; } // 全屏当前窗口
+    Mod+Q { close-window; }
+    Mod+V { toggle-window-floating; }
+    Mod+F { maximize-column; }
+    Mod+Shift+F { fullscreen-window; }
 
-    // --- 焦点移动 (类似 Vim 的 HJKL) ---
+    // --- 焦点移动 ---
     Mod+Left  { focus-column-left; }
     Mod+Right { focus-column-right; }
     Mod+H     { focus-column-left; }
@@ -151,15 +152,15 @@ binds {
     Mod+3 { focus-workspace 3; }
     Mod+4 { focus-workspace 4; }
     Mod+5 { focus-workspace 5; }
-    
+
     // --- 移动窗口到指定工作区 ---
     Mod+Shift+1 { move-column-to-workspace 1; }
     Mod+Shift+2 { move-column-to-workspace 2; }
     Mod+Shift+3 { move-column-to-workspace 3; }
 
     // --- 退出与锁屏 ---
-    Mod+Shift+E { quit; } // 退出 Niri
-    Mod+Shift+L { spawn "hyprlock"; } // 锁屏
-    
-    Print { screenshot; } // 截图
+    Mod+Shift+E { quit; }
+    Mod+Shift+L { spawn "hyprlock"; }
+
+    Print { screenshot; }
 }

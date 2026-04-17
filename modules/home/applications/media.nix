@@ -2,7 +2,7 @@
 
 let
   unstable = import inputs.nixpkgs-unstable {
-    system = pkgs.system;
+    system = pkgs.stdenv.hostPlatform.system;
     config.allowUnfree = true;
   };
 in
@@ -11,10 +11,11 @@ in
     unstable.mpv
     pkgs.spotify
     unstable.go-musicfox
+    pkgs.netease-cloud-music-gtk
   ];
 
   xdg.configFile."mpv" = {
-    source = ./config/mpv-config;
+    source = ../config/mpv-config;
     recursive = true;
   };
 }

@@ -2,17 +2,20 @@
 
 {
   home.packages = with pkgs; [
-    # Famous AI IDE
+    # IDE/editor
     code-cursor
-    # Modern packages management tool by rust
+    vscode
+    github-desktop
+
+    # Runtime/package toolchain
     uv
     python3
-    # R language and its IDE
+    nodejs_22
+    pnpm
+
+    # Scientific writing and analysis
     rWrapper
     rstudioWrapper
-    # LaTeX environment
     texlive.combined.scheme-full
-    # TOP 1 IDE
-    vscode-fhs
   ];
 }

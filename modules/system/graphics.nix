@@ -1,9 +1,11 @@
 { pkgs, ... }:
 
 {
+  hardware.graphics = {
+    enable = true;
+  };
+
   environment.systemPackages = with pkgs; [
-    # zip and unzip tool
-    unrar
-    peazip
+    libva-utils
   ];
 }

@@ -9,7 +9,6 @@
   programs.zsh = {
     enable = true;
     enableCompletion = true;
-
     autosuggestion.enable = true;
     syntaxHighlighting.enable = true;
 
@@ -24,7 +23,7 @@
       la = "eza -la --icons --git";
     };
 
-    initExtra = ''
+    initContent = ''
       # zoxide 初始化
       eval "$(zoxide init zsh)"
     '';
@@ -35,8 +34,7 @@
     enableZshIntegration = true;
   };
 
-  xdg.configFile."starship.toml".source =
-    ./config/starship-config/starship.toml;
+  xdg.configFile."starship.toml".source = ../config/starship-config/starship.toml;
 
   programs.zoxide = {
     enable = true;

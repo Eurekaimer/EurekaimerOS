@@ -1,0 +1,37 @@
+# Home 层次图（注释版）
+# 入口文件：home/eurekaimer/home.nix
+# 作用：这是 Home Manager 的总入口，只负责导入 4 个层。
+
+# 导入链说明：
+# 1) modules/home/desktop.nix
+#    含义：桌面会话层，管理窗口管理器、桌面壳、可选启动器/状态栏。
+# 2) modules/home/core.nix
+#    含义：核心使用层，管理 shell、终端、基础 UI、文件管理等高频基础组件。
+# 3) modules/home/development.nix
+#    含义：开发工具链层，集中 IDE、语言运行时、包管理器、科研写作环境。
+# 4) modules/home/applications.nix
+#    含义：应用层，集中日常软件（知识、文档、媒体、下载、社交、Flatpak）。
+
+# 目录树与每个部件作用：
+# /etc/nixos/modules/home
+# ├── desktop.nix
+# │   ├── desktop/noctalia.nix        # Noctalia 壳层配置（顶部栏/控制中心等）
+# │   ├── desktop/niri.nix            # Niri 会话相关软件与配置
+# │   ├── desktop/rofi.nix            # 可选启动器（默认未导入）
+# │   └── desktop/waybar.nix          # 可选状态栏（默认未导入）
+# ├── core.nix
+# │   ├── core/shell.nix              # zsh/starship/zoxide 与命令行体验
+# │   ├── core/kitty.nix              # kitty 终端配置
+# │   ├── core/fastfetch.nix          # fastfetch 信息展示
+# │   ├── core/ui.nix                 # 图标主题/字体图标/GTK 光标主题
+# │   └── core/yazi.nix               # yazi 文件管理器
+# ├── development.nix
+# │   └── development/toolchain.nix   # 编程与科研工具链集合
+# └── applications.nix
+#     ├── applications/knowledge.nix      # 知识管理（Obsidian/Zotero）
+#     ├── applications/documents.nix      # 文档处理与阅读（PDF/EPUB/翻译）
+#     ├── applications/media.nix          # 媒体播放与音乐
+#     ├── applications/web.nix            # 浏览器与网络访问
+#     ├── applications/transfer.nix       # 下载/分发/图床上传
+#     ├── applications/communication.nix  # 社交通讯
+#     └── applications/flathub.nix        # Flatpak 远程源与应用声明

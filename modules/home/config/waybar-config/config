@@ -1,63 +1,94 @@
 {
     "layer": "top",
     "position": "top",
-    "height": 34,
+    "height": 38,
+    "spacing": 8,
+    // 如果你想让它完全贴紧顶部，把 margin 改成 0；
+    // 如果你想让它像一个完整的大悬浮方框，可以保留一点 margin
     "margin-top": 5,
     "margin-left": 10,
     "margin-right": 10,
 
     // 模块布局
-    "modules-left": ["niri/workspaces", "niri/window"],
-    "modules-center": ["clock"],
-    "modules-right": ["pulseaudio", "network", "battery"],
+    "modules-left": [
+        "niri/workspaces", // 或者 "wlr/workspaces" 取决于你的 niri 配置
+        "niri/window"      // 显示当前聚焦的窗口标题
+    ],
+    "modules-center": [
+        "mpris",           // 显示正在播放的歌曲
+        "cava"             // 海浪可视化效果
+    ],
+    "modules-right": [
+        "wlr/taskbar",     // 当前打开的所有应用图标
+        "pulseaudio",
+        "network",
+        "battery",
+        "clock"
+    ],
 
-    // Niri 工作区设置 (修复空心/实心圆问题)
-    "niri/workspaces": {
+    // ==========================================
+    // 模块详细设置
+    // ==========================================
+
+    "wlr/taskbar": {
         "format": "{icon}",
-        "format-icons": {
-            // "active" 代表当前正在看的工作区 -> 实心圆 (Nerd Font: )
-            "active": "",
-            // "default" 代表有窗口但没被激活的工作区 -> 空心圆 (Nerd Font: )
-            "default": ""
-        }
+        "icon-size": 18,
+        "tooltip-format": "{title}",
+        "on-click": "activate",
+        "on-click-middle": "close"
     },
 
-    "niri/window": {
-        "format": "{title}",
+    "mpris": {
+        "format": "  {artist} - {title}",
+        "format-paused": "  {artist} - {title}",
         "max-length": 40
+    },
+
+    "cava": {
+        "cava_config": "/home/eurekaimer/.config/cava/config",
+        "framerate": 60,
+        "autosens": 1,
+        "bars": 12,
+        "lower_cutoff_freq": 50,
+        "higher_cutoff_freq": 10000,
+        "method": "pipewire",
+        "source": "auto",
+        "stereo": true,
+        "reverse": false,
+        "bar_delimiter": 0,
+        "monstercat": false,
+        "waves": true,
+        "format-icons" : [" ", "▂", "▃", "▄", "▅", "▆", "▇", "█" ]
+    },
+
+    "pulseaudio": {
+        "format": "{icon} {volume}%",
+        "format-muted": "󰝟 Muted",
+        "format-icons": {
+            "default": ["", "", ""]
+        },
+        "on-click": "pavucontrol"
+    },
+
+    "network": {
+        "format-wifi": "  {essid}",
+        "format-ethernet": "󰈀 Wired",
+        "format-disconnected": "󰤮 Disconnected"
+    },
+
+    "battery": {
+        "states": {
+            "warning": 30,
+            "critical": 15
+        },
+        "format": "{icon} {capacity}%",
+        "format-charging": "󰂄 {capacity}%",
+        "format-plugged": " {capacity}%",
+        "format-icons": ["󰂎", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"]
     },
 
     "clock": {
         "format": " {:%H:%M}",
-        "tooltip-format": "{:%Y-%m-%d %A}"
-    },
-
-    "modules-right": ["pulseaudio/slider", "pulseaudio", "network", "battery"],
-
-    "pulseaudio": {
-        "format": "{icon} {volume}%",
-        "format-muted": " 静音",
-        "format-icons": ["", "", ""],
-        // 核心：左键点击直接打开图形化音量面板
-        "on-click": "pavucontrol",
-        // 右键点击静音
-        "on-click-right": "pamixer -t"
-    },
-
-    "pulseaudio/slider": {
-        "min": 0,
-        "max": 100,
-        "orientation": "horizontal"
-    },
-
-    "network": {
-        "format-wifi": " {essid}",
-        "format-ethernet": " 有线网络",
-        "format-disconnected": " 未连接"
-    },
-
-    "battery": {
-        "format": "{icon} {capacity}%",
-        "format-icons": ["", "", "", "", ""]
+        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>"
     }
 }
