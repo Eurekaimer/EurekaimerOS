@@ -5,14 +5,22 @@ prefer-no-csd
 
 spawn-at-startup "sh" "-c" "sleep 1 && swww img /etc/nixos/modules/home/swww/Muzomi.png --transition-type wipe"
 
-spawn-at-startup "noctalia-shell"
-
+spawn-at-startup "sh" "-c" "systemctl --user import-environment WAYLAND_DISPLAY DISPLAY XDG_CURRENT_DESKTOP XDG_SESSION_TYPE GTK_IM_MODULE QT_IM_MODULE SDL_IM_MODULE GLFW_IM_MODULE INPUT_METHOD XMODIFIERS NIXOS_OZONE_WL; dbus-update-activation-environment --systemd WAYLAND_DISPLAY DISPLAY XDG_CURRENT_DESKTOP XDG_SESSION_TYPE GTK_IM_MODULE QT_IM_MODULE SDL_IM_MODULE GLFW_IM_MODULE INPUT_METHOD XMODIFIERS NIXOS_OZONE_WL"
 spawn-at-startup "fcitx5" "-d"
 spawn-at-startup "xwayland-satellite"
+spawn-at-startup "xembedsniproxy"
+spawn-at-startup "noctalia-shell"
 
 environment {
     LANG "zh_CN.UTF-8"
     LC_ALL "zh_CN.UTF-8"
+    GTK_IM_MODULE "fcitx"
+    QT_IM_MODULE "fcitx"
+    SDL_IM_MODULE "fcitx"
+    GLFW_IM_MODULE "fcitx"
+    INPUT_METHOD "fcitx"
+    XMODIFIERS "@im=fcitx"
+    NIXOS_OZONE_WL "1"
 }
 
 // ==========================================
@@ -20,9 +28,11 @@ environment {
 // ==========================================
 input {
     keyboard {
-        xkb { options "caps:escape"; }
+        xkb { options "caps:super,shift:both_capslock"; }
         numlock
     }
+
+    mod-key "Super"
 
     touchpad {
         tap
@@ -108,6 +118,7 @@ binds {
     // --- 核心应用启动 ---
     Mod+Shift+Slash { show-hotkey-overlay; }
     Mod+Return { spawn "kitty"; }
+    Mod+R { spawn "fcitx5-remote" "-t"; }
 
     // Noctalia 官方推荐 IPC 方式
     Mod+Space { spawn "noctalia-shell" "ipc" "call" "launcher" "toggle"; }

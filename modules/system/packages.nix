@@ -9,6 +9,7 @@
     wget
     git
     curl
+    python3
     ncdu
     btop
     xclip

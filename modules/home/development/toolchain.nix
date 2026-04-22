@@ -9,7 +9,6 @@
 
     # Runtime/package toolchain
     uv
-    python3
     nodejs_22
     pnpm
 
@@ -18,4 +17,10 @@
     rstudioWrapper
     texlive.combined.scheme-full
   ];
+
+  home.sessionVariables = {
+    UV_PYTHON = "/run/current-system/sw/bin/python3";
+    UV_PYTHON_PREFERENCE = "only-system";
+  };
+
 }

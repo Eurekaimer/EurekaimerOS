@@ -5,7 +5,7 @@
   networking.hostName = "nixos";
 
   networking.firewall = {
-    enable = true;
+    enable = false;
     allowedTCPPorts = [ 21301 ];
     allowedUDPPorts = [ 21301 ];
   };

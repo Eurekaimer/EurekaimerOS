@@ -22,6 +22,7 @@
   boot.supportedFilesystems = [ "ntfs" ];
 
   networking.networkmanager.enable = true;
+  programs.nix-ld.enable = true;
 
   time.timeZone = "Asia/Shanghai";
   nixpkgs.config.allowUnfree = true;
