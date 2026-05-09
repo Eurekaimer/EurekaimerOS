@@ -14,6 +14,36 @@ This repository is my daily-driver configuration:
 
 If you are looking for a minimal but practical Niri/Noctalia-oriented NixOS layout, this repo is meant to be easy to read and easy to fork.
 
+## Reinstall First: Prefer GUI Installer + Mirrors
+
+If you are reinstalling and your proxy software is not ready yet, I recommend a simpler path: use mirrors in the live ISO, install a basic system with the GUI installer, restore your proxy inside the installed system, and only then clone/apply the full configuration.
+
+Current mirror setup:
+
+- Nix binary cache mirror: `https://mirrors.ustc.edu.cn/nix-channels/store`
+- Nix official fallback: `https://cache.nixos.org/`
+- Flathub mirror: `https://mirror.sjtu.edu.cn/flathub/flathub.flatpakrepo`
+
+For first install or restore, prefer:
+
+```bash
+sudo nixos-install --flake .#nixos \
+  --option substituters "https://mirrors.ustc.edu.cn/nix-channels/store https://cache.nixos.org/" \
+  --option download-attempts 10 \
+  --option connect-timeout 30
+```
+
+If you are restoring on an already installed system, use:
+
+```bash
+sudo nixos-rebuild switch --flake . \
+  --option substituters "https://mirrors.ustc.edu.cn/nix-channels/store https://cache.nixos.org/" \
+  --option download-attempts 10 \
+  --option connect-timeout 30
+```
+
+One subtle point: this repository does include a default local proxy module, but that does not affect the freshly installed base system until you actually run `nixos-rebuild switch --flake .`. So if your workflow is “restore proxy first, then clone/apply config”, there is no need for a separate no-proxy variant of the repo.
+
 ## What This Repo Prioritizes
 
 - Clear layering instead of one huge config file.
@@ -34,6 +64,8 @@ If you are looking for a minimal but practical Niri/Noctalia-oriented NixOS layo
 3. `modules/home/development.nix`
 4. `modules/home/applications.nix`
 
+`modules/home/applications.nix` also owns desktop file associations through Home Manager `xdg.mimeApps`, so default open behavior stays declarative instead of being scattered across Niri or Noctalia config.
+
 ---
 
 ## Home Layout (Niri/Noctalia Focus)
@@ -52,6 +84,7 @@ modules/home
 │   ├── core/ui.nix
 │   └── core/yazi.nix
 ├── development.nix
+│   ├── development/neovim.nix
 │   └── development/toolchain.nix
 └── applications.nix
     ├── applications/knowledge.nix
@@ -62,6 +95,12 @@ modules/home
     ├── applications/communication.nix
     └── applications/flathub.nix
 ```
+
+Current defaults:
+
+- PDF files open with `sioyek`.
+- Common image formats open with `imv`.
+- These associations are managed in `modules/home/applications.nix` via `xdg.mimeApps`.
 
 ---
 
