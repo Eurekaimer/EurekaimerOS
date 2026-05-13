@@ -11,6 +11,5 @@ in
     unstable.feishu
     unstable.qq
     unstable.wemeet
-    pkgs.discord
   ];
 }

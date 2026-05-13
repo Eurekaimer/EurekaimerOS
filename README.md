@@ -14,9 +14,9 @@ This repository is my daily-driver configuration:
 
 If you are looking for a minimal but practical Niri/Noctalia-oriented NixOS layout, this repo is meant to be easy to read and easy to fork.
 
-## Reinstall First: Prefer GUI Installer + Mirrors
+## Reinstall First: Add Mirrors, Then Install
 
-If you are reinstalling and your proxy software is not ready yet, I recommend a simpler path: use mirrors in the live ISO, install a basic system with the GUI installer, restore your proxy inside the installed system, and only then clone/apply the full configuration.
+For a reinstall, keep the early path simple: add Nix mirrors to `/etc/nix/nix.conf` first, then install. This avoids making the installer depend on a proxy client, a browser login, or a full desktop session before the base system exists.
 
 Current mirror setup:
 
@@ -24,25 +24,32 @@ Current mirror setup:
 - Nix official fallback: `https://cache.nixos.org/`
 - Flathub mirror: `https://mirror.sjtu.edu.cn/flathub/flathub.flatpakrepo`
 
-For first install or restore, prefer:
+In the live ISO, edit `/etc/nix/nix.conf`:
 
 ```bash
-sudo nixos-install --flake .#nixos \
-  --option substituters "https://mirrors.ustc.edu.cn/nix-channels/store https://cache.nixos.org/" \
-  --option download-attempts 10 \
-  --option connect-timeout 30
+sudo cp /etc/nix/nix.conf /etc/nix/nix.conf.bak
+sudo nano /etc/nix/nix.conf
 ```
 
-If you are restoring on an already installed system, use:
+Add or replace the mirror line:
+
+```conf
+substituters = https://mirrors.ustc.edu.cn/nix-channels/store https://cache.nixos.org/
+```
+
+Then restart the daemon and install with the GUI installer or your normal NixOS install flow:
 
 ```bash
-sudo nixos-rebuild switch --flake . \
-  --option substituters "https://mirrors.ustc.edu.cn/nix-channels/store https://cache.nixos.org/" \
-  --option download-attempts 10 \
-  --option connect-timeout 30
+sudo systemctl restart nix-daemon
 ```
 
-One subtle point: this repository does include a default local proxy module, but that does not affect the freshly installed base system until you actually run `nixos-rebuild switch --flake .`. So if your workflow is “restore proxy first, then clone/apply config”, there is no need for a separate no-proxy variant of the repo.
+After the first boot, repeat the same `/etc/nix/nix.conf` mirror edit in the installed system before pulling this repository or running the final rebuild:
+
+```bash
+sudo nixos-rebuild switch --flake .#nixos
+```
+
+For the first network recovery step, prefer `Throne` (`pkgs.throne`) or the headless `mihomo` core. They are less likely to fail because of WebView or GPU-rendering issues during the early restore stage. `clash-verge-rev` is still included, but it is better treated as a full desktop proxy UI after WebView rendering is known to work.
 
 ## What This Repo Prioritizes
 
@@ -90,7 +97,7 @@ modules/home
     ├── applications/knowledge.nix
     ├── applications/documents.nix
     ├── applications/media.nix
-    ├── applications/web.nix
+    ├── applications/web.nix            (browsers, Clash Verge, Throne)
     ├── applications/transfer.nix
     ├── applications/communication.nix
     └── applications/flathub.nix
@@ -100,6 +107,8 @@ Current defaults:
 
 - PDF files open with `sioyek`.
 - Common image formats open with `imv`.
+- `mihomo` is available as a system-level proxy core.
+- `Throne` is the preferred early proxy GUI; `clash-verge-rev` remains available for the full desktop session.
 - These associations are managed in `modules/home/applications.nix` via `xdg.mimeApps`.
 
 ---
@@ -121,7 +130,7 @@ modules/system
 ├── desktop.nix
 ├── graphics.nix
 ├── gaming.nix
-├── packages.nix
+├── packages.nix        (common CLI tools, Firefox, mihomo)
 └── graphics-intel.nix   (optional, Intel-only tuning)
 ```
 

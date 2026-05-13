@@ -11,7 +11,6 @@
 
     packages = [
       "com.tencent.WeChat"
-      "io.github.Predidit.Kazumi"
     ];
 
     update.auto = {

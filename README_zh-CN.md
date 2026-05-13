@@ -12,35 +12,17 @@
 
 如果你也想搭一套“结构清晰、以 Niri/Noctalia 为中心”的 NixOS 配置，这个仓库就是按这个目标整理的。
 
-## 快速恢复当前配置（推荐：图形安装器 + 镜像）
+## 快速恢复当前配置（先加镜像，再安装）
 
-如果目标是尽快把当前这套配置恢复回来，我更推荐下面这条主线：
+如果目标是尽快把当前这套配置恢复回来，推荐把早期流程压到最简单：
 
-1. 在 Live ISO 里先把 `Nix` 下载源切到国内镜像
-2. 用图形安装器装一个基础系统
-3. 首次进入新系统后，再把镜像配置写回去
-4. 先恢复代理、浏览器和 GitHub 访问能力
-5. 拿到完整配置仓库后，再执行最后一次 `nixos-rebuild`
+1. 在 Live ISO 里先给 `/etc/nix/nix.conf` 增加 Nix 镜像源
+2. 用图形安装器或你习惯的 NixOS 安装流程完成基础系统安装
+3. 首次进入新系统后，再给已安装系统的 `/etc/nix/nix.conf` 增加同样的镜像源
+4. 恢复网络、浏览器和 GitHub 访问能力
+5. 拿到完整配置仓库后执行 `sudo nixos-rebuild switch --flake .#nixos`
 
-这样做的好处是：
-
-- 不需要一开始就手打很多命令
-- 不需要一开始就解决 `git clone` 的网络问题
-- 更符合“先装一个能启动、能联网、能开浏览器的系统，再逐步恢复”的节奏
-
-如果按这个思路来，真正必须手打的命令通常只剩下 3 类：
-
-1. 在 Live ISO 里改一次 `/etc/nix/nix.conf`
-2. 第一次进新系统后，再改一次 `/etc/nix/nix.conf`
-3. 最后在完整配置仓库目录里执行一次 `sudo nixos-rebuild switch --flake .`
-
-唯一真正麻烦的点通常不是配置本身，而是**系统还没装好之前，怎么越过网络限制**。
-
-- 可以直接用已经开好科学网络的路由器
-- 也可以更直接一点，用线连到另一台已经开好代理的设备
-- 如果国内镜像能用，通常会省事很多
-
-这份恢复说明，也是借着把一台本地笔记本改成 NixOS 的过程顺手整理出来的。
+这样做的重点很朴素：**先让 Nix 下载走镜像，然后安装即可**。不要在系统还没装好时，把成功率绑到某个代理 GUI、浏览器登录状态或完整桌面渲染环境上。
 
 当前镜像设置：
 
@@ -48,16 +30,11 @@
 - Nix 官方回退：`https://cache.nixos.org/`
 - Flathub 镜像：`https://mirror.sjtu.edu.cn/flathub/flathub.flatpakrepo`
 
-说明：
+说明：仓库本身在 `modules/system/base.nix` 中默认使用的是 USTC；如果你实测 SJTU 或其他镜像更稳，可以在临时安装阶段按实际情况替换。
 
-- 仓库本身在 `modules/system/base.nix` 中默认使用的是 `USTC`
-- 下面示例里临时手改 `nix.conf` 时使用的是 `SJTU`
-- 实际恢复时，二者选你本地更快、更稳定的那个即可
+### 第 0 步：先改 `/etc/nix/nix.conf`
 
-### 第 0 步：如果 Live ISO 阶段就开始卡，先改 `/etc/nix/nix.conf`
-
-有时候系统还没正式安装，下载就已经开始变慢，甚至会出现你说的那种“卡在 46% 左右”的情况。  
-这时建议直接在 Live ISO 里先把 `substituters` 改掉，再继续后面的安装步骤。
+在 Live ISO 阶段先把 Nix 下载源切到镜像，再继续安装。
 
 推荐做法：
 
@@ -69,12 +46,6 @@ sudo nano /etc/nix/nix.conf
 加入这一行：
 
 ```conf
-substituters = https://mirror.sjtu.edu.cn/nix-channels/store https://cache.nixos.org/
-```
-
-如果你那边实测 USTC 更稳，也可以换成：
-
-```conf
 substituters = https://mirrors.ustc.edu.cn/nix-channels/store https://cache.nixos.org/
 ```
 
@@ -84,7 +55,7 @@ substituters = https://mirrors.ustc.edu.cn/nix-channels/store https://cache.nixo
 sudo systemctl restart nix-daemon
 ```
 
-这样做的目的，是在**正式安装前**，就先把 Live ISO 环境里的 Nix 下载源切到国内镜像。
+这样做的目的，是在正式安装前就先把 Live ISO 环境里的 Nix 下载源切到国内镜像。
 
 ### 第 1 步：先用图形界面分区
 
@@ -98,14 +69,14 @@ sudo systemctl restart nix-daemon
 
 这不是唯一方案，但对单盘个人机器来说通常已经足够直接。
 
-### 第 2 步：用图形安装器先装一个基础系统
+### 第 2 步：安装基础系统
 
 这里推荐的默认路线就是：
 
 - 用图形版 NixOS ISO 启动
 - 连接好网络
 - 在 Live ISO 里先改好 `/etc/nix/nix.conf`
-- 用图形安装器完成基础系统安装
+- 用图形安装器或你熟悉的安装流程完成基础系统安装
 
 图形安装器本身可以尽量按最直观的方式理解，基本就是这条线：
 
@@ -156,7 +127,7 @@ sudo systemctl restart nix-daemon
 - 有文件管理器，方便直接在图形界面里下载、解压、移动文件
 
 这里顺手说清楚一个容易误解的点：  
-下面列出来的 `clash-verge-rev`、`github-desktop`、`google-chrome` 等，指的是**完整配置恢复后会由这份仓库接管的工具**。在“基础系统阶段”，它们未必已经存在；你可以先用系统自带的同类工具，也可以临时补装。
+下面列出来的工具，指的是完整配置恢复后会由这份仓库接管的目标状态。在“基础系统阶段”，它们未必已经存在；你可以先用系统自带的同类工具，也可以临时补装。
 
 仓库里对应的目标工具如下：
 
@@ -166,12 +137,20 @@ sudo systemctl restart nix-daemon
 - `google-chrome`
   位置：`modules/home/applications/web.nix`
   用途：第二个浏览器备用。
+- `mihomo`
+  位置：`modules/system/packages.nix`
+  用途：无 GUI 的代理核心，适合恢复早期兜底。
+- `throne`
+  位置：`modules/home/applications/web.nix`
+  用途：Qt 代理客户端，适合刚开始恢复网络时优先使用。
 - `clash-verge-rev`
   位置：`modules/home/applications/web.nix`
-  用途：导入订阅、把代理恢复起来。
+  用途：完整桌面环境可用后继续作为代理 GUI。
 - `github-desktop`
   位置：`modules/home/development/toolchain.nix`
   用途：图形化同步你后续真正要恢复的仓库。
+
+特别提醒：刚开始恢复网络时，尽量优先使用 `throne` 这类 Qt 应用，或者直接用 `mihomo` 这种无 GUI 核心。`clash-verge-rev` 依赖 WebView 渲染，早期系统里如果显卡、WebView、Wayland/X11 环境还没完全稳定，可能出现界面打不开或渲染异常，导致代理还没恢复就先卡住。
 
 如果基础系统里已经有浏览器，那就直接用；如果没有，再补装一个即可。
 
@@ -200,7 +179,7 @@ sudo systemctl restart nix-daemon
 
 建议顺序是：
 
-1. 先打开 `clash-verge-rev`，导入你的订阅并确认代理可用
+1. 优先用 `throne` 或 `mihomo` 导入/加载订阅并确认代理可用
 2. 再用浏览器登录 GitHub
 3. 然后用 `github-desktop`、`git clone`，或者直接下载仓库 ZIP 的方式拿到你真正的完整配置仓库
 
@@ -239,7 +218,7 @@ sudo systemctl restart nix-daemon
 当下面这些条件都满足时，再执行你真正的最终恢复：
 
 - 镜像安装已经成功，系统能正常启动
-- `clash-verge-rev` 已经导入订阅并可正常联网
+- `throne`、`mihomo` 或其他代理方案已经可正常联网
 - 浏览器已经能登录 GitHub
 - `github-desktop`、`git` 或浏览器下载 ZIP 的方式已经拿到你的完整配置
 - 用户目录已经确认不会被中文路径卡住
@@ -306,7 +285,7 @@ modules/home
     ├── applications/knowledge.nix
     ├── applications/documents.nix
     ├── applications/media.nix
-    ├── applications/web.nix
+    ├── applications/web.nix            （浏览器、Clash Verge、Throne）
     ├── applications/transfer.nix
     ├── applications/communication.nix
     └── applications/flathub.nix
@@ -323,6 +302,8 @@ modules/home
 
 - PDF 使用 `sioyek`
 - 常见图片格式使用 `imv`
+- `mihomo` 作为系统级代理核心
+- `throne` 作为恢复早期优先使用的代理 GUI，`clash-verge-rev` 保留给完整桌面环境
 - 这些关联统一在 `modules/home/applications.nix` 里的 `xdg.mimeApps` 管理
 
 ---
@@ -344,7 +325,7 @@ modules/system
 ├── desktop.nix
 ├── graphics.nix
 ├── gaming.nix
-├── packages.nix
+├── packages.nix        （通用命令行工具、Firefox、mihomo）
 └── graphics-intel.nix   （可选，Intel 机器按需启用）
 ```
 

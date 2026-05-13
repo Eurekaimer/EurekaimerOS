@@ -1,22 +1,78 @@
-add_newline = true
+add_newline = false
 
-format = "$directory$git_branch$git_status$line_break$time$character"
+format = "$shell$directory$git_branch$git_status$line_break$character"
+right_format = "$status$cmd_duration$time"
+
+palette = "tokyonight"
+
+[palettes.tokyonight]
+bg = "#24283b"
+fg = "#c0caf5"
+blue = "#7aa2f7"
+blue_dark = "#3d59a1"
+green = "#9ece6a"
+yellow = "#e0af68"
+red = "#f7768e"
+purple = "#bb9af7"
+muted = "#a9b1d6"
 
 [character]
-success_symbol = "[✨ ➜](bold green)"
-error_symbol = "[💀 ➜](bold red)"
+success_symbol = "[❯](bold green)"
+error_symbol = "[❯](bold red)"
+
+[shell]
+disabled = false
+bash_indicator = "bash"
+fish_indicator = "fish"
+zsh_indicator = "zsh"
+format = "[](fg:blue)[  $indicator ]($style)[ ](fg:blue)"
+style = "bg:blue fg:bg bold"
 
 [directory]
-style = "bold blue"
+format = "[](fg:blue_dark)[  $path ]($style)[ ](fg:blue_dark)"
+style = "bg:blue_dark fg:fg bold"
 truncation_length = 3
 truncate_to_repo = false
+read_only = " 󰌾"
+read_only_style = "bg:blue_dark fg:yellow"
 
 [git_branch]
-symbol = "🌱 "
-style = "bold yellow"
+symbol = " "
+format = "[](fg:green)[ $symbol$branch ]($style)"
+style = "bg:green fg:bg bold"
+
+[git_status]
+format = "[$all_status$ahead_behind ]($style)[ ](fg:green)"
+style = "bg:green fg:bg bold"
+conflicted = "= "
+ahead = "⇡ "
+behind = "⇣ "
+diverged = "⇕ "
+up_to_date = ""
+untracked = "? "
+stashed = "$ "
+modified = "! "
+staged = "+ "
+renamed = "» "
+deleted = "✘ "
+
+[status]
+disabled = false
+format = "[](fg:red)[ ✘ $status ]($style)[ ](fg:red)"
+style = "bg:red fg:bg bold"
+pipestatus = true
+pipestatus_separator = "|"
+map_symbol = true
+
+[cmd_duration]
+min_time = 500
+show_milliseconds = false
+format = "[](fg:yellow)[ took $duration ]($style)[ ](fg:yellow)"
+style = "bg:yellow fg:bg bold"
 
 [time]
 disabled = false
 use_12hr = false
-format = "[🕒 $time]($style) "
-style = "bold purple"
+format = "[](fg:muted)[ at $time ]($style)[](fg:muted)"
+style = "bg:muted fg:bg bold"
+time_format = "%H:%M:%S"

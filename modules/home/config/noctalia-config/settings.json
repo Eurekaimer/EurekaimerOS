@@ -551,7 +551,7 @@
       "criticalSoundFile": "",
       "normalSoundFile": "",
       "lowSoundFile": "",
-      "excludedApps": "discord,firefox,chrome,chromium,edge"
+      "excludedApps": "firefox,chrome,chromium,edge"
     },
     "enableMediaToast": false,
     "enableKeyboardLayoutToast": true,

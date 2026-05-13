@@ -9,6 +9,7 @@
     wget
     git
     curl
+    mihomo
     python3
     ncdu
     btop

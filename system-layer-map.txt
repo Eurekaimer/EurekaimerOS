@@ -19,7 +19,7 @@
 # ├── desktop.nix           # 桌面会话服务（niri/xserver/sddm/plasma/音频/电源等）
 # ├── graphics.nix          # 通用图形能力（硬件加速基础 + 调试工具）
 # ├── gaming.nix            # 游戏相关（steam/gamemode/wine/lutris）
-# ├── packages.nix          # 系统级通用软件包
+# ├── packages.nix          # 系统级通用软件包（含 Firefox/mihomo 等恢复基础工具）
 # └── graphics-intel.nix    # Intel 可选增强（按需启用，不默认导入）
 
 # 迁移策略说明：
