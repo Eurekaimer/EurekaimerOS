@@ -36,4 +36,3 @@
 #     ├── applications/web.nix            # 浏览器与网络访问（Chrome/Clash Verge/Throne）
 #     ├── applications/transfer.nix       # 下载/分发/图床上传
 #     ├── applications/communication.nix  # 社交通讯（飞书/QQ/腾讯会议）
-#     └── applications/flathub.nix        # Flatpak 远程源与应用声明

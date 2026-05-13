@@ -8,7 +8,6 @@
     ./applications/web.nix
     ./applications/transfer.nix
     ./applications/communication.nix
-    ./applications/flathub.nix
   ];
 
   xdg.configFile."mimeapps.list".force = true;

@@ -22,7 +22,6 @@ Current mirror setup:
 
 - Nix binary cache mirror: `https://mirrors.ustc.edu.cn/nix-channels/store`
 - Nix official fallback: `https://cache.nixos.org/`
-- Flathub mirror: `https://mirror.sjtu.edu.cn/flathub/flathub.flatpakrepo`
 
 In the live ISO, edit `/etc/nix/nix.conf`:
 
@@ -99,8 +98,7 @@ modules/home
     ├── applications/media.nix
     ├── applications/web.nix            (browsers, Clash Verge, Throne)
     ├── applications/transfer.nix
-    ├── applications/communication.nix
-    └── applications/flathub.nix
+    └── applications/communication.nix
 ```
 
 Current defaults:

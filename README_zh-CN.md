@@ -28,7 +28,6 @@
 
 - 仓库内默认写入的 Nix 二进制缓存镜像：`https://mirrors.ustc.edu.cn/nix-channels/store`
 - Nix 官方回退：`https://cache.nixos.org/`
-- Flathub 镜像：`https://mirror.sjtu.edu.cn/flathub/flathub.flatpakrepo`
 
 说明：仓库本身在 `modules/system/base.nix` 中默认使用的是 USTC；如果你实测 SJTU 或其他镜像更稳，可以在临时安装阶段按实际情况替换。
 
@@ -287,8 +286,7 @@ modules/home
     ├── applications/media.nix
     ├── applications/web.nix            （浏览器、Clash Verge、Throne）
     ├── applications/transfer.nix
-    ├── applications/communication.nix
-    └── applications/flathub.nix
+    └── applications/communication.nix
 ```
 
 说明：
