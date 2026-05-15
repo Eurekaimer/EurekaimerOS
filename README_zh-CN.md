@@ -29,13 +29,22 @@
 substituters = https://mirrors.ustc.edu.cn/nix-channels/store https://cache.nixos.org/
 ```
 
+如果 `/etc/nix/nix.conf` 是只读文件或指向 Nix store 的受管链接，先备份，再删掉原文件，最后把备份还原成普通文件后编辑：
+
+```bash
+sudo cp -L /etc/nix/nix.conf /etc/nix/nix.conf.bak
+sudo rm /etc/nix/nix.conf
+sudo cp /etc/nix/nix.conf.bak /etc/nix/nix.conf
+sudo nano /etc/nix/nix.conf
+```
+
 改完重启 Nix daemon：
 
 ```bash
 sudo systemctl restart nix-daemon
 ```
 
-早期恢复代理优先用 `mihomo`、`throne` 或 `nekoray` 这类更直接的方案。`clash-verge-rev` 依赖 WebView，显卡、WebView、Wayland/X11 还没稳定时更容易卡在界面渲染上。
+早期恢复代理优先用 `mihomo`、`throne` 或 `nekoray` 这类更直接的方案。当前配置优先保留 `throne`；旧配置、旧教程或旧备份里可能还是 `nekoray`。恢复时不用纠结名字，先用能启动、能导入订阅、能让 GitHub 可访问的那个。`clash-verge-rev` 依赖 WebView，显卡、WebView、Wayland/X11 还没稳定时更容易卡在界面渲染上。
 
 第一次拿仓库不必执着 `git clone`：浏览器下载 ZIP、解压、右键打开终端也可以。关键是最后在仓库目录执行 rebuild。
 
