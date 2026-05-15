@@ -13,6 +13,11 @@ in
 
   programs.steam = {
     enable = true;
+    package = pkgs.steam.override {
+      # Work around black Steam UI on niri/xwayland-satellite while keeping
+      # webhelper GPU acceleration enabled.
+      extraArgs = "-cef-disable-gpu-compositing";
+    };
     remotePlay.openFirewall = true;
     dedicatedServer.openFirewall = true;
     extest.enable = true;

@@ -238,6 +238,46 @@ sudo nixos-rebuild switch --flake .
 - [NixOS & Flakes Book](https://nixos-and-flakes.thiscute.world/zh/)
   这份资料写得挺不错，比较适合先自己配合 AI 折腾一会，再回来看，理解速度会快很多。
 
+## 遇到的问题
+
+### Steam 在 Niri/xwayland-satellite 下黑屏和启动慢
+
+现象：Steam 能启动，但主窗口可能长时间黑屏，打开也明显变慢。日志里能看到 `steamwebhelper` 走 CEF/WebUI，当前会话是 `XDG_SESSION_TYPE=wayland`、`XDG_CURRENT_DESKTOP=niri`，Steam WebHelper 的 GPU 报告显示 `Ozone platform: x11`，同时 `cef_log.txt` / `webhelper.txt` 里出现大量 `BadWindow (invalid Window parameter)` 一类 X11/Xwayland 错误。
+
+这次机器是 Intel Iris Xe / Mesa，基础 Steam 配置里的 `hardware.graphics.enable32Bit = true;` 已经存在，所以问题不像是 32 位图形库缺失，而更像是 Steam 新 UI 的 CEF GPU compositing 和 `xwayland-satellite` 之间的窗口创建时序问题。
+
+当前采用的修复：
+
+```nix
+programs.steam = {
+  enable = true;
+  package = pkgs.steam.override {
+    extraArgs = "-cef-disable-gpu-compositing";
+  };
+};
+```
+
+这个参数只关闭 CEF 的 GPU compositing，保留 WebHelper 的 GPU 加速；如果以后再次复发，可以临时尝试更重的 `-cef-disable-gpu` 来验证是否仍然是 Steam WebView 渲染问题。
+
+另外，当前主机确认是 Intel iGPU，所以 `hosts/nixos/configuration.nix` 里启用了：
+
+```nix
+../../modules/system/graphics-intel.nix
+```
+
+对应模块会加入 `intel-media-driver`、`intel-vaapi-driver`、`libva`，用于补齐 Intel 图形/媒体相关支持。改完后执行：
+
+```bash
+sudo nixos-rebuild switch --flake .#nixos
+pkill steam
+steam
+```
+
+参考信息：
+
+- [Niri/xwayland-satellite: Black steam window fix - NixOS Discourse](https://discourse.nixos.org/t/niri-xwayland-satellite-black-steam-window-fix/77107)
+- [Steam UI Black Unless Ran Using -cef-disable-gpu - ValveSoftware/steam-for-linux](https://github.com/ValveSoftware/steam-for-linux/issues/10561)
+
 ## 这个仓库在意什么
 
 - 分层清楚：避免把所有逻辑塞进一个大文件。

@@ -9,7 +9,6 @@
     # apply the repository configuration via nixos-rebuild.
     ./proxy-local.nix
     ../../modules/system/system.nix
-    # optional on Intel iGPU machines:
-    # ../../modules/system/graphics-intel.nix
+    ../../modules/system/graphics-intel.nix
   ];
 }
