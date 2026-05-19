@@ -1,6 +1,6 @@
 add_newline = false
 
-format = "$shell$directory$git_branch$git_status$line_break$character"
+format = "$shell$nix_shell$directory$git_branch$git_status$line_break$character"
 right_format = "$status$cmd_duration$time"
 
 palette = "tokyonight"
@@ -27,6 +27,14 @@ fish_indicator = "fish"
 zsh_indicator = "zsh"
 format = "[](fg:blue)[  $indicator ]($style)[ ](fg:blue)"
 style = "bg:blue fg:bg bold"
+
+[nix_shell]
+disabled = false
+impure_msg = "nix"
+pure_msg = "pure"
+unknown_msg = "nix"
+format = "[](fg:purple)[  $state ]($style)[ ](fg:purple)"
+style = "bg:purple fg:bg bold"
 
 [directory]
 format = "[](fg:blue_dark)[  $path ]($style)[ ](fg:blue_dark)"

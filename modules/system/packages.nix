@@ -8,6 +8,7 @@
     neovim
     wget
     git
+    gh
     curl
     mihomo
     python3
