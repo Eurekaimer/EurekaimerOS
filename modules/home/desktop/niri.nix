@@ -11,6 +11,7 @@
     hyprlock
     imv
     pavucontrol
+    kdePackages.polkit-kde-agent-1
   ];
 
   services.swayosd.enable = false;

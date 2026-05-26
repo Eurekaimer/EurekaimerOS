@@ -111,6 +111,45 @@ Current defaults:
 
 ---
 
+## R, R Markdown, and Notebook Workflow
+
+R is provided through wrapped packages in `modules/home/development/toolchain.nix` instead of installing packages manually from inside RStudio.
+
+The current wrapper includes common coursework and plotting packages:
+
+- R Markdown/reporting: `rmarkdown`, `knitr`, `tinytex`
+- VSCode/Jupyter support: `IRkernel`, `languageserver`
+- Tidyverse/plots: `tidyverse`, `ggplot2`
+- Statistics/course packages: `boot`, `bootstrap`, `MASS`, `Matrix`, `survival`, `car`, `lmtest`, `sandwich`, `lme4`
+- Map tests: `maps`, `mapdata`
+
+`httpgd` is intentionally not included for now because the current nixpkgs revision marks `r-httpgd` as broken. Inline plots in R notebooks should still work through the R Jupyter kernel.
+
+After rebuilding, register the R kernel once:
+
+```bash
+Rscript -e 'IRkernel::installspec(user = TRUE)'
+```
+
+For a quick plotting test:
+
+```bash
+Rscript /home/eurekaimer/Documents/Rcode/r_plot_test_china_charts.R
+```
+
+For notebook-style inline feedback, open this file in VSCode and select the `R` kernel:
+
+```text
+/home/eurekaimer/Documents/Rcode/r_china_charts_notebook.ipynb
+```
+
+Required VSCode extensions:
+
+- `REditorSupport.r`
+- `ms-toolsai.jupyter`
+
+---
+
 ## System Layout
 
 `configuration.nix` keeps only three imports:

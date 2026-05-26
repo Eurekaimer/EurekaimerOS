@@ -30,7 +30,7 @@ style = "bg:blue fg:bg bold"
 
 [nix_shell]
 disabled = false
-impure_msg = "nix"
+impure_msg = "nix-shell"
 pure_msg = "pure"
 unknown_msg = "nix"
 format = "[](fg:purple)[  $state ]($style)[ ](fg:purple)"

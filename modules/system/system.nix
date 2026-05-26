@@ -6,7 +6,9 @@
     ./users.nix
     ./locale.nix
     ./desktop.nix
+    ./power.nix
     ./graphics.nix
+    ./mounts.nix
     ./gaming.nix
     ./packages.nix
   ];

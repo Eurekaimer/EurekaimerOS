@@ -7,6 +7,7 @@ spawn-at-startup "sh" "-c" "sleep 1 && swww img /etc/nixos/modules/home/swww/Muz
 
 spawn-at-startup "sh" "-c" "systemctl --user import-environment WAYLAND_DISPLAY DISPLAY XDG_CURRENT_DESKTOP XDG_SESSION_TYPE GTK_IM_MODULE QT_IM_MODULE SDL_IM_MODULE GLFW_IM_MODULE INPUT_METHOD XMODIFIERS NIXOS_OZONE_WL; dbus-update-activation-environment --systemd WAYLAND_DISPLAY DISPLAY XDG_CURRENT_DESKTOP XDG_SESSION_TYPE GTK_IM_MODULE QT_IM_MODULE SDL_IM_MODULE GLFW_IM_MODULE INPUT_METHOD XMODIFIERS NIXOS_OZONE_WL"
 spawn-at-startup "fcitx5" "-d"
+spawn-at-startup "polkit-kde-authentication-agent-1"
 spawn-at-startup "xwayland-satellite"
 spawn-at-startup "xembedsniproxy"
 spawn-at-startup "noctalia-shell"
