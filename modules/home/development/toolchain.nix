@@ -34,6 +34,27 @@ let
     maps
     mapdata
   ];
+
+  rWithPackages = pkgs.rWrapper.override {
+    packages = commonRPackages;
+  };
+
+  rstudioWithPackages = pkgs.rstudioWrapper.override {
+    packages = commonRPackages;
+  };
+
+  rKernelSpec = builtins.toJSON {
+    argv = [
+      "${rWithPackages}/bin/R"
+      "--slave"
+      "-e"
+      "IRkernel::main()"
+      "--args"
+      "{connection_file}"
+    ];
+    display_name = "R (Nix)";
+    language = "R";
+  };
 in
 {
   home.packages = with pkgs; [
@@ -43,18 +64,25 @@ in
 
     # Runtime/package toolchain
     uv
+    jupyter
     nodejs_22
     pnpm
 
     # Scientific writing and analysis
-    (rWrapper.override {
-      packages = commonRPackages;
-    })
-    (rstudioWrapper.override {
-      packages = commonRPackages;
-    })
+    rWithPackages
+    rstudioWithPackages
     texlive.combined.scheme-full
   ];
+
+  xdg.dataFile = {
+    "jupyter/kernels/r-nix/kernel.json".text = rKernelSpec + "\n";
+    "jupyter/kernels/r-nix/kernel.js".source =
+      "${pkgs.rPackages.IRkernel}/library/IRkernel/kernelspec/kernel.js";
+    "jupyter/kernels/r-nix/logo-svg.svg".source =
+      "${pkgs.rPackages.IRkernel}/library/IRkernel/kernelspec/logo-svg.svg";
+    "jupyter/kernels/r-nix/logo-64x64.png".source =
+      "${pkgs.rPackages.IRkernel}/library/IRkernel/kernelspec/logo-64x64.png";
+  };
 
   home.sessionVariables = {
     UV_PYTHON = "/run/current-system/sw/bin/python3";
