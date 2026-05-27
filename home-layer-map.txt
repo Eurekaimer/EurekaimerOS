@@ -1,6 +1,16 @@
 # Home 层次图（注释版）
 # 入口文件：home/eurekaimer/home.nix
-# 作用：这是 Home Manager 的总入口，只负责导入 4 个层。
+# 作用：这是 Home Manager 的总入口，只负责导入用户层模块。
+#
+# 上游入口：
+# flake.nix
+# └── home-manager.users.eurekaimer = import ./home/eurekaimer/home.nix
+#
+# unstable 规则：
+# - nixpkgs-unstable 只在 flake.nix 中 import 一次，并命名为 pkgs-unstable。
+# - Home Manager 模块通过 extraSpecialArgs 接收 pkgs-unstable。
+# - 需要 unstable 软件包时，只在本模块参数中写 pkgs-unstable，并在下方标注用途。
+# - 不要在 Home 模块中再次 import inputs.nixpkgs-unstable。
 
 # 导入链说明：
 # 1) modules/home/desktop.nix
@@ -12,27 +22,33 @@
 # 4) modules/home/applications.nix
 #    含义：应用层，集中日常软件，并统一管理 XDG 默认打开方式（如 PDF/图片）。
 
-# 目录树与每个部件作用：
-# /etc/nixos/modules/home
-# ├── desktop.nix
-# │   ├── desktop/noctalia.nix        # Noctalia 壳层配置（顶部栏/控制中心等）
-# │   ├── desktop/niri.nix            # Niri 会话相关软件与配置
-# │   ├── desktop/rofi.nix            # 可选启动器（默认未导入）
-# │   └── desktop/waybar.nix          # 可选状态栏（默认未导入）
-# ├── core.nix
-# │   ├── core/shell.nix              # zsh/starship/zoxide 与命令行体验
-# │   ├── core/kitty.nix              # kitty 终端配置
-# │   ├── core/fastfetch.nix          # fastfetch 信息展示
-# │   ├── core/ui.nix                 # 图标主题/字体图标/GTK 光标主题
-# │   └── core/yazi.nix               # yazi 文件管理器
-# ├── development.nix
-# │   ├── development/neovim.nix      # Neovim 与插件配置
-# │   └── development/toolchain.nix   # 编程与科研工具链集合
-# └── applications.nix
+# /etc/nixos/home/eurekaimer/home.nix
+# ├── ../../modules/home/desktop.nix
+# │   ├── desktop/noctalia.nix         # Noctalia 壳层配置（顶部栏/控制中心等）
+# │   │                                # 使用 inputs.noctalia.homeModules.default
+# │   ├── desktop/niri.nix             # Niri 会话相关软件与配置
+# │   ├── desktop/rofi.nix             # 可选启动器（默认未导入）
+# │   └── desktop/waybar.nix           # 可选状态栏（默认未导入）
+# ├── ../../modules/home/core.nix
+# │   ├── core/shell.nix               # zsh/starship/zoxide 与命令行体验
+# │   ├── core/kitty.nix               # kitty 终端配置
+# │   ├── core/fastfetch.nix           # fastfetch 信息展示
+# │   ├── core/ui.nix                  # 图标主题/字体图标/GTK 光标主题
+# │   └── core/yazi.nix                # yazi 文件管理器
+# ├── ../../modules/home/development.nix
+# │   ├── development/neovim.nix       # Neovim 与插件配置
+# │   └── development/toolchain.nix    # 编程与科研工具链集合
+# │                                    # unstable: VS Code
+# │                                    # TeX Live: 精简中/英/日 + XeLaTeX + latexmk
+# └── ../../modules/home/applications.nix
 #     # 日常应用总入口 + xdg.mimeApps 默认关联（当前 PDF -> sioyek，图片 -> imv）
-#     ├── applications/knowledge.nix      # 知识管理（Obsidian/Zotero）
-#     ├── applications/documents.nix      # 文档处理与阅读（PDF/EPUB/翻译）
-#     ├── applications/media.nix          # 媒体播放与音乐
-#     ├── applications/web.nix            # 浏览器与网络访问（Chrome/Clash Verge/Throne）
-#     ├── applications/transfer.nix       # 下载/分发/图床上传
-#     ├── applications/communication.nix  # 社交通讯（飞书/QQ/腾讯会议）
+#     ├── applications/knowledge.nix       # 知识管理（Obsidian/Zotero）
+#     ├── applications/documents.nix       # 文档处理与阅读（PDF/EPUB/翻译）
+#     ├── applications/media.nix           # 媒体播放与音乐
+#     │                                    # unstable: mpv, go-musicfox
+#     ├── applications/web.nix             # 浏览器与网络访问（Chrome/Clash Verge/Throne）
+#     ├── applications/transfer.nix        # 下载/分发/图床上传
+#     │                                    # unstable: picgo
+#     ├── applications/communication.nix   # 社交通讯（飞书/QQ/腾讯会议/微信）
+#     │                                    # unstable: feishu, qq, wemeet, wechat package input
+#     └── applications/wechat-official.nix # 微信官方包封装，被 communication.nix 调用

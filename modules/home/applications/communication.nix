@@ -1,18 +1,13 @@
-{ pkgs, inputs, ... }:
+{ pkgs-unstable, ... }:
 
 let
-  unstable = import inputs.nixpkgs-unstable {
-    system = pkgs.stdenv.hostPlatform.system;
-    config.allowUnfree = true;
-  };
-
-  wechat = unstable.callPackage ./wechat-official.nix { };
+  wechat = pkgs-unstable.callPackage ./wechat-official.nix { };
 in
 {
   home.packages = [
-    unstable.feishu
-    unstable.qq
+    pkgs-unstable.feishu
+    pkgs-unstable.qq
     wechat
-    unstable.wemeet
+    pkgs-unstable.wemeet
   ];
 }

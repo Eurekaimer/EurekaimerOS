@@ -42,17 +42,42 @@ The configured system currently prefers domestic mirrors in `modules/system/base
 ## Layout
 
 ```text
-hosts/nixos/                 host entry and hardware config
-home/eurekaimer/home.nix     Home Manager entry
-modules/system/              system-level modules
-modules/home/                user-level modules
+flake.nix
+├── inputs
+│   ├── nixpkgs              stable system package set
+│   ├── nixpkgs-unstable     source for selected fast-moving packages
+│   ├── home-manager
+│   └── noctalia             follows nixpkgs-unstable
+├── pkgs-unstable            imported once here and passed to modules
+└── nixosConfigurations.nixos
+    ├── hosts/nixos/configuration.nix
+    │   ├── hardware-configuration.nix
+    │   ├── host-local.nix
+    │   ├── proxy-local.nix
+    │   ├── ../../modules/system/system.nix
+    │   └── ../../modules/system/graphics-intel.nix
+    └── home-manager.users.eurekaimer
+        └── home/eurekaimer/home.nix
+            ├── ../../modules/home/desktop.nix
+            ├── ../../modules/home/core.nix
+            ├── ../../modules/home/development.nix
+            └── ../../modules/home/applications.nix
 ```
 
 Key files:
 
+- `flake.nix`
 - `hosts/nixos/configuration.nix`
 - `home/eurekaimer/home.nix`
 - `modules/home/development/toolchain.nix`
+- `home-layer-map.txt`
+- `system-layer-map.txt`
+
+`nixpkgs-unstable` is configured only in `flake.nix`, where it is imported as
+`pkgs-unstable` and passed to both NixOS modules and Home Manager modules. If a
+module needs an unstable package, accept `pkgs-unstable` as a module argument and
+annotate the package usage locally; do not import `inputs.nixpkgs-unstable`
+again inside the module.
 
 ## Rebuild
 
@@ -83,3 +108,4 @@ The list should include `r-nix`.
 ## Notes
 
 - For another host, add a separate `hosts/<name>/` entry instead of reusing machine-specific files blindly.
+- Keep personal data, homework files, and local test paths out of the public README.

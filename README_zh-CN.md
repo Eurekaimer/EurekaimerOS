@@ -49,17 +49,41 @@ sudo nixos-rebuild switch --flake .#nixos
 ## 结构
 
 ```text
-hosts/nixos/                 主机入口和硬件配置
-home/eurekaimer/home.nix     Home Manager 入口
-modules/system/              系统层模块
-modules/home/                用户层模块
+flake.nix
+├── inputs
+│   ├── nixpkgs              稳定系统包集
+│   ├── nixpkgs-unstable     供少量快速更新软件使用
+│   ├── home-manager
+│   └── noctalia             跟随 nixpkgs-unstable
+├── pkgs-unstable            只在这里 import 一次，并传给各模块
+└── nixosConfigurations.nixos
+    ├── hosts/nixos/configuration.nix
+    │   ├── hardware-configuration.nix
+    │   ├── host-local.nix
+    │   ├── proxy-local.nix
+    │   ├── ../../modules/system/system.nix
+    │   └── ../../modules/system/graphics-intel.nix
+    └── home-manager.users.eurekaimer
+        └── home/eurekaimer/home.nix
+            ├── ../../modules/home/desktop.nix
+            ├── ../../modules/home/core.nix
+            ├── ../../modules/home/development.nix
+            └── ../../modules/home/applications.nix
 ```
 
 主要入口：
 
+- `flake.nix`
 - `hosts/nixos/configuration.nix`
 - `home/eurekaimer/home.nix`
 - `modules/home/development/toolchain.nix`
+- `home-layer-map.txt`
+- `system-layer-map.txt`
+
+`nixpkgs-unstable` 的统一设置位置是 `flake.nix`。这里把它 import 为
+`pkgs-unstable`，并同时传给 NixOS modules 与 Home Manager modules。需要使用
+unstable 软件包的模块，只接收 `pkgs-unstable` 参数并在本模块标注用途；不要在
+模块里再次 `import inputs.nixpkgs-unstable`。
 
 ## 重建
 

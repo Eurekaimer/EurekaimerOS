@@ -1,29 +1,50 @@
 # System 层次图（注释版）
 # 入口文件：hosts/nixos/configuration.nix
-# 作用：这是系统配置入口，建议只保留“硬件 + 主机本地 + 通用系统层”三类导入。
+# 作用：这是系统配置入口，建议只保留“硬件 + 主机本地 + 通用系统层 + 可选硬件增强”导入。
+#
+# 上游入口：
+# flake.nix
+# └── nixosConfigurations.nixos
+#     ├── specialArgs = { inputs, pkgs-unstable, ... }
+#     └── modules = [ ./hosts/nixos/configuration.nix home-manager.nixosModules.home-manager ... ]
+#
+# unstable 规则：
+# - nixpkgs-unstable 只在 flake.nix 中 import 一次，并命名为 pkgs-unstable。
+# - NixOS 模块通过 specialArgs 接收 pkgs-unstable。
+# - 需要 unstable 软件包时，只在本模块参数中写 pkgs-unstable，并在下方标注用途。
+# - 不要在 System 模块中再次 import inputs.nixpkgs-unstable。
 
-# configuration.nix 导入关系：
+# hosts/nixos/configuration.nix 导入关系：
 # 1) hosts/nixos/hardware-configuration.nix
 #    含义：硬件扫描结果（磁盘、文件系统、内核模块），与机器强绑定。
 # 2) hosts/nixos/host-local.nix
-#    含义：主机本地差异配置（主机名、代理、特殊内核参数、防火墙端口）。
-# 3) modules/system/system.nix
+#    含义：主机本地差异配置（主机名、特殊内核参数、防火墙端口等）。
+# 3) hosts/nixos/proxy-local.nix
+#    含义：当前主机日用代理配置；迁移时可替换或移除。
+# 4) modules/system/system.nix
 #    含义：可复用的系统通用层（尽量机器无关，便于迁移）。
+# 5) modules/system/graphics-intel.nix
+#    含义：当前主机启用的 Intel 图形增强；新机器按硬件决定是否导入。
 
-# 通用系统层结构：
-# /etc/nixos/modules/system
-# ├── system.nix            # 总入口，负责组合各子模块
-# ├── base.nix              # Nix 基础设置、GC、引导、网络基础、时区、系统版本
-# ├── users.nix             # 用户与默认 shell
-# ├── locale.nix            # 字体、语言、输入法（fcitx5）
-# ├── desktop.nix           # 桌面会话服务（niri/xserver/sddm/plasma/音频/电源等）
-# ├── graphics.nix          # 通用图形能力（硬件加速基础 + 调试工具）
-# ├── gaming.nix            # 游戏相关（steam/gamemode/wine/lutris）
-# ├── packages.nix          # 系统级通用软件包（含 Firefox/mihomo 等恢复基础工具）
-# └── graphics-intel.nix    # Intel 可选增强（按需启用，不默认导入）
+# /etc/nixos/hosts/nixos/configuration.nix
+# ├── hardware-configuration.nix       # 机器绑定：文件系统、swap、内核模块
+# ├── host-local.nix                   # 机器绑定：主机名、本机差异
+# ├── proxy-local.nix                  # 机器绑定：代理相关本地设置
+# ├── ../../modules/system/system.nix
+# │   ├── base.nix                     # Nix 基础设置、GC、引导、网络基础、时区、系统版本
+# │   ├── users.nix                    # 用户与默认 shell
+# │   ├── locale.nix                   # 字体、语言、输入法（fcitx5）
+# │   ├── desktop.nix                  # 桌面会话服务（niri/xserver/sddm/plasma/音频/电源等）
+# │   ├── power.nix                    # 电源管理
+# │   ├── graphics.nix                 # 通用图形能力（硬件加速基础 + 调试工具）
+# │   ├── mounts.nix                   # 额外挂载点
+# │   ├── gaming.nix                   # 游戏相关（steam/gamemode/wine/lutris）
+# │   │                                # unstable: lutris, protonplus, umu-launcher
+# │   └── packages.nix                 # 系统级通用软件包（含 Firefox/mihomo 等恢复基础工具）
+# └── ../../modules/system/graphics-intel.nix # Intel 可选增强，按主机启用
 
 # 迁移策略说明：
 # - 跨机器复用时优先复用 modules/system/*
 # - 新机器只需替换 hosts/<new-host>/hardware-configuration.nix
-# - 主机差异统一放到 hosts/<new-host>/host-local.nix
+# - 主机差异统一放到 hosts/<new-host>/host-local.nix 和 proxy-local.nix
 # - 某厂商驱动优化（如 Intel）保持“可选模块”模式，避免绑死到所有机器

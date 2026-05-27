@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, pkgs-unstable, ... }:
 
 let
   commonRPackages = with pkgs.rPackages; [
@@ -43,6 +43,21 @@ let
     packages = commonRPackages;
   };
 
+  texliveWriting = pkgs.texlive.combine {
+    inherit (pkgs.texlive)
+      scheme-small
+      collection-latexrecommended
+      collection-latexextra
+      collection-fontsrecommended
+      collection-xetex
+      collection-langchinese
+      collection-langenglish
+      collection-langjapanese
+      siunitx
+      latexindent
+      latexmk;
+  };
+
   rKernelSpec = builtins.toJSON {
     argv = [
       "${rWithPackages}/bin/R"
@@ -59,7 +74,7 @@ in
 {
   home.packages = with pkgs; [
     # IDE/editor
-    vscode
+    pkgs-unstable.vscode
     github-desktop
 
     # Runtime/package toolchain
@@ -71,7 +86,7 @@ in
     # Scientific writing and analysis
     rWithPackages
     rstudioWithPackages
-    texlive.combined.scheme-full
+    texliveWriting
   ];
 
   xdg.dataFile = {

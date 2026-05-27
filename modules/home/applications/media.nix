@@ -1,16 +1,10 @@
-{ pkgs, inputs, ... }:
+{ pkgs, pkgs-unstable, ... }:
 
-let
-  unstable = import inputs.nixpkgs-unstable {
-    system = pkgs.stdenv.hostPlatform.system;
-    config.allowUnfree = true;
-  };
-in
 {
   home.packages = [
-    unstable.mpv
+    pkgs-unstable.mpv
     pkgs.spotify
-    unstable.go-musicfox
+    pkgs-unstable.go-musicfox
     pkgs.netease-cloud-music-gtk
   ];
 

@@ -1,11 +1,5 @@
-{ pkgs, inputs, ... }:
+{ pkgs, pkgs-unstable, ... }:
 
-let
-  pkgs-unstable = import inputs.nixpkgs-unstable {
-    system = pkgs.stdenv.hostPlatform.system;
-    config.allowUnfree = true;
-  };
-in
 {
   hardware.graphics = {
     enable32Bit = true;
