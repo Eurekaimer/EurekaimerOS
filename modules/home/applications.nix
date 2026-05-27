@@ -18,7 +18,7 @@
     sioyek = {
       name = "Sioyek";
       comment = "PDF viewer for reading research papers and technical books";
-      exec = "sioyek %U";
+      exec = "sioyek --new-window %U";
       terminal = false;
       icon = "sioyek-icon-linux";
       categories = [ "Development" "Viewer" ];
