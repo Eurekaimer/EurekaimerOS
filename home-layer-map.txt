@@ -18,9 +18,9 @@
 # 2) modules/home/core.nix
 #    含义：核心使用层，管理 shell、终端、基础 UI、文件管理等高频基础组件。
 # 3) modules/home/development.nix
-#    含义：开发工具链层，集中 IDE、语言运行时、包管理器、科研写作环境。
+#    含义：开发工具链层，按编辑器、通用 CLI、语言运行时、科研写作环境拆分管理。
 # 4) modules/home/applications.nix
-#    含义：应用层，集中日常软件，并统一管理 XDG 默认打开方式（如 PDF/图片）。
+#    含义：应用层，集中日常软件；XDG 默认打开方式独立放在 mime-defaults.nix。
 
 # /etc/nixos/home/eurekaimer/home.nix
 # ├── ../../modules/home/desktop.nix
@@ -37,11 +37,22 @@
 # │   └── core/yazi.nix                # yazi 文件管理器
 # ├── ../../modules/home/development.nix
 # │   ├── development/neovim.nix       # Neovim 与插件配置
-# │   └── development/toolchain.nix    # 编程与科研工具链集合
-# │                                    # unstable: VS Code
-# │                                    # TeX Live: 精简中/英/日 + XeLaTeX + latexmk
+# │   └── development/toolchain.nix    # 开发工具链总入口，按功能继续拆分
+# │       ├── toolchain/editors.nix    # GUI 开发工具（VS Code/GitHub Desktop）
+# │       │                            # unstable: VS Code
+# │       ├── toolchain/cli.nix        # 通用代码搜索/文件搜索工具（ripgrep/fd）
+# │       ├── toolchain/shell.nix      # shell 语言服务器
+# │       ├── toolchain/nix.nix        # Nix LSP 与格式化器
+# │       ├── toolchain/lua.nix        # Lua LSP 与格式化器
+# │       ├── toolchain/markdown.nix   # Markdown LSP
+# │       ├── toolchain/python.nix     # uv/Jupyter/Pyright；Python 版本交给项目 .python-version
+# │       ├── toolchain/javascript.nix # Node.js/pnpm
+# │       ├── toolchain/go.nix         # Go/gopls/delve/gotools 与 GOPATH
+# │       ├── toolchain/c-cpp.nix      # C/C++ 基础编译器
+# │       ├── toolchain/latex.nix      # TeX Live 精简中/英/日 + XeLaTeX + latexmk + texlab
+# │       └── toolchain/r.nix          # R/RStudio/R packages 与 Jupyter R kernel
 # └── ../../modules/home/applications.nix
-#     # 日常应用总入口 + xdg.mimeApps 默认关联（当前 PDF -> sioyek，图片 -> imv）
+#     # 日常应用总入口；默认打开方式拆到 applications/mime-defaults.nix
 #     ├── applications/knowledge.nix       # 知识管理（Obsidian/Zotero）
 #     ├── applications/documents.nix       # 文档处理与阅读（PDF/EPUB/翻译）
 #     ├── applications/media.nix           # 媒体播放与音乐
@@ -51,4 +62,5 @@
 #     │                                    # unstable: picgo
 #     ├── applications/communication.nix   # 社交通讯（飞书/QQ/腾讯会议/微信）
 #     │                                    # unstable: feishu, qq, wemeet, wechat package input
-#     └── applications/wechat-official.nix # 微信官方包封装，被 communication.nix 调用
+#     ├── applications/wechat-official.nix # 微信官方包封装，被 communication.nix 调用
+#     └── applications/mime-defaults.nix   # XDG 默认关联（PDF -> sioyek，图片 -> imv）

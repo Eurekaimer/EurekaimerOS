@@ -61,7 +61,12 @@ flake.nix
             ├── ../../modules/home/desktop.nix
             ├── ../../modules/home/core.nix
             ├── ../../modules/home/development.nix
+            │   ├── development/neovim.nix
+            │   └── development/toolchain.nix
+            │       └── development/toolchain/*.nix
             └── ../../modules/home/applications.nix
+                ├── applications/*.nix
+                └── applications/mime-defaults.nix
 ```
 
 Key files:
@@ -70,6 +75,9 @@ Key files:
 - `hosts/nixos/configuration.nix`
 - `home/eurekaimer/home.nix`
 - `modules/home/development/toolchain.nix`
+- `modules/home/development/toolchain/*.nix`
+- `modules/home/applications/mime-defaults.nix`
+- `modules/system/packages/*.nix`
 - `home-layer-map.txt`
 - `system-layer-map.txt`
 
@@ -96,6 +104,14 @@ jupyter kernelspec list
 ```
 
 The list should include `r-nix`.
+
+## Python And uv
+
+Python project environments are managed by `uv`. The global Home Manager
+configuration installs `uv`, `jupyter`, and `pyright`, but does not pin
+`UV_PYTHON` globally. This lets project-local `.python-version` files drive
+interpreter selection and allows uv-managed Python downloads when the requested
+version is not already installed.
 
 ## Troubleshooting Notes
 

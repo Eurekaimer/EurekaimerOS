@@ -1,22 +1,10 @@
-{ pkgs, ... }:
+{ ... }:
 
 {
-  programs.firefox.enable = true;
-
-  environment.systemPackages = with pkgs; [
-    vim
-    neovim
-    wget
-    git
-    gh
-    curl
-    mihomo
-    python3
-    ncdu
-    btop
-    xclip
-    activitywatch
-    unrar
-    peazip
+  imports = [
+    ./packages/base-cli.nix
+    ./packages/network.nix
+    ./packages/monitoring.nix
+    ./packages/archive.nix
   ];
 }

@@ -68,7 +68,12 @@ flake.nix
             ├── ../../modules/home/desktop.nix
             ├── ../../modules/home/core.nix
             ├── ../../modules/home/development.nix
+            │   ├── development/neovim.nix
+            │   └── development/toolchain.nix
+            │       └── development/toolchain/*.nix
             └── ../../modules/home/applications.nix
+                ├── applications/*.nix
+                └── applications/mime-defaults.nix
 ```
 
 主要入口：
@@ -77,6 +82,9 @@ flake.nix
 - `hosts/nixos/configuration.nix`
 - `home/eurekaimer/home.nix`
 - `modules/home/development/toolchain.nix`
+- `modules/home/development/toolchain/*.nix`
+- `modules/home/applications/mime-defaults.nix`
+- `modules/system/packages/*.nix`
 - `home-layer-map.txt`
 - `system-layer-map.txt`
 
@@ -102,6 +110,13 @@ jupyter kernelspec list
 ```
 
 列表里应该包含 `r-nix`。
+
+## Python 和 uv
+
+Python 项目环境由 `uv` 管理。Home Manager 全局只安装 `uv`、`jupyter`
+和 `pyright`，不再全局固定 `UV_PYTHON`。这样每个项目可以通过
+`.python-version` 选择解释器；如果本地没有对应版本，uv 可以按默认行为自动下载
+uv-managed Python。
 
 ## 排障记录
 

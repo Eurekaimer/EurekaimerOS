@@ -1,19 +1,6 @@
 { pkgs, ... }:
 
 {
-  home.packages = with pkgs; [
-    bash-language-server
-    fd
-    lua-language-server
-    marksman
-    nil
-    nixfmt-rfc-style
-    pyright
-    ripgrep
-    stylua
-    texlab
-  ];
-
   programs.neovim = {
     enable = true;
     defaultEditor = true;

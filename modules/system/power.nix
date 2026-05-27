@@ -19,6 +19,10 @@
       CPU_BOOST_ON_BAT = 0;
       CPU_HWP_DYN_BOOST_ON_AC = 1;
       CPU_HWP_DYN_BOOST_ON_BAT = 0;
+      CPU_MIN_PERF_ON_AC = 10;
+      CPU_MAX_PERF_ON_AC = 100;
+      CPU_MIN_PERF_ON_BAT = 10;
+      CPU_MAX_PERF_ON_BAT = 75;
 
       PLATFORM_PROFILE_ON_AC = "balanced";
       PLATFORM_PROFILE_ON_BAT = "low-power";
@@ -37,6 +41,13 @@
       SOUND_POWER_SAVE_ON_BAT = 1;
       USB_AUTOSUSPEND = 1;
       NMI_WATCHDOG = 0;
+
+      # Lenovo XiaoXin/IdeaPad exposes a fixed conservation mode instead of
+      # arbitrary charge thresholds. Keep it off so charging can reach 100%;
+      # switch STOP_CHARGE_THRESH_BAT0 to 1 if you want long-life 55-60% mode.
+      START_CHARGE_THRESH_BAT0 = 0;
+      STOP_CHARGE_THRESH_BAT0 = 0;
+      RESTORE_THRESHOLDS_ON_BAT = 1;
     };
   };
 
