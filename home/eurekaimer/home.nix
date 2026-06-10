@@ -11,6 +11,7 @@
   home.username = "eurekaimer";
   home.homeDirectory = "/home/eurekaimer";
   home.stateVersion = "25.11";
+  home.sessionPath = [ "$HOME/.local/bin" ];
 
   programs.home-manager.enable = true;
 }

@@ -1,7 +1,7 @@
 {
   "settingsVersion": 59,
   "bar": {
-    "barType": "framed",
+    "barType": "simple",
     "position": "top",
     "monitors": [],
     "density": "comfortable",
@@ -589,7 +589,7 @@
   },
   "colorSchemes": {
     "useWallpaperColors": false,
-    "predefinedScheme": "Rose Pine",
+    "predefinedScheme": "Tokyo Night",
     "darkMode": false,
     "schedulingMode": "manual",
     "manualSunrise": "08:00",

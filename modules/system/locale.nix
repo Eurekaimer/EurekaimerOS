@@ -27,10 +27,14 @@
   };
 
   fonts = {
+    fontDir.enable = true;
+
     packages = with pkgs; [
       nerd-fonts.jetbrains-mono
+      wqy_microhei
       wqy_zenhei
       noto-fonts-cjk-sans
+      noto-fonts-cjk-serif
       sarasa-gothic
       noto-fonts-color-emoji
     ];
@@ -38,10 +42,118 @@
     fontconfig = {
       defaultFonts = {
         emoji = [ "Noto Color Emoji" ];
-        monospace = [ "JetBrains Mono" "Sarasa Mono SC" ];
-        sansSerif = [ "Noto Sans CJK SC" ];
-        serif = [ "Noto Serif CJK SC" ];
+        monospace = [
+          "JetBrains Mono"
+          "Sarasa Mono SC"
+          "Noto Sans Mono CJK SC"
+        ];
+        sansSerif = [
+          "Noto Sans CJK SC"
+          "WenQuanYi Micro Hei"
+        ];
+        serif = [
+          "Noto Serif CJK SC"
+          "Noto Sans CJK SC"
+        ];
       };
+
+      localConf = ''
+        <?xml version="1.0"?>
+        <!DOCTYPE fontconfig SYSTEM "urn:fontconfig:fonts.dtd">
+        <fontconfig>
+          <alias binding="same">
+            <family>SimSun</family>
+            <prefer>
+              <family>Noto Serif CJK SC</family>
+              <family>Noto Sans CJK SC</family>
+            </prefer>
+          </alias>
+          <alias binding="same">
+            <family>NSimSun</family>
+            <prefer>
+              <family>Noto Serif CJK SC</family>
+              <family>Noto Sans CJK SC</family>
+            </prefer>
+          </alias>
+          <alias binding="same">
+            <family>宋体</family>
+            <prefer>
+              <family>Noto Serif CJK SC</family>
+              <family>Noto Sans CJK SC</family>
+            </prefer>
+          </alias>
+          <alias binding="same">
+            <family>Microsoft YaHei</family>
+            <prefer>
+              <family>WenQuanYi Micro Hei</family>
+              <family>Noto Sans CJK SC</family>
+            </prefer>
+          </alias>
+          <alias binding="same">
+            <family>微软雅黑</family>
+            <prefer>
+              <family>WenQuanYi Micro Hei</family>
+              <family>Noto Sans CJK SC</family>
+            </prefer>
+          </alias>
+          <alias binding="same">
+            <family>DengXian</family>
+            <prefer>
+              <family>WenQuanYi Micro Hei</family>
+              <family>Noto Sans CJK SC</family>
+            </prefer>
+          </alias>
+          <alias binding="same">
+            <family>等线</family>
+            <prefer>
+              <family>WenQuanYi Micro Hei</family>
+              <family>Noto Sans CJK SC</family>
+            </prefer>
+          </alias>
+          <alias binding="same">
+            <family>SimHei</family>
+            <prefer>
+              <family>WenQuanYi Micro Hei</family>
+              <family>Noto Sans CJK SC</family>
+            </prefer>
+          </alias>
+          <alias binding="same">
+            <family>黑体</family>
+            <prefer>
+              <family>WenQuanYi Micro Hei</family>
+              <family>Noto Sans CJK SC</family>
+            </prefer>
+          </alias>
+          <alias binding="same">
+            <family>KaiTi</family>
+            <prefer>
+              <family>Noto Serif CJK SC</family>
+              <family>Noto Sans CJK SC</family>
+            </prefer>
+          </alias>
+          <alias binding="same">
+            <family>楷体</family>
+            <prefer>
+              <family>Noto Serif CJK SC</family>
+              <family>Noto Sans CJK SC</family>
+            </prefer>
+          </alias>
+          <alias binding="same">
+            <family>FangSong</family>
+            <prefer>
+              <family>Noto Serif CJK SC</family>
+              <family>Noto Sans CJK SC</family>
+            </prefer>
+          </alias>
+          <alias binding="same">
+            <family>仿宋</family>
+            <prefer>
+              <family>Noto Serif CJK SC</family>
+              <family>Noto Sans CJK SC</family>
+            </prefer>
+          </alias>
+        </fontconfig>
+      '';
     };
   };
 

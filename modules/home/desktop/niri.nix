@@ -7,6 +7,7 @@
     brightnessctl
     grim
     slurp
+    wf-recorder
     wl-clipboard
     hyprlock
     imv

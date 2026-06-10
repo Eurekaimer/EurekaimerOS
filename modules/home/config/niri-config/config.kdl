@@ -71,6 +71,10 @@ layout {
 
 screenshot-path "~/Pictures/Screenshots/Screenshot_%Y-%m-%d_%H-%M-%S.png"
 
+hotkey-overlay {
+    hide-not-bound
+}
+
 // ==========================================
 // 4. 动画效果 (Animations)
 // ==========================================
@@ -117,62 +121,69 @@ window-rule {
 // ==========================================
 binds {
     // --- 核心应用启动 ---
-    Mod+Shift+Slash { show-hotkey-overlay; }
-    Mod+Return { spawn "kitty"; }
-    Mod+R { spawn "fcitx5-remote" "-t"; }
+    Mod+Shift+Slash hotkey-overlay-title="帮助：显示快捷键" { show-hotkey-overlay; }
+    Mod+Return hotkey-overlay-title="启动：终端 Kitty" { spawn "kitty"; }
+    Mod+R hotkey-overlay-title="输入法：切换 Fcitx5" { spawn "fcitx5-remote" "-t"; }
 
     // Noctalia 官方推荐 IPC 方式
-    Mod+Space { spawn "noctalia-shell" "ipc" "call" "launcher" "toggle"; }
-    Mod+S { spawn "noctalia-shell" "ipc" "call" "controlCenter" "toggle"; }
-    Mod+Comma { spawn "noctalia-shell" "ipc" "call" "settings" "toggle"; }
-
-    Mod+B { spawn "firefox"; }
+    Mod+Space hotkey-overlay-title="启动：应用启动器" { spawn "noctalia-shell" "ipc" "call" "launcher" "toggle"; }
+    Mod+S hotkey-overlay-title="系统：控制中心" { spawn "noctalia-shell" "ipc" "call" "controlCenter" "toggle"; }
+    Mod+Comma hotkey-overlay-title="系统：打开设置" { spawn "noctalia-shell" "ipc" "call" "settings" "toggle"; }
 
     // --- 硬件控制 (切到 Noctalia IPC，统一 OSD/状态) ---
-    XF86AudioRaiseVolume allow-when-locked=true { spawn "noctalia-shell" "ipc" "call" "volume" "increase"; }
-    XF86AudioLowerVolume allow-when-locked=true { spawn "noctalia-shell" "ipc" "call" "volume" "decrease"; }
-    XF86AudioMute        allow-when-locked=true { spawn "noctalia-shell" "ipc" "call" "volume" "muteOutput"; }
+    XF86AudioRaiseVolume allow-when-locked=true hotkey-overlay-title=null { spawn "noctalia-shell" "ipc" "call" "volume" "increase"; }
+    XF86AudioLowerVolume allow-when-locked=true hotkey-overlay-title=null { spawn "noctalia-shell" "ipc" "call" "volume" "decrease"; }
+    XF86AudioMute        allow-when-locked=true hotkey-overlay-title=null { spawn "noctalia-shell" "ipc" "call" "volume" "muteOutput"; }
 
-    XF86MonBrightnessUp   allow-when-locked=true { spawn "noctalia-shell" "ipc" "call" "brightness" "increase"; }
-    XF86MonBrightnessDown allow-when-locked=true { spawn "noctalia-shell" "ipc" "call" "brightness" "decrease"; }
+    XF86MonBrightnessUp   allow-when-locked=true hotkey-overlay-title=null { spawn "noctalia-shell" "ipc" "call" "brightness" "increase"; }
+    XF86MonBrightnessDown allow-when-locked=true hotkey-overlay-title=null { spawn "noctalia-shell" "ipc" "call" "brightness" "decrease"; }
 
     // --- 窗口操作 ---
-    Mod+Q { close-window; }
-    Mod+V { toggle-window-floating; }
-    Mod+F { maximize-column; }
-    Mod+Shift+F { fullscreen-window; }
+    Mod+Q hotkey-overlay-title="窗口：关闭当前窗口" { close-window; }
+    Mod+V hotkey-overlay-title="窗口：切换浮动/平铺" { toggle-window-floating; }
+    Mod+F hotkey-overlay-title="窗口：最大化当前列" { maximize-column; }
+    Mod+Shift+F hotkey-overlay-title="窗口：全屏当前窗口" { fullscreen-window; }
+
+    // --- 分屏布局 ---
+    Mod+BracketLeft hotkey-overlay-title="布局：与左侧窗口合并/分离" { consume-or-expel-window-left; }
+    Mod+BracketRight hotkey-overlay-title="布局：与右侧窗口合并/分离" { consume-or-expel-window-right; }
+    Mod+Equal hotkey-overlay-title="布局：当前列宽设为 50%" { set-column-width "50%"; }
+    Mod+Shift+Equal hotkey-overlay-title="布局：当前窗口高度设为 50%" { set-window-height "50%"; }
+    Mod+Backspace hotkey-overlay-title="布局：重置窗口高度" { reset-window-height; }
+    Mod+Alt+H hotkey-overlay-title="布局：当前列窄一点" { set-column-width "-5%"; }
+    Mod+Alt+L hotkey-overlay-title="布局：当前列宽一点" { set-column-width "+5%"; }
+    Mod+Alt+J hotkey-overlay-title="布局：当前窗口高一点" { set-window-height "+5%"; }
+    Mod+Alt+K hotkey-overlay-title="布局：当前窗口矮一点" { set-window-height "-5%"; }
 
     // --- 焦点移动 ---
-    Mod+Left  { focus-column-left; }
-    Mod+Right { focus-column-right; }
-    Mod+H     { focus-column-left; }
-    Mod+L     { focus-column-right; }
-    Mod+J     { focus-window-down; }
-    Mod+K     { focus-window-up; }
+    Mod+H     hotkey-overlay-title="焦点：切到左侧列" { focus-column-left; }
+    Mod+L     hotkey-overlay-title="焦点：切到右侧列" { focus-column-right; }
+    Mod+J     hotkey-overlay-title="焦点：切到下方窗口" { focus-window-down; }
+    Mod+K     hotkey-overlay-title="焦点：切到上方窗口" { focus-window-up; }
 
     // --- 移动窗口位置 ---
-    Mod+Ctrl+Left  { move-column-left; }
-    Mod+Ctrl+Right { move-column-right; }
-    Mod+Ctrl+H     { move-column-left; }
-    Mod+Ctrl+L     { move-column-right; }
-    Mod+Ctrl+J     { move-window-down; }
-    Mod+Ctrl+K     { move-window-up; }
+    Mod+Ctrl+H     hotkey-overlay-title="移动：当前列左移" { move-column-left; }
+    Mod+Ctrl+L     hotkey-overlay-title="移动：当前列右移" { move-column-right; }
+    Mod+Ctrl+J     hotkey-overlay-title="移动：窗口下移" { move-window-down; }
+    Mod+Ctrl+K     hotkey-overlay-title="移动：窗口上移" { move-window-up; }
 
     // --- 工作区切换 ---
-    Mod+1 { focus-workspace 1; }
-    Mod+2 { focus-workspace 2; }
-    Mod+3 { focus-workspace 3; }
-    Mod+4 { focus-workspace 4; }
-    Mod+5 { focus-workspace 5; }
+    Mod+1 hotkey-overlay-title="工作区：切到 1" { focus-workspace 1; }
+    Mod+2 hotkey-overlay-title="工作区：切到 2" { focus-workspace 2; }
+    Mod+3 hotkey-overlay-title="工作区：切到 3" { focus-workspace 3; }
+    Mod+4 hotkey-overlay-title="工作区：切到 4" { focus-workspace 4; }
+    Mod+5 hotkey-overlay-title="工作区：切到 5" { focus-workspace 5; }
 
     // --- 移动窗口到指定工作区 ---
-    Mod+Shift+1 { move-column-to-workspace 1; }
-    Mod+Shift+2 { move-column-to-workspace 2; }
-    Mod+Shift+3 { move-column-to-workspace 3; }
+    Mod+Shift+1 hotkey-overlay-title="工作区：当前列移到 1" { move-column-to-workspace 1; }
+    Mod+Shift+2 hotkey-overlay-title="工作区：当前列移到 2" { move-column-to-workspace 2; }
+    Mod+Shift+3 hotkey-overlay-title="工作区：当前列移到 3" { move-column-to-workspace 3; }
 
     // --- 退出与锁屏 ---
-    Mod+Shift+E { quit; }
-    Mod+Shift+L { spawn "hyprlock"; }
+    Mod+Shift+E hotkey-overlay-title="会话：退出 niri" { quit; }
+    Mod+Shift+L hotkey-overlay-title="会话：锁屏" { spawn "hyprlock"; }
 
-    Print { screenshot; }
+    Print hotkey-overlay-title="截图：打开截图工具" { screenshot; }
+    Mod+Print hotkey-overlay-title="录屏：选择区域开始录制" { spawn "sh" "-c" "mkdir -p \"$HOME/Videos/Screencasts\" && wf-recorder -g \"$(slurp)\" -f \"$HOME/Videos/Screencasts/Recording_$(date +%F_%H-%M-%S).mp4\""; }
+    Mod+Shift+Print hotkey-overlay-title="录屏：停止录制" { spawn "pkill" "-INT" "wf-recorder"; }
 }
