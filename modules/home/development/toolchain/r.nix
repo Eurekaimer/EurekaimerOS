@@ -8,6 +8,7 @@ let
     tinytex
     IRkernel
     languageserver
+    renv
 
     # Tidyverse and plotting
     tidyverse

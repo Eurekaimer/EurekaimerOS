@@ -32,14 +32,17 @@
 # ├── ../../modules/home/core.nix
 # │   ├── core/shell.nix               # zsh/starship/zoxide 与命令行体验
 # │   ├── core/kitty.nix               # kitty 终端配置
+# │   ├── core/wezterm.nix             # WezTerm 终端与配置
 # │   ├── core/fastfetch.nix           # fastfetch 信息展示
 # │   ├── core/ui.nix                  # 图标主题/字体图标/GTK 光标主题
 # │   └── core/yazi.nix                # yazi 文件管理器
 # ├── ../../modules/home/development.nix
+# │   ├── development/agents.nix       # AI coding agents（Codex/Claude Code）与 ACP 桥
+# │   │                                # unstable: codex, codex-acp, claude-code, claude-code-acp
 # │   ├── development/neovim.nix       # Neovim 与插件配置
 # │   └── development/toolchain.nix    # 开发工具链总入口，按功能继续拆分
-# │       ├── toolchain/editors.nix    # GUI 开发工具（VS Code/GitHub Desktop）
-# │       │                            # unstable: VS Code
+# │       ├── toolchain/editors.nix    # GUI 开发工具（VS Code/Zed/GitHub Desktop）与 Helix
+# │       │                            # unstable: VS Code, Zed, Helix
 # │       ├── toolchain/cli.nix        # 通用代码搜索/文件搜索工具（ripgrep/fd）
 # │       ├── toolchain/shell.nix      # shell 语言服务器
 # │       ├── toolchain/nix.nix        # Nix LSP 与格式化器

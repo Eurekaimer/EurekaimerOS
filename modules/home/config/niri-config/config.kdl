@@ -184,6 +184,7 @@ binds {
     Mod+Shift+L hotkey-overlay-title="会话：锁屏" { spawn "hyprlock"; }
 
     Print hotkey-overlay-title="截图：打开截图工具" { screenshot; }
-    Mod+Print hotkey-overlay-title="录屏：选择区域开始录制" { spawn "sh" "-c" "mkdir -p \"$HOME/Videos/Screencasts\" && wf-recorder -g \"$(slurp)\" -f \"$HOME/Videos/Screencasts/Recording_$(date +%F_%H-%M-%S).mp4\""; }
-    Mod+Shift+Print hotkey-overlay-title="录屏：停止录制" { spawn "pkill" "-INT" "wf-recorder"; }
+    Mod+Print hotkey-overlay-title="录屏：当前屏幕开始录制" { spawn "sh" "-c" "mkdir -p \"$HOME/Videos/Screencasts\"; file=\"$HOME/Videos/Screencasts/Recording_$(date +%F_%H-%M-%S).mp4\"; notify-send \"录屏开始\" \"正在录制当前屏幕；按 Super+Shift+Print 停止\"; wf-recorder -f \"$file\"; notify-send \"录屏已保存\" \"$file\""; }
+    Mod+Ctrl+Print hotkey-overlay-title="录屏：选择区域开始录制" { spawn "sh" "-c" "mkdir -p \"$HOME/Videos/Screencasts\"; geometry=\"$(slurp -d -b '#00000099' -c '#8FBCBBff' -s '#8FBCBB33')\"; [ -n \"$geometry\" ] || exit 0; file=\"$HOME/Videos/Screencasts/Recording_$(date +%F_%H-%M-%S).mp4\"; notify-send \"录屏开始\" \"区域：$geometry；按 Super+Shift+Print 停止\"; wf-recorder -g \"$geometry\" -f \"$file\"; notify-send \"录屏已保存\" \"$file\""; }
+    Mod+Shift+Print hotkey-overlay-title="录屏：停止录制" { spawn "sh" "-c" "if pkill -INT -x wf-recorder; then notify-send \"录屏停止中\" \"视频正在写入\"; else notify-send \"录屏\" \"没有正在运行的 wf-recorder\"; fi"; }
 }
