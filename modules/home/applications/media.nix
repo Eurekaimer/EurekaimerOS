@@ -2,6 +2,13 @@
 
 {
   home.packages = [
+    (pkgs-unstable.wrapOBS {
+      plugins = with pkgs-unstable.obs-studio-plugins; [
+        obs-multi-rtmp
+        obs-pipewire-audio-capture
+        obs-vaapi
+      ];
+    })
     pkgs-unstable.mpv
     pkgs.ffmpeg
     pkgs.mediainfo

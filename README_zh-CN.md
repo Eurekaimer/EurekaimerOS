@@ -99,6 +99,34 @@ unstable 软件包的模块，只接收 `pkgs-unstable` 参数并在本模块标
 sudo nixos-rebuild switch --flake .#nixos
 ```
 
+## Niri 截图和 OBS
+
+截图由 niri 负责，因此窗口截图使用真实窗口对象，会保留圆角、阴影，以及窗口外的透明区域。Noctalia 继续负责壳层、面板、通知和启动器入口。
+
+| 快捷键 | 行为 |
+| --- | --- |
+| `Print` | 截取当前聚焦显示器，保存到 `~/Pictures/Screenshots/`，并复制到剪贴板。 |
+| `Alt+Print` | 截取当前聚焦窗口，窗口外区域保持透明。 |
+| `Mod+Alt+Print` | 鼠标点击选择窗口，然后截取该窗口。 |
+| `Shift+Print` | 打开 niri 原生区域截图界面。 |
+
+这些绑定都设置了 `hotkey-overlay-title`，因此会显示在 niri 的
+`Mod+Shift+Slash` 帮助菜单里。
+
+`niri-window-shot` 由 `modules/home/desktop/niri.nix` 声明式生成。进入 niri 后可以临时测试：
+
+```bash
+niri-window-shot
+```
+
+确认截图已经写入剪贴板：
+
+```bash
+wl-paste --type image/png >/tmp/niri-shot.png
+```
+
+部分图片查看器会把透明区域显示成黑色、白色或棋盘格；PNG 本身仍然保留透明通道。OBS 通过 `nixpkgs-unstable` 安装，并带 PipeWire 音频捕获、VAAPI 和 multi-RTMP 插件。
+
 ## R 和 Notebook
 
 R 通过 Nix wrapper 提供。开发工具链包含 R Markdown、常用统计包、绘图包、Jupyter，以及声明式生成的 `R (Nix)` kernel。

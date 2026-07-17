@@ -11,6 +11,8 @@ let
       collection-langchinese
       collection-langenglish
       collection-langjapanese
+      algorithms
+      algorithmicx
       siunitx
       latexindent
       latexmk

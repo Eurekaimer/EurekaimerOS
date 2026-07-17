@@ -93,6 +93,39 @@ again inside the module.
 sudo nixos-rebuild switch --flake .#nixos
 ```
 
+## Niri Screenshots And OBS
+
+Screenshots are handled by niri so window captures use real window objects,
+including rounded corners, shadows, and transparent space outside the window.
+Noctalia keeps its shell, panel, notification, and launcher roles.
+
+| Shortcut | Action |
+| --- | --- |
+| `Print` | Screenshot the focused monitor, save to `~/Pictures/Screenshots/`, and copy to the clipboard. |
+| `Alt+Print` | Screenshot the focused window with transparent outside area. |
+| `Mod+Alt+Print` | Pick a window with the mouse, then screenshot that window. |
+| `Shift+Print` | Open niri's region screenshot UI. |
+
+These bindings have `hotkey-overlay-title` entries, so they show in niri's
+`Mod+Shift+Slash` help overlay.
+
+The `niri-window-shot` helper is generated declaratively from
+`modules/home/desktop/niri.nix`. To test it temporarily inside niri:
+
+```bash
+niri-window-shot
+```
+
+To confirm the last screenshot reached the clipboard:
+
+```bash
+wl-paste --type image/png >/tmp/niri-shot.png
+```
+
+Some image viewers render transparent pixels as black, white, or a checkerboard;
+the PNG transparency is still preserved. OBS is installed from
+`nixpkgs-unstable` with PipeWire audio capture, VAAPI, and multi-RTMP plugins.
+
 ## R And Notebook Support
 
 R is provided through Nix wrappers. The development toolchain includes R Markdown, common statistics packages, plotting packages, Jupyter, and a declarative `R (Nix)` kernel.
