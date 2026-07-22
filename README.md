@@ -43,11 +43,12 @@ The configured system currently prefers domestic mirrors in `modules/system/base
 
 ```text
 flake.nix
-├── inputs
 │   ├── nixpkgs              stable system package set
 │   ├── nixpkgs-unstable     source for selected fast-moving packages
 │   ├── home-manager
-│   └── noctalia             follows nixpkgs-unstable
+│   ├── noctalia             follows nixpkgs-unstable
+│   ├── lexigraph            follows nixpkgs-unstable
+│   └── llm-agents
 ├── pkgs-unstable            imported once here and passed to modules
 └── nixosConfigurations.nixos
     ├── hosts/nixos/configuration.nix

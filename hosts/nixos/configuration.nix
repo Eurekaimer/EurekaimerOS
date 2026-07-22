@@ -1,4 +1,4 @@
-{ ... }:
+{ inputs, ... }:
 
 {
   imports = [
@@ -10,5 +10,6 @@
     ./proxy-local.nix
     ../../modules/system/system.nix
     ../../modules/system/graphics-intel.nix
+    inputs.lexigraph.nixosModules.default
   ];
 }

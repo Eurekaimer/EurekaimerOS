@@ -54,7 +54,9 @@ flake.nix
 │   ├── nixpkgs              稳定系统包集
 │   ├── nixpkgs-unstable     供少量快速更新软件使用
 │   ├── home-manager
-│   └── noctalia             跟随 nixpkgs-unstable
+│   ├── noctalia             跟随 nixpkgs-unstable
+│   ├── lexigraph            跟随 nixpkgs-unstable
+│   └── llm-agents
 ├── pkgs-unstable            只在这里 import 一次，并传给各模块
 └── nixosConfigurations.nixos
     ├── hosts/nixos/configuration.nix

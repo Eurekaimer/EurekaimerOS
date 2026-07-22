@@ -1,0 +1,126 @@
+/* Palette sampled from project_mifeng.png: twilight navy, periwinkle and blush. */
+frame.background {
+  background-color: rgba(24, 20, 39, 0.90);
+  color: #f3f5ff;
+  border: 1px solid rgba(183, 198, 235, 0.48);
+  border-radius: 24px;
+  box-shadow: 0 18px 48px rgba(17, 14, 31, 0.48);
+}
+
+frame.background > grid {
+  margin: 14px;
+}
+
+frame.background > label {
+  color: #f3f5ff;
+  font-size: 18px;
+  font-weight: 600;
+  padding: 10px 20px;
+  text-shadow: 0 2px 8px rgba(17, 14, 31, 0.75);
+}
+
+frame.background grid label {
+  color: #eef2ff;
+}
+
+entry,
+combobox > box.linked > button.combo {
+  min-height: 46px;
+  color: #f7f8ff;
+  background-color: rgba(43, 42, 65, 0.92);
+  background-image: none;
+  border: 1px solid rgba(167, 185, 226, 0.42);
+  border-radius: 12px;
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.05);
+}
+
+entry:hover,
+combobox > box.linked > button.combo:hover {
+  background-color: rgba(55, 55, 83, 0.96);
+  border-color: rgba(195, 207, 238, 0.72);
+}
+
+entry:focus,
+combobox > box.linked > button.combo:focus {
+  border-color: #b7c6eb;
+  box-shadow: 0 0 0 2px rgba(143, 164, 213, 0.28);
+}
+
+combobox arrow {
+  color: #cbd6f2;
+}
+
+popover contents {
+  color: #f5f6ff;
+  background-color: rgba(29, 26, 47, 0.98);
+  border: 1px solid rgba(183, 198, 235, 0.46);
+  border-radius: 14px;
+  box-shadow: 0 12px 30px rgba(15, 13, 28, 0.55);
+  padding: 6px;
+}
+
+popover modelbutton {
+  min-height: 38px;
+  border-radius: 9px;
+  padding: 4px 12px;
+}
+
+popover modelbutton:hover,
+popover modelbutton:selected {
+  color: #171522;
+  background-color: #aebfe6;
+  background-image: none;
+}
+
+button {
+  min-height: 42px;
+  color: #eef2ff;
+  background-color: rgba(47, 45, 70, 0.92);
+  background-image: none;
+  border: 1px solid rgba(167, 185, 226, 0.42);
+  border-radius: 12px;
+  box-shadow: none;
+  padding: 0 18px;
+}
+
+button:hover {
+  color: #ffffff;
+  background-color: rgba(68, 67, 98, 0.96);
+  border-color: rgba(202, 213, 241, 0.72);
+}
+
+button.suggested-action {
+  color: #171522;
+  background-color: #aebfe6;
+  background-image: none;
+  border-color: #cad5f0;
+  font-weight: 700;
+}
+
+button.suggested-action label {
+  color: #171522;
+}
+
+button.suggested-action:hover {
+  background-color: #c2cff0;
+}
+
+button.destructive-action {
+  color: #f3e7ed;
+  background-color: rgba(76, 52, 72, 0.88);
+  background-image: none;
+  border-color: rgba(222, 173, 190, 0.48);
+}
+
+button.destructive-action:hover {
+  color: #241822;
+  background-color: #ddaebc;
+  border-color: #efc8d2;
+}
+
+button:focus-visible {
+  outline-color: #d3dcf4;
+  outline-style: solid;
+  outline-width: 2px;
+  outline-offset: 2px;
+}

@@ -1,6 +1,6 @@
 # System 层次图（注释版）
 # 入口文件：hosts/nixos/configuration.nix
-# 作用：这是系统配置入口，建议只保留“硬件 + 主机本地 + 通用系统层 + 可选硬件增强”导入。
+# 作用：这是系统配置入口，建议只保留"硬件 + 主机本地 + 通用系统层 + 可选硬件增强"导入。
 #
 # 上游入口：
 # flake.nix
@@ -34,7 +34,7 @@
 # │   ├── base.nix                     # Nix 基础设置、GC、引导、网络基础、时区、系统版本
 # │   ├── users.nix                    # 用户与默认 shell
 # │   ├── locale.nix                   # 字体、语言、输入法（fcitx5）
-# │   ├── desktop.nix                  # 桌面会话服务（niri/xserver/sddm/plasma/音频/电源等）
+# │   ├── desktop.nix                  # 桌面会话服务（niri/greetd/ReGreet/plasma/音频/电源等）
 # │   ├── power.nix                    # 电源管理
 # │   ├── graphics.nix                 # 通用图形能力（硬件加速基础 + 调试工具）
 # │   ├── mounts.nix                   # 额外挂载点
@@ -51,4 +51,4 @@
 # - 跨机器复用时优先复用 modules/system/*
 # - 新机器只需替换 hosts/<new-host>/hardware-configuration.nix
 # - 主机差异统一放到 hosts/<new-host>/host-local.nix 和 proxy-local.nix
-# - 某厂商驱动优化（如 Intel）保持“可选模块”模式，避免绑死到所有机器
+# - 某厂商驱动优化（如 Intel）保持"可选模块"模式，避免绑死到所有机器

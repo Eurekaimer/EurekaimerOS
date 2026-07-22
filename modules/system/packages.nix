@@ -6,5 +6,6 @@
     ./packages/network.nix
     ./packages/monitoring.nix
     ./packages/archive.nix
+    ./packages/dos.nix
   ];
 }

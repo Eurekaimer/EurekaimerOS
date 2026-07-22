@@ -2,15 +2,20 @@
   lib,
   pkgs,
   pkgs-unstable,
+  inputs,
   ...
 }:
 
+let
+  ompPackage = inputs.llm-agents.packages.${pkgs.system}.omp;
+in
 {
   home.packages = with pkgs-unstable; [
     claude-code
     claude-code-acp
     codex
     codex-acp
+    ompPackage
   ];
 
   home.file.".codex/config.toml".source = ../config/agents/codex/config.toml;

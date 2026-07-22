@@ -37,8 +37,8 @@
 # │   ├── core/ui.nix                  # 图标主题/字体图标/GTK 光标主题
 # │   └── core/yazi.nix                # yazi 文件管理器
 # ├── ../../modules/home/development.nix
-# │   ├── development/agents.nix       # AI coding agents（Codex/Claude Code）与 ACP 桥
-# │   │                                # unstable: codex, codex-acp, claude-code, claude-code-acp
+# │   ├── development/agents.nix       # AI coding agents（Codex/Claude Code/omp）与 ACP 桥
+# │   │                                # unstable: codex, codex-acp, claude-code, claude-code-acp, omp
 # │   ├── development/neovim.nix       # Neovim 与插件配置
 # │   └── development/toolchain.nix    # 开发工具链总入口，按功能继续拆分
 # │       ├── toolchain/editors.nix    # GUI 开发工具（VS Code/Zed/GitHub Desktop）与 Helix
