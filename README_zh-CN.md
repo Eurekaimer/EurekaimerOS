@@ -4,7 +4,7 @@
 
 这是我的个人 NixOS 配置，核心是 **Niri**、**Noctalia**、**Home Manager** 和 **flakes**。
 
-![](https://cdn.jsdelivr.net/gh/Eurekaimer/MyIMGs@main/img/20260417160052566.png)
+![](img/system_show.png)
 
 ## 特点
 

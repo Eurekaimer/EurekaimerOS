@@ -4,7 +4,7 @@ Language: English | [中文说明](README_zh-CN.md)
 
 A personal NixOS configuration built around **Niri**, **Noctalia**, **Home Manager**, and **flakes**.
 
-![](https://cdn.jsdelivr.net/gh/Eurekaimer/MyIMGs@main/img/20260417160052566.png)
+![](img/system_show.png)
 
 ## Highlights
 
