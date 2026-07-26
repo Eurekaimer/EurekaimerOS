@@ -7,6 +7,5 @@
     sioyek
     calibre
     crow-translate
-    libreoffice
   ];
 }

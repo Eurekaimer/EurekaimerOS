@@ -12,6 +12,7 @@ A personal NixOS configuration built around **Niri**, **Noctalia**, **Home Manag
 - Noctalia shell components
 - Declarative system and user environment
 - Reusable module layout with host-specific files separated
+- QEMU/KVM virtualization with virt-manager for Windows virtual machines
 
 ## Recovery Notes
 
@@ -79,6 +80,7 @@ Key files:
 - `modules/home/development/toolchain/*.nix`
 - `modules/home/applications/mime-defaults.nix`
 - `modules/system/packages/*.nix`
+- `modules/system/virtualisation.nix`
 - `home-layer-map.txt`
 - `system-layer-map.txt`
 
@@ -87,6 +89,13 @@ Key files:
 module needs an unstable package, accept `pkgs-unstable` as a module argument and
 annotate the package usage locally; do not import `inputs.nixpkgs-unstable`
 again inside the module.
+
+## QEMU/KVM Virtualisation
+
+- `modules/system/virtualisation.nix` enables libvirt/QEMU/KVM, virt-manager, swtpm, SPICE USB redirection, `virt-viewer`, and `virtio-win` for Windows guests.
+- `modules/system/users.nix` adds `eurekaimer` to `libvirtd` and `kvm`; log out and back in after rebuilding so the new groups apply.
+- `systemd.services.virtchd.enable = false` avoids pulling cloud-hypervisor when the mirror is incomplete; QEMU/libvirt Windows VMs do not need virtchd.
+
 
 ## Rebuild
 

@@ -63,7 +63,7 @@
 #     ├── applications/web.nix             # 浏览器与网络访问（Chrome/Clash Verge/Throne）
 #     ├── applications/transfer.nix        # 下载/分发/图床上传
 #     │                                    # unstable: picgo
-#     ├── applications/communication.nix   # 社交通讯（飞书/QQ/腾讯会议/微信）
-#     │                                    # unstable: feishu, qq, wemeet, wechat package input
+#     ├── applications/communication.nix   # 社交通讯（飞书/QQ/微信/Zoom）
+#     │                                    # unstable: feishu, qq, wechat package input；stable: zoom-us
 #     ├── applications/wechat-official.nix # 微信官方包封装，被 communication.nix 调用
 #     └── applications/mime-defaults.nix   # XDG 默认关联（PDF -> sioyek，图片 -> imv）

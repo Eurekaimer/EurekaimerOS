@@ -40,7 +40,8 @@
 # │   ├── mounts.nix                   # 额外挂载点
 # │   ├── gaming.nix                   # 游戏相关（steam/gamemode/wine/lutris）
 # │   │                                # unstable: lutris, protonplus, umu-launcher
-# │   └── packages.nix                 # 系统级通用软件包总入口
+# │   ├── virtualisation.nix            # QEMU/KVM/libvirt/virt-manager，Windows 虚拟机支持
+# │   └── packages.nix                  # 系统级通用软件包总入口
 # │       ├── packages/base-cli.nix    # 基础命令行与恢复工具（vim/git/gh/python3/xclip）
 # │       ├── packages/network.nix     # 浏览器与网络工具（Firefox/wget/curl/mihomo）
 # │       ├── packages/monitoring.nix  # 资源/磁盘/活动监控（btop/ncdu/activitywatch）

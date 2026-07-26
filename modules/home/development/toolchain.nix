@@ -14,6 +14,5 @@
     ./toolchain/go.nix
     ./toolchain/c-cpp.nix
     ./toolchain/latex.nix
-    ./toolchain/r.nix
   ];
 }

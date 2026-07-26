@@ -1,4 +1,4 @@
-{ pkgs-unstable, ... }:
+{ pkgs, pkgs-unstable, ... }:
 
 let
   wechat = pkgs-unstable.callPackage ./wechat-official.nix { };
@@ -8,6 +8,6 @@ in
     pkgs-unstable.feishu
     pkgs-unstable.qq
     wechat
-    pkgs-unstable.wemeet
+    pkgs.zoom-us
   ];
 }

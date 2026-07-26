@@ -12,6 +12,7 @@
 - Noctalia 壳层组件
 - 声明式系统和用户环境
 - 可复用模块与主机专属配置分离
+- QEMU/KVM + virt-manager，便于创建 Windows 虚拟机
 
 ## 恢复要点
 
@@ -87,6 +88,7 @@ flake.nix
 - `modules/home/development/toolchain/*.nix`
 - `modules/home/applications/mime-defaults.nix`
 - `modules/system/packages/*.nix`
+- `modules/system/virtualisation.nix`
 - `home-layer-map.txt`
 - `system-layer-map.txt`
 
@@ -94,6 +96,13 @@ flake.nix
 `pkgs-unstable`，并同时传给 NixOS modules 与 Home Manager modules。需要使用
 unstable 软件包的模块，只接收 `pkgs-unstable` 参数并在本模块标注用途；不要在
 模块里再次 `import inputs.nixpkgs-unstable`。
+
+## QEMU/KVM 虚拟化
+
+- `modules/system/virtualisation.nix` 启用 libvirt/QEMU/KVM、virt-manager、swtpm、SPICE USB 重定向，并安装 `virt-viewer`、`virtio-win`，便于创建 Windows 虚拟机。
+- `modules/system/users.nix` 把 `eurekaimer` 加入 `libvirtd` 和 `kvm`；重建后需要注销并重新登录一次，让新用户组生效。
+- `systemd.services.virtchd.enable = false` 避免镜像缺 cloud-hypervisor 时回落到 crates.io；QEMU/libvirt 的 Windows 虚拟机不需要 virtchd。
+
 
 ## 重建
 

@@ -10,6 +10,7 @@
     ./graphics.nix
     ./mounts.nix
     ./gaming.nix
+    ./virtualisation.nix
     ./packages.nix
   ];
 }
