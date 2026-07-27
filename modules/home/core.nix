@@ -7,5 +7,6 @@
     ./core/fastfetch.nix
     ./core/ui.nix
     ./core/yazi.nix
+    ./core/trash-cleanup.nix
   ];
 }

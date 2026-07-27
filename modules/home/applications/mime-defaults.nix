@@ -1,7 +1,76 @@
-{ ... }:
+{ lib, ... }:
+
+let
+  foliateDesktop = [ "com.github.johnfactotum.Foliate.desktop" ];
+  imvDesktop = [ "imv.desktop" ];
+
+  ebookMimeTypes = [
+    "application/epub+zip"
+    "application/vnd.amazon.mobi8-ebook"
+    "application/vnd.comicbook+zip"
+    "application/x-fictionbook+xml"
+    "application/x-mobipocket-ebook"
+    "application/x-zip-compressed-fb2"
+    "x-scheme-handler/opds"
+  ];
+
+  imageMimeTypes = [
+    "image/apng"
+    "image/avif"
+    "image/bmp"
+    "image/gif"
+    "image/heic"
+    "image/heif"
+    "image/jpeg"
+    "image/jpg"
+    "image/jxl"
+    "image/png"
+    "image/qoi"
+    "image/svg+xml"
+    "image/tiff"
+    "image/webp"
+    "image/x-bmp"
+    "image/x-farbfeld"
+    "image/x-png"
+    "image/x-portable-bitmap"
+    "image/x-portable-graymap"
+    "image/x-portable-pixmap"
+  ];
+
+  defaultApplications = {
+    "application/pdf" = [ "sioyek.desktop" ];
+  }
+  // lib.genAttrs ebookMimeTypes (_: foliateDesktop)
+  // lib.genAttrs imageMimeTypes (_: imvDesktop);
+
+  renderMimeAppsSection =
+    apps:
+    lib.concatStringsSep "\n" (
+      lib.mapAttrsToList (mime: desktops: "${mime}=${lib.concatStringsSep ";" desktops}") apps
+    );
+
+  mimeAppsText = ''
+    [Added Associations]
+    ${renderMimeAppsSection defaultApplications}
+
+    [Default Applications]
+    ${renderMimeAppsSection defaultApplications}
+
+    [Removed Associations]
+  '';
+in
 
 {
-  xdg.configFile."mimeapps.list".force = true;
+  xdg.configFile = {
+    "mimeapps.list".force = true;
+
+    # Dolphin/KDE can prefer the desktop-specific file over the generic
+    # mimeapps.list that xdg-open/yazi already honor.
+    "kde-mimeapps.list" = {
+      force = true;
+      text = mimeAppsText;
+    };
+  };
 
   xdg.desktopEntries = {
     # Override upstream desktop entries so portal/app chooser flows can
@@ -32,68 +101,20 @@
         "2DGraphics"
         "Viewer"
       ];
-      mimeType = [
-        "image/avif"
-        "image/bmp"
-        "image/gif"
-        "image/heic"
-        "image/heif"
-        "image/jpeg"
-        "image/jpg"
-        "image/jxl"
-        "image/png"
-        "image/qoi"
-        "image/svg+xml"
-        "image/tiff"
-        "image/webp"
-        "image/x-bmp"
-        "image/x-farbfeld"
-        "image/x-png"
-        "image/x-portable-bitmap"
-        "image/x-portable-graymap"
-        "image/x-portable-pixmap"
-      ];
+      mimeType = imageMimeTypes;
     };
   };
 
   xdg.mimeApps = {
     enable = true;
-    defaultApplications = {
-      "application/pdf" = [ "sioyek.desktop" ];
+    defaultApplications = defaultApplications;
 
-      "image/avif" = [ "imv.desktop" ];
-      "image/bmp" = [ "imv.desktop" ];
-      "image/gif" = [ "imv.desktop" ];
-      "image/heic" = [ "imv.desktop" ];
-      "image/heif" = [ "imv.desktop" ];
-      "image/jpeg" = [ "imv.desktop" ];
-      "image/jxl" = [ "imv.desktop" ];
-      "image/png" = [ "imv.desktop" ];
-      "image/svg+xml" = [ "imv.desktop" ];
-      "image/tiff" = [ "imv.desktop" ];
-      "image/webp" = [ "imv.desktop" ];
-      "image/x-portable-bitmap" = [ "imv.desktop" ];
-      "image/x-portable-graymap" = [ "imv.desktop" ];
-      "image/x-portable-pixmap" = [ "imv.desktop" ];
-    };
-
-    associations.added = {
-      "application/pdf" = [ "sioyek.desktop" ];
-
-      "image/avif" = [ "imv.desktop" ];
-      "image/bmp" = [ "imv.desktop" ];
-      "image/gif" = [ "imv.desktop" ];
-      "image/heic" = [ "imv.desktop" ];
-      "image/heif" = [ "imv.desktop" ];
-      "image/jpeg" = [ "imv.desktop" ];
-      "image/jxl" = [ "imv.desktop" ];
-      "image/png" = [ "imv.desktop" ];
-      "image/svg+xml" = [ "imv.desktop" ];
-      "image/tiff" = [ "imv.desktop" ];
-      "image/webp" = [ "imv.desktop" ];
-      "image/x-portable-bitmap" = [ "imv.desktop" ];
-      "image/x-portable-graymap" = [ "imv.desktop" ];
-      "image/x-portable-pixmap" = [ "imv.desktop" ];
-    };
+    associations.added = defaultApplications;
   };
+
+  home.activation.rebuildKdeServiceCache = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
+    if command -v kbuildsycoca6 >/dev/null 2>&1; then
+      $DRY_RUN_CMD kbuildsycoca6 --noincremental || true
+    fi
+  '';
 }

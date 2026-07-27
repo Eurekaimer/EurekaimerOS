@@ -5,7 +5,6 @@
     pdfarranger
     foliate
     sioyek
-    calibre
     crow-translate
   ];
 }
