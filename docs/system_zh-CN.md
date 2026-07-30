@@ -21,7 +21,7 @@
   + 使用 [Fcitx 5](https://fcitx-im.org/wiki/Fcitx_5) 及 Rime、Mozc、GTK/Qt 前端，并导出 Wayland 应用所需输入法环境变量。
   + 安装 LXGW WenKai Screen、Noto CJK、文泉驿、Sarasa、JetBrains Mono Nerd Font 和 Noto Color Emoji。
   + `LXGW WenKai Screen` 是 sans-serif、serif、常见中文 Windows 字体别名和 Noto Sans 的首选，覆盖中英文界面。
-  + 等宽代码与终端仍保留 JetBrains Mono/Sarasa Mono，避免比例字体破坏列对齐；Emoji 单独使用 Noto Color Emoji。
+  + Kitty 终端使用 `LXGW WenKai Screen`；JetBrains Mono/Sarasa Mono 保留为代码与字形回退。
 + [`desktop.nix`](../modules/system/desktop.nix)
   + ReGreet 登录界面显式使用 LXGW，确保登录前也有一致的中文显示。
 
@@ -47,7 +47,7 @@
   + 电池模式使用 `powersave` governor、`power` EPP、low-power 平台档位，关闭 Turbo 和 HWP dynamic boost。
   + 电池模式 CPU 性能范围为 5%–50%；交流电保持 10%–100%。
   + 电池模式启用 PCIe ASPM、设备 runtime PM、AHCI runtime PM、Wi-Fi 节能、声卡节能和 USB autosuspend。
-  + 蓝牙开机默认关闭，并在切换到电池供电时由 TLP 关闭；需要时仍可从桌面重新开启。
+  + 蓝牙不会再被 TLP 在开机或切换到电池供电时软阻塞，Noctalia 可正常控制开关。
   + 首选 `deep` suspend，减少待机掉电；若特定固件恢复不稳定，应撤销该内核参数。
   + 安装 `powertop` 与 `s-tui` 作为诊断工具，不运行常驻自动调优服务。
 
@@ -66,8 +66,8 @@
   + 配置 [Steam](https://store.steampowered.com/about/)、[GameMode](https://github.com/FeralInteractive/gamemode)、MangoHud 和 Wine。
   + Steam 使用 CEF GPU compositing 兼容参数处理 Niri/Xwayland 黑屏。
 + [`virtualisation.nix`](../modules/system/virtualisation.nix)
-  + 启用 [libvirt](https://libvirt.org/)、[virt-manager](https://virt-manager.org/)、QEMU、swtpm、SPICE USB 重定向和 Windows virtio 驱动。
-  + 显式关闭当前工作流不需要的 `virtchd`；Windows QEMU/KVM 虚拟机使用 libvirtd 即可。
+  + 启用 Docker/Compose，并为镜像拉取配置本机代理。
+  + 同时启用 [libvirt](https://libvirt.org/)、[virt-manager](https://virt-manager.org/)、QEMU、swtpm、SPICE USB 重定向和 Windows virtio 驱动；显式关闭当前工作流不需要的 `virtchd`。
 
 ## 主机专属文件
 

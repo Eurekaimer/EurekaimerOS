@@ -14,7 +14,7 @@ nix build .#nixosConfigurations.nixos.config.system.build.toplevel --no-link
 sudo nixos-rebuild switch --flake .#nixos
 ```
 
-+ The complete NixOS toplevel was built after the font, browser, and power changes. The result contains no Firefox desktop file, and its generated TLP configuration contains the 5%–50% battery CPU range and battery-mode Bluetooth disable rule.
++ The complete NixOS toplevel was built after the font, browser, power, and Docker changes. Generated TLP settings keep the 5%–50% battery CPU range without blocking Bluetooth.
 
 ## Where to edit
 

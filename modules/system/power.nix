@@ -40,7 +40,6 @@
       SOUND_POWER_SAVE_ON_AC = 0;
       SOUND_POWER_SAVE_ON_BAT = 1;
       USB_AUTOSUSPEND = 1;
-      DEVICES_TO_DISABLE_ON_BAT = "bluetooth";
       NMI_WATCHDOG = 0;
 
       # Lenovo XiaoXin/IdeaPad exposes a fixed conservation mode instead of
@@ -60,9 +59,6 @@
   # drain; remove this if resume becomes unreliable on this hardware.
   boot.kernelParams = [ "mem_sleep_default=deep" ];
 
-  # Bluetooth is easy to toggle from the desktop, but keeping it powered at
-  # boot costs battery even when unused.
-  hardware.bluetooth.powerOnBoot = lib.mkForce false;
 
   environment.systemPackages = with pkgs; [
     powertop

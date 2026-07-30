@@ -4,6 +4,16 @@
   home.packages = with pkgs; [
     eza
     tree
+    (writeShellApplication {
+      name = "docker-ass";
+      runtimeInputs = [ docker ];
+      text = ''
+        /run/wrappers/bin/sg docker -c 'docker compose --project-directory /home/eurekaimer/Videos/ASS up -d'
+        printf '%s\n' \
+          'ANI-RSS:     http://127.0.0.1:7789' \
+          'qBittorrent: http://127.0.0.1:8080'
+      '';
+    })
   ];
 
   programs.zsh = {
