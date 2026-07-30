@@ -30,6 +30,7 @@
     fontDir.enable = true;
 
     packages = with pkgs; [
+      lxgw-wenkai-screen
       nerd-fonts.jetbrains-mono
       wqy_microhei
       wqy_zenhei
@@ -48,12 +49,12 @@
           "Noto Sans Mono CJK SC"
         ];
         sansSerif = [
+          "LXGW WenKai Screen"
           "Noto Sans CJK SC"
-          "WenQuanYi Micro Hei"
         ];
         serif = [
+          "LXGW WenKai Screen"
           "Noto Serif CJK SC"
-          "Noto Sans CJK SC"
         ];
       };
 
@@ -62,93 +63,105 @@
         <!DOCTYPE fontconfig SYSTEM "urn:fontconfig:fonts.dtd">
         <fontconfig>
           <alias binding="same">
+            <family>Noto Sans</family>
+            <prefer>
+              <family>LXGW WenKai Screen</family>
+            </prefer>
+          </alias>
+          <alias binding="same">
+            <family>Noto Sans CJK SC</family>
+            <prefer>
+              <family>LXGW WenKai Screen</family>
+            </prefer>
+          </alias>
+          <alias binding="same">
             <family>SimSun</family>
             <prefer>
-              <family>Noto Serif CJK SC</family>
+              <family>LXGW WenKai Screen</family>
               <family>Noto Sans CJK SC</family>
             </prefer>
           </alias>
           <alias binding="same">
             <family>NSimSun</family>
             <prefer>
-              <family>Noto Serif CJK SC</family>
+              <family>LXGW WenKai Screen</family>
               <family>Noto Sans CJK SC</family>
             </prefer>
           </alias>
           <alias binding="same">
             <family>宋体</family>
             <prefer>
-              <family>Noto Serif CJK SC</family>
+              <family>LXGW WenKai Screen</family>
               <family>Noto Sans CJK SC</family>
             </prefer>
           </alias>
           <alias binding="same">
             <family>Microsoft YaHei</family>
             <prefer>
-              <family>WenQuanYi Micro Hei</family>
+              <family>LXGW WenKai Screen</family>
               <family>Noto Sans CJK SC</family>
             </prefer>
           </alias>
           <alias binding="same">
             <family>微软雅黑</family>
             <prefer>
-              <family>WenQuanYi Micro Hei</family>
+              <family>LXGW WenKai Screen</family>
               <family>Noto Sans CJK SC</family>
             </prefer>
           </alias>
           <alias binding="same">
             <family>DengXian</family>
             <prefer>
-              <family>WenQuanYi Micro Hei</family>
+              <family>LXGW WenKai Screen</family>
               <family>Noto Sans CJK SC</family>
             </prefer>
           </alias>
           <alias binding="same">
             <family>等线</family>
             <prefer>
-              <family>WenQuanYi Micro Hei</family>
+              <family>LXGW WenKai Screen</family>
               <family>Noto Sans CJK SC</family>
             </prefer>
           </alias>
           <alias binding="same">
             <family>SimHei</family>
             <prefer>
-              <family>WenQuanYi Micro Hei</family>
+              <family>LXGW WenKai Screen</family>
               <family>Noto Sans CJK SC</family>
             </prefer>
           </alias>
           <alias binding="same">
             <family>黑体</family>
             <prefer>
-              <family>WenQuanYi Micro Hei</family>
+              <family>LXGW WenKai Screen</family>
               <family>Noto Sans CJK SC</family>
             </prefer>
           </alias>
           <alias binding="same">
             <family>KaiTi</family>
             <prefer>
-              <family>Noto Serif CJK SC</family>
+              <family>LXGW WenKai Screen</family>
               <family>Noto Sans CJK SC</family>
             </prefer>
           </alias>
           <alias binding="same">
             <family>楷体</family>
             <prefer>
-              <family>Noto Serif CJK SC</family>
+              <family>LXGW WenKai Screen</family>
               <family>Noto Sans CJK SC</family>
             </prefer>
           </alias>
           <alias binding="same">
             <family>FangSong</family>
             <prefer>
-              <family>Noto Serif CJK SC</family>
+              <family>LXGW WenKai Screen</family>
               <family>Noto Sans CJK SC</family>
             </prefer>
           </alias>
           <alias binding="same">
             <family>仿宋</family>
             <prefer>
-              <family>Noto Serif CJK SC</family>
+              <family>LXGW WenKai Screen</family>
               <family>Noto Sans CJK SC</family>
             </prefer>
           </alias>

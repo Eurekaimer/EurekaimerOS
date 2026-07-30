@@ -25,6 +25,11 @@
 
   gtk = {
     enable = true;
+    font = {
+      name = "LXGW WenKai Screen";
+      package = pkgs.lxgw-wenkai-screen;
+      size = 11;
+    };
     iconTheme = {
       name = "Papirus-Dark";
       package = pkgs.papirus-icon-theme;

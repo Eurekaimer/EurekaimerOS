@@ -1,170 +1,94 @@
 # EurekaimerOS
 
-Language: English | [中文说明](README_zh-CN.md)
+[中文说明](README_zh-CN.md)
 
-A personal NixOS configuration built around **Niri**, **Noctalia**, **Home Manager**, and **flakes**.
+A personal, host-aware NixOS configuration built around Niri, Noctalia, Home Manager, and flakes. `/etc/nixos` is the live configuration; this repository is its long-lived, frequently synchronized source copy.
 
-![](img/system_show.png)
+## Choose a topic
 
-## Highlights
++ [Configuration architecture](docs/architecture.md)
+  + Flake inputs and package flow
+  + Host, system, and Home Manager boundaries
+  + Safe extension points
++ [System configuration](docs/system.md)
+  + Boot, network, locale, LXGW fonts, graphics, and desktop services
+  + TLP power policy, storage, gaming, and virtualization
++ [Desktop and UI](docs/desktop.md)
+  + Niri session, screenshots, and window rules
+  + Noctalia, GTK, icons, core user tools, and optional UI modules
++ [Applications](docs/applications.md)
+  + Google Chrome as the only configured browser
+  + Documents, media, communication, transfer, and MIME defaults
+  + Links crediting each major upstream project
++ [Development environment](docs/development.md)
+  + Editors, CLI tools, language toolchains, notebooks, and AI tools
++ [Build and maintenance](docs/operations.md)
+  + Rebuild and verification commands
+  + Recovery, migration, power diagnostics, and EurekaimerOS synchronization
++ [Complete documentation index](docs/index.md)
+  + English and Chinese navigation for every section
 
-- Niri-based Wayland desktop workflow
-- Noctalia shell components
-- Declarative system and user environment
-- Reusable module layout with host-specific files separated
-- QEMU/KVM virtualization with virt-manager for Windows virtual machines
-
-## Recovery Notes
-
-For reinstalling or recovering this setup, keep the early path simple:
-
-1. In the live ISO, add a Nix binary cache mirror to `/etc/nix/nix.conf`.
-2. Install a minimal working system first, using the GUI installer if convenient.
-3. After the first boot, add the mirror again in the installed system.
-4. Restore network/proxy access and GitHub access. Prefer `throne` or `nekoray` early; use `mihomo` directly if a headless core is enough.
-5. Fetch this repository and run the rebuild command.
-
-This avoids making the initial install depend on a proxy GUI, browser login, or a fully working desktop session.
-
-In the live ISO, rebuild `/etc/nix/nix.conf` as a normal file and add mirrors:
-
-```bash
-sudo cp -L /etc/nix/nix.conf /etc/nix/nix.conf.bak
-sudo rm /etc/nix/nix.conf
-sudo tee /etc/nix/nix.conf >/dev/null <<'EOF'
-experimental-features = nix-command flakes
-substituters = https://mirrors.ustc.edu.cn/nix-channels/store https://cache.nixos.org/
-EOF
-sudo systemctl restart nix-daemon
-```
-
-The configured system currently prefers domestic mirrors in `modules/system/base.nix`. If a mirror is stale or incomplete, switch mirrors temporarily and rebuild again.
-
-## Layout
+## Repository map
 
 ```text
 flake.nix
-│   ├── nixpkgs              stable system package set
-│   ├── nixpkgs-unstable     source for selected fast-moving packages
+├── inputs
+│   ├── nixpkgs
+│   ├── nixpkgs-unstable
 │   ├── home-manager
-│   ├── noctalia             follows nixpkgs-unstable
-│   ├── lexigraph            follows nixpkgs-unstable
+│   ├── noctalia
+│   ├── lexigraph
 │   └── llm-agents
-├── pkgs-unstable            imported once here and passed to modules
 └── nixosConfigurations.nixos
     ├── hosts/nixos/configuration.nix
     │   ├── hardware-configuration.nix
     │   ├── host-local.nix
     │   ├── proxy-local.nix
-    │   ├── ../../modules/system/system.nix
-    │   └── ../../modules/system/graphics-intel.nix
+    │   ├── modules/system/system.nix
+    │   └── modules/system/graphics-intel.nix
     └── home-manager.users.eurekaimer
         └── home/eurekaimer/home.nix
-            ├── ../../modules/home/desktop.nix
-            ├── ../../modules/home/core.nix
-            ├── ../../modules/home/development.nix
-            │   ├── development/neovim.nix
-            │   └── development/toolchain.nix
-            │       └── development/toolchain/*.nix
-            └── ../../modules/home/applications.nix
-                ├── applications/*.nix
-                └── applications/mime-defaults.nix
+            ├── modules/home/desktop.nix
+            ├── modules/home/core.nix
+            ├── modules/home/development.nix
+            └── modules/home/applications.nix
+
+docs/
+├── index.md / index_zh-CN.md
+└── <topic>.md / <topic>_zh-CN.md
 ```
 
-Key files:
-
-- `flake.nix`
-- `hosts/nixos/configuration.nix`
-- `home/eurekaimer/home.nix`
-- `modules/home/development/toolchain.nix`
-- `modules/home/development/toolchain/*.nix`
-- `modules/home/applications/mime-defaults.nix`
-- `modules/system/packages/*.nix`
-- `modules/system/virtualisation.nix`
-- `home-layer-map.txt`
-- `system-layer-map.txt`
-
-`nixpkgs-unstable` is configured only in `flake.nix`, where it is imported as
-`pkgs-unstable` and passed to both NixOS modules and Home Manager modules. If a
-module needs an unstable package, accept `pkgs-unstable` as a module argument and
-annotate the package usage locally; do not import `inputs.nixpkgs-unstable`
-again inside the module.
-
-## QEMU/KVM Virtualisation
-
-- `modules/system/virtualisation.nix` enables libvirt/QEMU/KVM, virt-manager, swtpm, SPICE USB redirection, `virt-viewer`, and `virtio-win` for Windows guests.
-- `modules/system/users.nix` adds `eurekaimer` to `libvirtd` and `kvm`; log out and back in after rebuilding so the new groups apply.
-- `systemd.services.virtchd.enable = false` avoids pulling cloud-hypervisor when the mirror is incomplete; QEMU/libvirt Windows VMs do not need virtchd.
-
++ [`flake.nix`](flake.nix)
+  + Pins stable and unstable package sets and builds `nixosConfigurations.nixos`.
++ [`hosts/nixos/`](hosts/nixos/)
+  + Current machine's hardware, local, and proxy entry points.
++ [`modules/system/`](modules/system/)
+  + Root-owned NixOS services, hardware, power, fonts, virtualization, and shared packages.
++ [`home/eurekaimer/`](home/eurekaimer/)
+  + Home Manager user entry point.
++ [`modules/home/`](modules/home/)
+  + Desktop, user configuration, applications, and development tools.
++ [`docs/`](docs/)
+  + Bilingual explanations of this repository's own configuration.
 
 ## Rebuild
+
++ Validate without activation:
+
+```bash
+nix build .#nixosConfigurations.nixos.config.system.build.toplevel --no-link
+```
+
++ Build and switch the running system:
 
 ```bash
 sudo nixos-rebuild switch --flake .#nixos
 ```
 
-## Niri Screenshots And OBS
+## Current decisions
 
-Screenshots are handled by niri so window captures use real window objects,
-including rounded corners, shadows, and transparent space outside the window.
-Noctalia keeps its shell, panel, notification, and launcher roles.
-
-| Shortcut | Action |
-| --- | --- |
-| `Print` | Screenshot the focused monitor, save to `~/Pictures/Screenshots/`, and copy to the clipboard. |
-| `Alt+Print` | Screenshot the focused window with transparent outside area. |
-| `Mod+Alt+Print` | Pick a window with the mouse, then screenshot that window. |
-| `Shift+Print` | Open niri's region screenshot UI. |
-
-These bindings have `hotkey-overlay-title` entries, so they show in niri's
-`Mod+Shift+Slash` help overlay.
-
-The `niri-window-shot` helper is generated declaratively from
-`modules/home/desktop/niri.nix`. To test it temporarily inside niri:
-
-```bash
-niri-window-shot
-```
-
-To confirm the last screenshot reached the clipboard:
-
-```bash
-wl-paste --type image/png >/tmp/niri-shot.png
-```
-
-Some image viewers render transparent pixels as black, white, or a checkerboard;
-the PNG transparency is still preserved. OBS is installed from
-`nixpkgs-unstable` with PipeWire audio capture, VAAPI, and multi-RTMP plugins.
-
-## R And Notebook Support
-
-R is provided through Nix wrappers. The development toolchain includes R Markdown, common statistics packages, plotting packages, Jupyter, and a declarative `R (Nix)` kernel.
-
-After rebuilding:
-
-```bash
-jupyter kernelspec list
-```
-
-The list should include `r-nix`.
-
-## Python And uv
-
-Python project environments are managed by `uv`. The global Home Manager
-configuration installs `uv`, `jupyter`, and `pyright`, but does not pin
-`UV_PYTHON` globally. This lets project-local `.python-version` files drive
-interpreter selection and allows uv-managed Python downloads when the requested
-version is not already installed.
-
-## Troubleshooting Notes
-
-- `hardware-configuration.nix` is machine-specific and should be regenerated per host.
-- Host-local and proxy settings may need adjustment on a new machine.
-- During early recovery, prefer `throne`, `nekoray`, or `mihomo`; `clash-verge-rev` depends on WebView and is better used after the full desktop environment is stable.
-- Steam may show a black UI under Niri/Xwayland. `modules/system/gaming.nix` currently works around this with `-cef-disable-gpu-compositing`.
-- `httpgd` is not enabled while it is marked broken in the current nixpkgs revision.
-
-## Notes
-
-- For another host, add a separate `hosts/<name>/` entry instead of reusing machine-specific files blindly.
-- Keep personal data, homework files, and local test paths out of the public README.
++ UI text uses LXGW WenKai Screen for Chinese and Latin text; terminals retain a true monospace font.
++ Google Chrome is the only declared browser; Firefox and its stale desktop rule are removed.
++ TLP is the sole power-profile owner. Battery mode caps CPU performance at 50%, disables Turbo/dynamic boost, and turns Bluetooth off on battery transitions.
++ NixOS uses stable packages by default. Fast-moving applications consume the single `pkgs-unstable` instance passed down from `flake.nix`.
++ Machine-specific disk UUIDs, proxy settings, and hardware configuration must be reviewed before using this setup on another host.

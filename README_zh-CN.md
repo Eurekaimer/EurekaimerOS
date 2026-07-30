@@ -1,196 +1,94 @@
 # EurekaimerOS
 
-语言：中文 | [English](README.md)
+[English](README.md)
 
-这是我的个人 NixOS 配置，核心是 **Niri**、**Noctalia**、**Home Manager** 和 **flakes**。
+这是一个围绕 Niri、Noctalia、Home Manager 和 flakes 组织的个人 NixOS 配置。`/etc/nixos` 是当前运行配置，本仓库是需要经常同步的长期维护副本。
 
-![](img/system_show.png)
+## 按需选择文档
 
-## 特点
++ [配置架构](docs/architecture_zh-CN.md)
+  + flake 输入和软件包传递
+  + 主机、系统与 Home Manager 的职责边界
+  + 新增主机、系统模块、应用和工具链的方法
++ [系统层配置](docs/system_zh-CN.md)
+  + 启动、网络、中文环境、LXGW 字体、图形和桌面服务
+  + TLP 电源策略、存储、游戏与虚拟化
++ [桌面与用户界面](docs/desktop_zh-CN.md)
+  + Niri 会话、截图和窗口规则
+  + Noctalia、GTK、图标、核心用户工具和可选界面
++ [应用软件](docs/applications_zh-CN.md)
+  + Google Chrome 作为唯一配置的浏览器
+  + 文档、媒体、通信、下载和默认应用
+  + 主要软件的官方项目地址，用于说明来源并尊重上游贡献
++ [开发环境](docs/development_zh-CN.md)
+  + 编辑器、CLI、语言工具链、Notebook 和 AI 工具
++ [构建和维护](docs/operations_zh-CN.md)
+  + 重建与验证命令
+  + 恢复、迁移、电源诊断和 EurekaimerOS 同步方法
++ [完整中文文档索引](docs/index_zh-CN.md)
+  + 从总览进入每个独立配置主题
 
-- 基于 Niri 的 Wayland 桌面工作流
-- Noctalia 壳层组件
-- 声明式系统和用户环境
-- 可复用模块与主机专属配置分离
-- QEMU/KVM + virt-manager，便于创建 Windows 虚拟机
-
-## 恢复要点
-
-重装或恢复时，先让 Nix 下载走镜像，再装基础系统。这样可以避免把初始安装绑定到代理 GUI、浏览器登录或完整桌面渲染环境上。
-
-在 Live ISO 里先处理 `/etc/nix/nix.conf`。直接按“可能是只读或受管链接”的情况处理，复制粘贴下面这一段即可：
-
-```bash
-sudo cp -L /etc/nix/nix.conf /etc/nix/nix.conf.bak
-sudo rm /etc/nix/nix.conf
-sudo tee /etc/nix/nix.conf >/dev/null <<'EOF'
-experimental-features = nix-command flakes
-substituters = https://mirrors.ustc.edu.cn/nix-channels/store https://cache.nixos.org/
-EOF
-```
-
-然后重启 Nix daemon：
-
-```bash
-sudo systemctl restart nix-daemon
-```
-
-接下来先用图形安装器或常规安装流程装出一个能启动、能联网的基础系统。第一次进入新系统后，再重复上面的 `/etc/nix/nix.conf` 镜像设置。
-
-早期恢复网络时，优先使用 `throne` 或 `nekoray` 这类轻量代理客户端；如果只需要核心转发，也可以直接用 `mihomo`。等代理、浏览器和 GitHub 访问都恢复后，再获取这个仓库。第一次恢复不必执着 `git clone`，浏览器下载 ZIP、解压、在仓库目录打开终端也可以。
-
-拿到仓库后执行：
-
-```bash
-sudo nixos-rebuild switch --flake .#nixos
-```
-
-当前系统配置在 `modules/system/base.nix` 中优先使用国内镜像。如果某个镜像缺对象或不稳定，可以临时换源后再 rebuild。
-
-## 结构
+## 仓库结构
 
 ```text
 flake.nix
 ├── inputs
-│   ├── nixpkgs              稳定系统包集
-│   ├── nixpkgs-unstable     供少量快速更新软件使用
+│   ├── nixpkgs
+│   ├── nixpkgs-unstable
 │   ├── home-manager
-│   ├── noctalia             跟随 nixpkgs-unstable
-│   ├── lexigraph            跟随 nixpkgs-unstable
+│   ├── noctalia
+│   ├── lexigraph
 │   └── llm-agents
-├── pkgs-unstable            只在这里 import 一次，并传给各模块
 └── nixosConfigurations.nixos
     ├── hosts/nixos/configuration.nix
     │   ├── hardware-configuration.nix
     │   ├── host-local.nix
     │   ├── proxy-local.nix
-    │   ├── ../../modules/system/system.nix
-    │   └── ../../modules/system/graphics-intel.nix
+    │   ├── modules/system/system.nix
+    │   └── modules/system/graphics-intel.nix
     └── home-manager.users.eurekaimer
         └── home/eurekaimer/home.nix
-            ├── ../../modules/home/desktop.nix
-            ├── ../../modules/home/core.nix
-            ├── ../../modules/home/development.nix
-            │   ├── development/neovim.nix
-            │   └── development/toolchain.nix
-            │       └── development/toolchain/*.nix
-            └── ../../modules/home/applications.nix
-                ├── applications/*.nix
-                └── applications/mime-defaults.nix
+            ├── modules/home/desktop.nix
+            ├── modules/home/core.nix
+            ├── modules/home/development.nix
+            └── modules/home/applications.nix
+
+docs/
+├── index.md / index_zh-CN.md
+└── <主题>.md / <主题>_zh-CN.md
 ```
 
-主要入口：
++ [`flake.nix`](flake.nix)
+  + 固定 stable/unstable 软件包输入并构建 `nixosConfigurations.nixos`。
++ [`hosts/nixos/`](hosts/nixos/)
+  + 当前机器的硬件、本地参数和代理入口。
++ [`modules/system/`](modules/system/)
+  + 需要 root 的 NixOS 服务、硬件、电源、字体、虚拟化和共享软件。
++ [`home/eurekaimer/`](home/eurekaimer/)
+  + Home Manager 用户入口。
++ [`modules/home/`](modules/home/)
+  + 桌面、用户配置、应用和开发环境。
++ [`docs/`](docs/)
+  + 对本仓库自身配置的中英文解释文档。
 
-- `flake.nix`
-- `hosts/nixos/configuration.nix`
-- `home/eurekaimer/home.nix`
-- `modules/home/development/toolchain.nix`
-- `modules/home/development/toolchain/*.nix`
-- `modules/home/applications/mime-defaults.nix`
-- `modules/system/packages/*.nix`
-- `modules/system/virtualisation.nix`
-- `home-layer-map.txt`
-- `system-layer-map.txt`
+## 构建
 
-`nixpkgs-unstable` 的统一设置位置是 `flake.nix`。这里把它 import 为
-`pkgs-unstable`，并同时传给 NixOS modules 与 Home Manager modules。需要使用
-unstable 软件包的模块，只接收 `pkgs-unstable` 参数并在本模块标注用途；不要在
-模块里再次 `import inputs.nixpkgs-unstable`。
++ 只验证构建，不切换当前系统：
 
-## QEMU/KVM 虚拟化
+```bash
+nix build .#nixosConfigurations.nixos.config.system.build.toplevel --no-link
+```
 
-- `modules/system/virtualisation.nix` 启用 libvirt/QEMU/KVM、virt-manager、swtpm、SPICE USB 重定向，并安装 `virt-viewer`、`virtio-win`，便于创建 Windows 虚拟机。
-- `modules/system/users.nix` 把 `eurekaimer` 加入 `libvirtd` 和 `kvm`；重建后需要注销并重新登录一次，让新用户组生效。
-- `systemd.services.virtchd.enable = false` 避免镜像缺 cloud-hypervisor 时回落到 crates.io；QEMU/libvirt 的 Windows 虚拟机不需要 virtchd。
-
-
-## 重建
++ 构建并切换当前系统：
 
 ```bash
 sudo nixos-rebuild switch --flake .#nixos
 ```
 
-## Niri 截图和 OBS
+## 当前关键决策
 
-截图由 niri 负责，因此窗口截图使用真实窗口对象，会保留圆角、阴影，以及窗口外的透明区域。Noctalia 继续负责壳层、面板、通知和启动器入口。
-
-| 快捷键 | 行为 |
-| --- | --- |
-| `Print` | 截取当前聚焦显示器，保存到 `~/Pictures/Screenshots/`，并复制到剪贴板。 |
-| `Alt+Print` | 截取当前聚焦窗口，窗口外区域保持透明。 |
-| `Mod+Alt+Print` | 鼠标点击选择窗口，然后截取该窗口。 |
-| `Shift+Print` | 打开 niri 原生区域截图界面。 |
-
-这些绑定都设置了 `hotkey-overlay-title`，因此会显示在 niri 的
-`Mod+Shift+Slash` 帮助菜单里。
-
-`niri-window-shot` 由 `modules/home/desktop/niri.nix` 声明式生成。进入 niri 后可以临时测试：
-
-```bash
-niri-window-shot
-```
-
-确认截图已经写入剪贴板：
-
-```bash
-wl-paste --type image/png >/tmp/niri-shot.png
-```
-
-部分图片查看器会把透明区域显示成黑色、白色或棋盘格；PNG 本身仍然保留透明通道。OBS 通过 `nixpkgs-unstable` 安装，并带 PipeWire 音频捕获、VAAPI 和 multi-RTMP 插件。
-
-## R 和 Notebook
-
-R 通过 Nix wrapper 提供。开发工具链包含 R Markdown、常用统计包、绘图包、Jupyter，以及声明式生成的 `R (Nix)` kernel。
-
-重建后可以检查：
-
-```bash
-jupyter kernelspec list
-```
-
-列表里应该包含 `r-nix`。
-
-## Python 和 uv
-
-Python 项目环境由 `uv` 管理。Home Manager 全局只安装 `uv`、`jupyter`
-和 `pyright`，不再全局固定 `UV_PYTHON`。这样每个项目可以通过
-`.python-version` 选择解释器；如果本地没有对应版本，uv 可以按默认行为自动下载
-uv-managed Python。
-
-## 排障记录
-
-- `hardware-configuration.nix` 绑定具体机器，迁移时应重新生成。
-- 新机器上可能需要调整 host-local 和代理相关配置。
-- 早期恢复网络时，优先用 `throne`、`nekoray` 或 `mihomo`；`clash-verge-rev` 依赖 WebView，更适合完整桌面环境稳定后再用。
-- 当前 nixpkgs 中 `httpgd` 被标记为 broken，因此暂不启用。
-
-### Steam 黑屏
-
-在 Niri + `xwayland-satellite` 下，Steam 主窗口可能黑屏或启动很慢。日志里常见线索包括：
-
-- `steamwebhelper` / CEF WebUI
-- `XDG_SESSION_TYPE=wayland`
-- `Ozone platform: x11`
-- `BadWindow (invalid Window parameter)`
-
-当前修复在 `modules/system/gaming.nix`：
-
-```nix
-programs.steam = {
-  enable = true;
-  package = pkgs.steam.override {
-    extraArgs = "-cef-disable-gpu-compositing";
-  };
-};
-```
-
-这个参数只关闭 CEF 的 GPU compositing，比直接 `-cef-disable-gpu` 更轻。若问题复发，可以临时把参数换成 `-cef-disable-gpu` 验证是否仍是 Steam WebView 渲染问题。
-
-参考：
-
-- [Niri/xwayland-satellite: Black steam window fix - NixOS Discourse](https://discourse.nixos.org/t/niri-xwayland-satellite-black-steam-window-fix/77107)
-- [Steam UI Black Unless Ran Using -cef-disable-gpu - ValveSoftware/steam-for-linux](https://github.com/ValveSoftware/steam-for-linux/issues/10561)
-
-## 备注
-
-- 新主机应新建独立的 `hosts/<name>/` 入口，不要盲目复用机器绑定文件。
++ 中英文界面统一使用 LXGW WenKai Screen；终端和代码保留真正的等宽字体。
++ Google Chrome 是唯一声明安装的浏览器；Firefox 和过期窗口规则已经移除。
++ TLP 是唯一电源档位管理器。电池模式 CPU 上限为 50%，关闭 Turbo/HWP dynamic boost，并在电池切换时关闭蓝牙。
++ 默认使用稳定版软件包；快速更新的软件只使用 `flake.nix` 传下来的单一 `pkgs-unstable`。
++ 磁盘 UUID、代理和硬件配置与当前机器绑定，迁移前必须核对。

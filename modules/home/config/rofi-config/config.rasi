@@ -4,9 +4,9 @@
 configuration {
     modi:                      "drun";
     show-icons:                true;
-    display-drun:              " Apps";
+    display-drun:              "搜索 Apps";
     drun-display-format:       "{name}";
-    font:                      "FiraCode Nerd Font Mono 14";
+    font:                      "LXGW WenKai Screen 14";
 }
 
 /* ================================================= */

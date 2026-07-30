@@ -39,8 +39,8 @@ in
       };
     };
     font = {
-      package = pkgs.noto-fonts-cjk-sans;
-      name = "Noto Sans CJK SC";
+      package = pkgs.lxgw-wenkai-screen;
+      name = "LXGW WenKai Screen";
       size = 16;
     };
   };
@@ -67,8 +67,6 @@ in
   };
 
   hardware.bluetooth.enable = true;
-  hardware.bluetooth.powerOnBoot = true;
 
   services.upower.enable = true;
-  services.power-profiles-daemon.enable = true;
 }

@@ -5,9 +5,16 @@
     substituters = lib.mkForce [
       "https://mirrors.ustc.edu.cn/nix-channels/store"
       "https://mirrors.tuna.tsinghua.edu.cn/nix-channels/store"
+      "https://cache.nixos.org/"
     ];
-    trusted-users = [ "root" "eurekaimer" ];
-    experimental-features = [ "nix-command" "flakes" ];
+    trusted-users = [
+      "root"
+      "eurekaimer"
+    ];
+    experimental-features = [
+      "nix-command"
+      "flakes"
+    ];
     auto-optimise-store = true;
   };
 

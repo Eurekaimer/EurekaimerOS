@@ -231,7 +231,7 @@
     "smoothScrollEnabled": true
   },
   "ui": {
-    "fontDefault": "Sans Serif",
+    "fontDefault": "LXGW WenKai Screen",
     "fontFixed": "monospace",
     "fontDefaultScale": 1,
     "fontFixedScale": 1,
@@ -551,7 +551,7 @@
       "criticalSoundFile": "",
       "normalSoundFile": "",
       "lowSoundFile": "",
-      "excludedApps": "firefox,chrome,chromium,edge"
+      "excludedApps": "chrome"
     },
     "enableMediaToast": false,
     "enableKeyboardLayoutToast": true,

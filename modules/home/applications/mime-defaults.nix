@@ -75,6 +75,7 @@ in
   xdg.desktopEntries = {
     # Override upstream desktop entries so portal/app chooser flows can
     # treat these apps as URI-capable defaults instead of file-only handlers.
+
     sioyek = {
       name = "Sioyek";
       comment = "PDF viewer for reading research papers and technical books";

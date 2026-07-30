@@ -1,6 +1,6 @@
 * {
-/* 统一个字体，确保图标正常显示 */
-font-family: "FiraCode Nerd Font Mono", "sans-serif";
+/* LXGW renders interface text; Nerd Font remains the icon fallback. */
+font-family: "LXGW WenKai Screen", "FiraCode Nerd Font Mono", "sans-serif";
 font-size: 14px;
 border: none;
 border-radius: 0;
