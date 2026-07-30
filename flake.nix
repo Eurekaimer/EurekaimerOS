@@ -5,6 +5,11 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-25.11";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
 
+    komari-call = {
+      url = "git+https://github.com/Eurekaimer/KOMABELIKA.git?ref=main";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     lexigraph = {
       url = "path:/home/eurekaimer/Documents/GitHub/lexigraph";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
@@ -47,6 +52,7 @@
 
         modules = [
           ./hosts/nixos/configuration.nix
+          inputs.komari-call.nixosModules.default
 
           home-manager.nixosModules.home-manager
           {

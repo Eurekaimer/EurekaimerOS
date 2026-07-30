@@ -12,6 +12,7 @@
     ./toolchain/javascript.nix
     ./toolchain/java.nix
     ./toolchain/go.nix
+    ./toolchain/rust.nix
     ./toolchain/c-cpp.nix
     ./toolchain/latex.nix
   ];

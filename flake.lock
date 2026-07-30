@@ -75,6 +75,27 @@
         "type": "github"
       }
     },
+    "komari-call": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1785425697,
+        "narHash": "sha256-cEzEnkkGoYZZSeFclXczzYBgeGoNA2bivFwhnj0+uGQ=",
+        "ref": "main",
+        "rev": "d40739074cff6283d04ceef12e2e2db45e9ae1a0",
+        "revCount": 3,
+        "type": "git",
+        "url": "https://github.com/Eurekaimer/KOMABELIKA.git"
+      },
+      "original": {
+        "ref": "main",
+        "type": "git",
+        "url": "https://github.com/Eurekaimer/KOMABELIKA.git"
+      }
+    },
     "lexigraph": {
       "inputs": {
         "nixpkgs": [
@@ -209,6 +230,7 @@
     "root": {
       "inputs": {
         "home-manager": "home-manager",
+        "komari-call": "komari-call",
         "lexigraph": "lexigraph",
         "llm-agents": "llm-agents",
         "nixpkgs": "nixpkgs_2",
