@@ -6,7 +6,7 @@
 
 + [`base.nix`](../modules/system/base.nix)
   + 启用 flakes、`nix-command`、商用软件许可和 `nix-ld`。
-  + 使用中科大、清华和官方二进制缓存；每周清理超过 7 天的旧 store 路径，并启用 store 自动优化。
+  + 使用中科大、清华和官方二进制缓存；每次 rebuild 时检查 generation 数量，达到 10 个即删除最旧的并立即回收 store 空间（不使用每周定时 GC），同时启用 store 自动优化。
   + 使用 systemd-boot、NetworkManager、上海时区和 NixOS `25.11` 状态版本。
 + [`users.nix`](../modules/system/users.nix)
   + 声明日常用户及其 shell、管理员和虚拟化相关用户组。

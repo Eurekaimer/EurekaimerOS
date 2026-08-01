@@ -6,7 +6,7 @@
 
 + [`base.nix`](../modules/system/base.nix)
   + Enables flakes, `nix-command`, unfree packages, `nix-ld`, NetworkManager, and systemd-boot.
-  + Uses USTC, Tsinghua, and official caches; optimizes the store and removes generations older than seven days weekly.
+  + Uses USTC, Tsinghua, and official caches; optimizes the store and prunes profile generations on every rebuild — once the count reaches 10 the oldest are deleted and the store is GC'd immediately (no weekly timer).
 + [`users.nix`](../modules/system/users.nix) defines the daily user, shell, administration, and virtualization groups.
 + [`packages.nix`](../modules/system/packages.nix) groups shared CLI, networking, monitoring, archive, and DOS tools. Browsers are user-level packages.
 
