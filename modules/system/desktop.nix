@@ -66,5 +66,8 @@ in
 
   hardware.bluetooth.enable = true;
 
+  # 蓝牙芯片常驻会持续耗电：默认关闭，需要时再手动开启。
+  hardware.bluetooth.powerOnBoot = false;
+
   services.upower.enable = true;
 }

@@ -48,6 +48,7 @@ let
     imv
     pavucontrol
     polkitAgent        # Polkit 认证代理（替代 KDE agent，见上方 let）
+    swayidle           # 空闲超时自动锁屏/熄屏（省电，见 config.kdl）
   ];
 
   niriCapturePackages = with pkgs; [

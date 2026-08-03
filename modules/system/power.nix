@@ -1,4 +1,15 @@
 { lib, pkgs, ... }:
+# 续航调优指南（从省电到更省电，按需自行开启）：
+#   - 默认档（当前）：电池下 powersave + 关 boost + CPU 上限 50% + EPP=power
+#   - 更激进档（改一行即可）：
+#       CPU_MAX_PERF_ON_BAT = 30;                    # 上限降到 30%
+#       CPU_MIN_PERF_ON_BAT = 2;                     # 空闲更低
+#       START_CHARGE_THRESH_BAT0 = 1;                # 联想长寿命充电模式（55-60% 停止）
+#   - 行为层（收益最大，见下方注释）：
+#       调低屏幕亮度 > 刷新率降到 60Hz > 减少后台常驻
+#
+# 注意：CPU_MAX_PERF_ON_BAT 影响电池下性能，调太低会明显变慢。
+#
 
 {
   powerManagement.enable = true;
@@ -41,6 +52,7 @@
       SOUND_POWER_SAVE_ON_BAT = 1;
       USB_AUTOSUSPEND = 1;
       NMI_WATCHDOG = 0;
+      SCHED_POWERSAVE_ON_BAT = 1;  # CFS 调度器省电模式（仅电池下生效）
 
       # Lenovo XiaoXin/IdeaPad exposes a fixed conservation mode instead of
       # arbitrary charge thresholds. Keep it off so charging can reach 100%;
