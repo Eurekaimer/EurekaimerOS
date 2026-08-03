@@ -66,8 +66,8 @@ in
 
   hardware.bluetooth.enable = true;
 
-  # 蓝牙芯片常驻会持续耗电：默认关闭，需要时再手动开启。
-  hardware.bluetooth.powerOnBoot = false;
+  # 蓝牙默认开启（日常使用蓝牙外设；待机功耗可忽略，省电重点在屏幕与后台）
+  hardware.bluetooth.powerOnBoot = true;
 
   services.upower.enable = true;
 }
