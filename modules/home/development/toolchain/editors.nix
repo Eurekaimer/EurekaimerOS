@@ -17,9 +17,9 @@
     ];
   };
 
-  home.packages = [
-    pkgs-unstable.zed-editor
-    pkgs.github-desktop
+  eureka.software.home = [
+    pkgs-unstable.zed-editor # Zed 编辑器（unstable）
+    pkgs.github-desktop      # GitHub Desktop 图形客户端
   ];
 
   xdg.configFile = {

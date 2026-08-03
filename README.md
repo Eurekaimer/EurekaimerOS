@@ -4,7 +4,7 @@
 
 A personal, host-aware NixOS configuration built around Niri, Noctalia, Home Manager, and flakes. `/etc/nixos` is the live configuration; this repository is its long-lived, frequently synchronized source copy.
 
-![EurekaimerOS system showcase](img/system_show.png)
+![EurekaimerOS system showcase](img/system-showcase.png)
 
 ## Choose a topic
 

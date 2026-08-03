@@ -42,5 +42,5 @@
 ## Default applications
 
 + [`applications/mime-defaults.nix`](../modules/home/applications/mime-defaults.nix)
-  + Generates both generic and KDE MIME defaults so desktop databases do not disagree.
+  + Generates generic MIME defaults so desktop databases do not disagree.
   + Change defaults in this module rather than manually editing `~/.config/mimeapps.list`.

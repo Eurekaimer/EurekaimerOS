@@ -5,7 +5,7 @@
 ## Niri 会话
 
 + [`desktop/niri.nix`](../modules/home/desktop/niri.nix)
-  + 安装 Xwayland Satellite、音量与亮度工具、Hyprlock、图片查看器、音量控制和 KDE Polkit agent。
+  + 安装 Xwayland Satellite、音量与亮度工具、Hyprlock、图片查看器、音量控制和 Polkit 认证代理（polkit-gnome）。
   + 安装 grim、slurp、wf-recorder、wl-clipboard，并创建 `~/Pictures/Screenshots`。
   + 生成 `niri-window-shot`：通过 Niri IPC 选择真实窗口 ID，再调用原生窗口截图，保留圆角、阴影和透明区域。
   + 将 [`config/niri-config/config.kdl`](../modules/home/config/niri-config/config.kdl) 映射到 `~/.config/niri/config.kdl`。

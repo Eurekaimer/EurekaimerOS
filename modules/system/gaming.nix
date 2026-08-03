@@ -19,12 +19,12 @@
 
   programs.gamemode.enable = true;
 
-  environment.systemPackages = with pkgs; [
-    mangohud
-    wine
+  eureka.software.system = with pkgs; [
+    mangohud # 游戏内性能监控 HUD（帧率/温度/功耗）
+    wine     # Windows 兼容层（运行 Windows 游戏/软件）
   ] ++ [
-    pkgs-unstable.lutris
-    pkgs-unstable.protonplus
-    pkgs-unstable.umu-launcher
+    pkgs-unstable.lutris        # 游戏管理器（unstable）
+    pkgs-unstable.protonplus    # Proton 版本管理
+    pkgs-unstable.umu-launcher  # UMU 启动器（运行非 Steam 游戏）
   ];
 }

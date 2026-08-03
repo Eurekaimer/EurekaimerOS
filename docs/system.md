@@ -23,7 +23,7 @@
 
 + [`desktop.nix`](../modules/system/desktop.nix)
   + Enables Niri, greetd/ReGreet through Labwc, GVfs, UDisks2, printing, PipeWire, Bluetooth, and UPower.
-  + Plasma 6 supplies KDE applications and components, while Niri remains the daily session.
+  + No KDE/Plasma components are installed; Niri is the only desktop session.
 + [`graphics.nix`](../modules/system/graphics.nix) enables the graphics stack and installs VAAPI diagnostics.
 + [`graphics-intel.nix`](../modules/system/graphics-intel.nix) adds Intel media/VAAPI drivers only for this host.
 

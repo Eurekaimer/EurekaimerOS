@@ -1,7 +1,7 @@
 { pkgs, ... }:
 
 let
-  loginWallpaper = ../../img/project_mifeng.png;
+  loginWallpaper = ../../img/login-wallpaper.png;
 in
 {
   programs.niri.enable = true;
@@ -10,7 +10,7 @@ in
   services.udisks2 = {
     enable = true;
     settings."mount_options.conf".defaults = {
-      # Safe NTFS defaults for Dolphin/udisks in niri.
+      # Safe NTFS defaults for file managers/udisks in niri.
       # Do not add "force" here: dirty NTFS volumes should be fixed with Windows chkdsk.
       "ntfs:ntfs3_defaults" = "uid=$UID,gid=$GID,windows_names";
       "ntfs:ntfs3_allow" =
@@ -46,14 +46,12 @@ in
   };
 
   services.xserver.enable = true;
-  services.displayManager.sddm.enable = false;
   # Labwc handles GTK popovers reliably; Cage can misroute pointer grabs for
   # ReGreet's user/session combo boxes on this system.
   services.greetd.settings.default_session = {
     command = "${pkgs.dbus}/bin/dbus-run-session ${pkgs.labwc}/bin/labwc -s ${pkgs.regreet}/bin/regreet";
     user = "greeter";
   };
-  services.desktopManager.plasma6.enable = true;
   services.xserver.xkb.layout = "us";
 
   services.printing.enable = true;

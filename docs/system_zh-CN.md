@@ -29,7 +29,7 @@
 
 + [`desktop.nix`](../modules/system/desktop.nix)
   + 启用 Niri、greetd/ReGreet、Labwc 登录承载环境、GVfs、UDisks2、打印、PipeWire、蓝牙和 UPower。
-  + Plasma 6 提供 KDE 应用及相关桌面组件，但日常会话入口仍是 Niri。
+  + 不安装 KDE/Plasma 组件，Niri 是唯一的桌面会话。
   + PipeWire 同时启用 ALSA、32 位 ALSA 和 PulseAudio 兼容层。
   + UDisks 的 NTFS 参数拒绝对脏卷强制挂载，优先要求在 Windows 中修复文件系统。
 

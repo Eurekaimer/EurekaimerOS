@@ -60,8 +60,8 @@
   boot.kernelParams = [ "mem_sleep_default=deep" ];
 
 
-  environment.systemPackages = with pkgs; [
-    powertop
-    s-tui
+  eureka.software.system = with pkgs; [
+    powertop # 电源管理诊断与调优（TLP 的配套工具）
+    s-tui    # 终端内 CPU 压力/温度监控
   ];
 }

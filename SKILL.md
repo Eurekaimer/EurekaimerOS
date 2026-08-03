@@ -57,7 +57,7 @@
 { pkgs, ... }:
 
 let
-  loginWallpaper = ../../img/login.png;
+  loginWallpaper = ../../img/login-wallpaper.png;
 in
 {
   programs.regreet = {
@@ -72,7 +72,6 @@ in
       size = 16;
     };
   };
-  services.displayManager.sddm.enable = false;
 }
 ```
 
@@ -91,10 +90,10 @@ in
 
 ### Current pipeline
 1. `programs.regreet.enable = true` enables ReGreet and greetd.
-2. The Nix path `img/project_mifeng.png` becomes `background.path`.
+2. The Nix path `img/login-wallpaper.png` becomes `background.path`.
 3. Labwc hosts ReGreet as greetd's default session so GTK combo-box popovers receive normal single-click pointer events.
-4. ReGreet discovers the installed Niri and Plasma desktop sessions.
-5. SDDM stays explicitly disabled; do not reintroduce the old QML theme.
+4. ReGreet discovers the installed Niri desktop session.
+5. No display manager (SDDM) is used; ReGreet/greetd is the greeter.
 
 ### Design rules
 - Keep the greeter simple: background, greeting, clock, session selector, credentials.
@@ -102,7 +101,7 @@ in
 - Keep the custom GTK stylesheet in `modules/system/config/regreet.css`; its twilight navy, periwinkle, and blush palette is sampled from the wallpaper.
 - Use `Noto Sans CJK SC` for Chinese text.
 - Configure user-visible greeter behavior in `modules/system/desktop.nix`.
-- Keep the background source in `img/project_mifeng.png`.
+- Keep the background source in `img/login-wallpaper.png`.
 
 ### Rebuild workflow after greeter changes
 ```bash

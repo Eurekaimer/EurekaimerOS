@@ -1,8 +1,9 @@
+# 系统监控工具（系统级）
 { pkgs, ... }:
 
 {
-  environment.systemPackages = with pkgs; [
-    ncdu
-    btop
+  eureka.software.system = with pkgs; [
+    ncdu # 磁盘占用分析（终端 TUI）
+    btop # 系统资源监控（CPU/内存/网络/进程）
   ];
 }

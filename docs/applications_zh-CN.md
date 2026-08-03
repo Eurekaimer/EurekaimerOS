@@ -47,5 +47,5 @@
 ## 默认应用
 
 + [`applications/mime-defaults.nix`](../modules/home/applications/mime-defaults.nix)
-  + 集中生成通用和 KDE 的 MIME 默认项，避免两套桌面数据库指向不同应用。
+  + 集中生成通用的 MIME 默认项，避免桌面数据库指向不同应用。
   + 修改默认程序时应改此模块，而不是手动编辑 `~/.config/mimeapps.list`。

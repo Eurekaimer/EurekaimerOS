@@ -168,7 +168,7 @@ let
   };
 in
 {
-  home.packages = [ trashCleanup ];
+  eureka.software.home = [ trashCleanup ];
 
   systemd.user.services.trash-cleanup = {
     Unit = {

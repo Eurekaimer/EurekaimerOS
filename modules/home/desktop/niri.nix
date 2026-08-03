@@ -47,7 +47,7 @@ let
     hyprlock
     imv
     pavucontrol
-    kdePackages.polkit-kde-agent-1
+    polkitAgent        # Polkit 认证代理（替代 KDE agent，见上方 let）
   ];
 
   niriCapturePackages = with pkgs; [
@@ -60,9 +60,18 @@ let
   niriScripts = [
     niri-window-shot
   ];
+  # Polkit 认证代理（轻量替代 KDE 的 polkit-kde-agent-1）
+  polkitAgent = pkgs.writeShellApplication {
+    name = "polkit-auth-agent";
+    runtimeInputs = [ pkgs.polkit_gnome ];
+    text = ''
+      exec ${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1 "$@"
+    '';
+  };
+
 in
 {
-  home.packages = niriSessionPackages ++ niriCapturePackages ++ niriScripts;
+  eureka.software.home = niriSessionPackages ++ niriCapturePackages ++ niriScripts;
 
   services.swayosd.enable = false;
   home.activation.createScreenshotsDir = lib.hm.dag.entryAfter [ "writeBoundary" ] ''

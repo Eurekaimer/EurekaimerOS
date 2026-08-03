@@ -1,10 +1,11 @@
 { pkgs, ... }:
 
 {
-  home.packages = with pkgs; [
-    papirus-icon-theme
-    font-awesome
-    libnotify
+  # 桌面 UI 相关
+  eureka.software.home = with pkgs; [
+    papirus-icon-theme # Papirus 图标主题
+    font-awesome       # Font Awesome 图标字体
+    libnotify          # 桌面通知命令（notify-send）
   ];
 
   # Keep user dirs stable across reinstalls so app configs that expect

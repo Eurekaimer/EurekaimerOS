@@ -43,33 +43,11 @@ let
   // lib.genAttrs ebookMimeTypes (_: foliateDesktop)
   // lib.genAttrs imageMimeTypes (_: imvDesktop);
 
-  renderMimeAppsSection =
-    apps:
-    lib.concatStringsSep "\n" (
-      lib.mapAttrsToList (mime: desktops: "${mime}=${lib.concatStringsSep ";" desktops}") apps
-    );
-
-  mimeAppsText = ''
-    [Added Associations]
-    ${renderMimeAppsSection defaultApplications}
-
-    [Default Applications]
-    ${renderMimeAppsSection defaultApplications}
-
-    [Removed Associations]
-  '';
 in
 
 {
   xdg.configFile = {
     "mimeapps.list".force = true;
-
-    # Dolphin/KDE can prefer the desktop-specific file over the generic
-    # mimeapps.list that xdg-open/yazi already honor.
-    "kde-mimeapps.list" = {
-      force = true;
-      text = mimeAppsText;
-    };
   };
 
   xdg.desktopEntries = {
@@ -112,10 +90,4 @@ in
 
     associations.added = defaultApplications;
   };
-
-  home.activation.rebuildKdeServiceCache = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
-    if command -v kbuildsycoca6 >/dev/null 2>&1; then
-      $DRY_RUN_CMD kbuildsycoca6 --noincremental || true
-    fi
-  '';
 }

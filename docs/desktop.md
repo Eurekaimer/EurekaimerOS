@@ -5,7 +5,7 @@ The user desktop entry point is [`modules/home/desktop.nix`](../modules/home/des
 ## Niri session
 
 + [`desktop/niri.nix`](../modules/home/desktop/niri.nix)
-  + Installs Xwayland Satellite, audio/brightness controls, Hyprlock, an image viewer, and the KDE Polkit agent.
+  + Installs Xwayland Satellite, audio/brightness controls, Hyprlock, an image viewer, and a Polkit authentication agent (polkit-gnome).
   + Installs grim, slurp, wf-recorder, and wl-clipboard, and creates `~/Pictures/Screenshots`.
   + Generates `niri-window-shot`, which obtains a real window ID through Niri IPC and preserves rounded corners, shadows, and transparency.
   + Maps [`config/niri-config/config.kdl`](../modules/home/config/niri-config/config.kdl) to `~/.config/niri/config.kdl`.

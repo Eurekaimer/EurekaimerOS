@@ -28,8 +28,8 @@
   # Needed for attaching USB devices to Windows guests from virt-manager.
   virtualisation.spiceUSBRedirection.enable = true;
 
-  environment.systemPackages = with pkgs; [
-    virt-viewer
-    virtio-win
+  eureka.software.system = with pkgs; [
+    virt-viewer # SPICE/VNC 虚拟机图形客户端
+    virtio-win  # Windows 客户机 virtio 驱动镜像
   ];
 }

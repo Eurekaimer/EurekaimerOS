@@ -1,11 +1,10 @@
+# 图形栈基础（系统级）
 { pkgs, ... }:
 
 {
-  hardware.graphics = {
-    enable = true;
-  };
+  hardware.graphics.enable = true;
 
-  environment.systemPackages = with pkgs; [
-    libva-utils
+  eureka.software.system = with pkgs; [
+    libva-utils # VA-API 硬件解码测试工具（vainfo）
   ];
 }

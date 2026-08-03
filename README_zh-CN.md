@@ -4,7 +4,7 @@
 
 这是一个围绕 Niri、Noctalia、Home Manager 和 flakes 组织的个人 NixOS 配置。`/etc/nixos` 是当前运行配置，本仓库是需要经常同步的长期维护副本。
 
-![EurekaimerOS 系统展示](img/system_show.png)
+![EurekaimerOS 系统展示](img/system-showcase.png)
 
 ## 按需选择文档
 

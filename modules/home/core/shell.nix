@@ -1,9 +1,10 @@
 { pkgs, ... }:
 
 {
-  home.packages = with pkgs; [
-    eza
-    tree
+  # 终端工具与自建脚本（见各条目注释）
+  eureka.software.home = with pkgs; [
+    eza  # 现代化的 ls 替代（图标/文件类型着色）
+    tree # 目录树展示
     (writeShellApplication {
       name = "docker-ass";
       runtimeInputs = [ docker ];

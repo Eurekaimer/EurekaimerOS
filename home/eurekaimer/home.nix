@@ -6,6 +6,7 @@
     ../../modules/home/core.nix
     ../../modules/home/development.nix
     ../../modules/home/applications.nix
+    ../../modules/home/software.nix
   ];
 
   home.username = "eurekaimer";

@@ -34,7 +34,7 @@
 # │   ├── base.nix                     # Nix 基础设置、GC、引导、网络基础、时区、系统版本
 # │   ├── users.nix                    # 用户、默认 shell 与 docker/libvirt 组
 # │   ├── locale.nix                   # 字体、语言、输入法（fcitx5）
-# │   ├── desktop.nix                  # 桌面会话服务（niri/greetd/ReGreet/plasma/音频/电源等）
+# │   ├── desktop.nix                  # 桌面会话服务（niri/greetd/ReGreet/音频/电源等）
 # │   ├── power.nix                    # 电源管理
 # │   ├── graphics.nix                 # 通用图形能力（硬件加速基础 + 调试工具）
 # │   ├── mounts.nix                   # 额外挂载点
