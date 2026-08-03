@@ -9,7 +9,7 @@
 #   - 增删软件：只改对应分类模块中的一行，不碰任何聚合逻辑；
 #   - 新增分类：新建一个模块文件 + 在 packages.nix 里加一行 import；
 #   - 清单可查：所有系统软件集中在 modules/system/packages/ 下，
-#     配合 readme/software.md 一览无余；
+#     配合根目录 software.md 一览无余；
 #   - 聚合逻辑只有一处，避免多个模块各写各的 environment.systemPackages。
 { lib, config, ... }:
 

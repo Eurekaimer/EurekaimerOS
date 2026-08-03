@@ -25,7 +25,7 @@
 | 基础 CLI | `git` | 版本控制 | stable | 保留 |
 | 基础 CLI | `gh` | GitHub CLI | stable | 保留 |
 | 基础 CLI | `neovim` | 终端编辑器（配置见用户级） | stable | 保留 |
-| 基础 CLI | `vim` | 经典 vi | stable | **可删**（被 neovim 覆盖） |
+| 基础 CLI | `vim` | 经典 vi 编辑器（与 neovim 并存，用户指定保留） | stable | 保留 |
 | 基础 CLI | `python3` | 系统 Python 解释器 | stable | 保留（脚本兜底） |
 | 基础 CLI | `xclip` | X11 剪贴板 | stable | 保留 |
 | 网络 | `wget` / `curl` | HTTP 下载/请求 | stable | 保留 |
@@ -57,12 +57,11 @@
 | 包 | 用途 | 渠道 | 建议 |
 |---|---|---|---|
 | `neovim`（+22 插件） | 主力编辑器 | stable | 保留 |
-| `helix` | 编辑器 | unstable | **可选** |
 | `vscode`（+4 扩展） | 编辑器 | unstable | **可选** |
 | `zed-editor` | 编辑器 | unstable | **可选** |
 | `jetbrains.idea-oss` | Java IDE | unstable | **可选** |
 | `github-desktop` | GitHub 图形客户端 | stable | **可删**（与 gh CLI 重叠） |
-| `claude-code` / `claude-code-acp` / `codex` / `codex-acp` / `omp` | AI 编码 agent | unstable | 保留 |
+| `codex` / `codex-acp` / `omp` | AI 编码 agent | unstable | 保留 |
 | `fd` / `ripgrep` / `sqlite` | 搜索/数据库 CLI | stable | 保留 |
 | `bash-language-server` | Bash LSP | stable | 保留 |
 | `nil` / `nixfmt-rfc-style` | Nix LSP / 格式化 | stable | 保留 |
@@ -85,15 +84,15 @@
 | `crow-translate` | 翻译 | stable | **可选** |
 | OBS Studio（wrapOBS + 3 插件） | 录屏推流 | unstable | 保留 |
 | `mpv` / `ffmpeg` / `mediainfo` | 播放/转码/信息 | stable/unstable | 保留 |
-| `spotify` / `go-musicfox` / `netease-cloud-music-gtk` | 音乐 | stable/unstable | 保留 |
+| `go-musicfox` | 网易云音乐终端版 | unstable | 保留 |
 | `trash-cli` / `yt-dlp` | 回收站 CLI / 视频下载 | stable | **trash-cli 可选**（与 trash-cleanup 脚本并存） |
 | `google-chrome` / `throne` | 浏览器 | stable | 保留 |
 | `clash-verge-rev` | Clash 图形客户端 | stable | 保留 |
-| `sunshine` | 远程串流服务端 | stable | 保留 |
 | `campus-login`（自建脚本） | 校园网直连认证 | — | 保留 |
-| `motrix` / `qbittorrent` | 下载器 / BT 客户端 | stable | **motrix 可选** |
+| `qbittorrent` | BT 下载客户端 | stable | 保留 |
 | `picgo` | 图床 | unstable | 保留 |
 | `feishu` / `qq` / `wechat`（FHS 封装）/ `zoom-us` | 通讯 | unstable/stable | 保留 |
+| `pcmanfm` | GUI 文件管理器（轻量 GTK3，依赖面最小；曾试 Double Commander/Qt 偏卡） | stable | 保留 |
 
 ### 桌面（desktop/）
 | 包 | 用途 | 渠道 | 建议 |
@@ -113,19 +112,18 @@
 - **全部 KDE/Plasma 组件**：`services.desktopManager.plasma6`、SDDM（含旧主题 `sddm-mifeng/`）、`kdePackages.polkit-kde-agent-1`。
   - 保留 `kdePackages.fcitx5-qt`（fcitx5 的 Qt 输入法模块，非 KDE 桌面组件，删除会导致 Qt 应用无法输入中文）。
   - polkit 授权改为 `polkit-gnome`（自建 `polkit-auth-agent` 封装启动）。
+- **用户指定精简**：`motrix`、`helix`、`sunshine`、`spotify`、`netease-cloud-music-gtk`、`claude-code` / `claude-code-acp`（含其配置目录与激活脚本）。
+- **人机协作文档**：`SKILL.md`、`home-layer-map.txt`、`system-layer-map.txt` 已删除。
 
 ## 可删/精简建议（仅建议，未执行 —— 由你决定）
 
 | 包 | 理由 | 建议 |
 |---|---|---|
-| `vim` | 与 neovim 功能完全重叠 | 可删 |
 | `dosbox-staging` | 小众模拟器 | 可删 |
 | `jupyter` | 体积大，可用 `uv` 按项目安装 | 可删/可选 |
 | `github-desktop` | 与 `gh` CLI 重叠 | 可删 |
-| 编辑器（neovim/helix/vscode/zed/idea-oss 并存 5 个） | 维护面大 | 建议保留 2-3 个 |
 | 阅读器（foliate/readest/sioyek） | 功能重叠 | 保留 1-2 个 |
 | `wine` | 体积大；不打 Windows 程序可删 | 可选 |
-| `motrix` | 与 qbittorrent 部分重叠 | 可选 |
 | `trash-cli` | 与 trash-cleanup 定时脚本并存 | 可选 |
 | `crow-translate` / `zotero` / `s-tui` | 非高频 | 可选 |
 | 字体（lxgw/noto/sarasa/wqy 多套 CJK） | 占用空间 | 按需精简（影响观感） |

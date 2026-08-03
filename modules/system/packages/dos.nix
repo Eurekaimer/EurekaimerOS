@@ -3,6 +3,6 @@
 
 {
   eureka.software.system = with pkgs; [
-    dosbox-staging # DOS 游戏模拟器（小众，可删建议见 readme/software.md）
+    dosbox-staging # DOS 游戏模拟器（小众，可删建议见根目录 software.md）
   ];
 }

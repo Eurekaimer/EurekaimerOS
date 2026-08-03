@@ -5,7 +5,6 @@
     google-chrome   # Chrome 浏览器（默认）
     clash-verge-rev # Clash 图形客户端（配 mihomo 内核）
     throne          # 浏览器（Throne）
-    sunshine        # 远程串流服务端（配合 Moonlight）
   ] ++ [
     # campus-login：校园网认证直连脚本（南开 netauth）
     (writeShellApplication {

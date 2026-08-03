@@ -1,10 +1,6 @@
 { pkgs, pkgs-unstable, ... }:
 
 {
-  programs.helix = {
-    enable = true;
-    package = pkgs-unstable.helix;
-  };
 
   programs.vscode = {
     enable = true;
@@ -23,7 +19,6 @@
   ];
 
   xdg.configFile = {
-    "helix/config.toml".source = ../../config/helix-config/config.toml;
     "zed/settings.json".source = ../../config/zed-config/settings.json;
   };
 }

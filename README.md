@@ -90,7 +90,7 @@ sudo nixos-rebuild switch --flake .#nixos
 ## Current decisions
 
 + UI and Kitty terminal text use LXGW WenKai Screen; Nerd Font remains available for glyph fallback.
-+ Google Chrome is the only declared browser; Firefox and its stale desktop rule are removed.
+Google Chrome and Throne are the declared browsers; Firefox and its stale desktop rule are removed.
 + TLP is the sole power-profile owner. Battery mode caps CPU performance at 50% and disables Turbo/dynamic boost without blocking Bluetooth.
 + NixOS uses stable packages by default. Fast-moving applications consume the single `pkgs-unstable` instance passed down from `flake.nix`.
 + Docker is enabled with Compose support and uses the local proxy for image pulls.
