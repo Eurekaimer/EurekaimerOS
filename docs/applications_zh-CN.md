@@ -5,9 +5,8 @@
 ## 浏览器与网络
 
 + [`applications/web.nix`](../modules/home/applications/web.nix)
-  + [Google Chrome](https://www.google.com/chrome/) 是唯一声明安装的网页浏览器；Firefox 已从系统配置移除。
+  + [Google Chrome](https://www.google.com/chrome/) 与 [Throne](https://github.com/throneproj/Throne) 是声明的浏览器；Firefox 已从系统配置移除。
   + [Clash Verge Rev](https://github.com/clash-verge-rev/clash-verge-rev) 和 [Throne](https://github.com/throneproj/Throne) 提供代理图形界面。
-  + [Sunshine](https://app.lizardbyte.dev/Sunshine/) 提供串流主机程序。
   + `campus-login` 生成隔离的临时 Chrome profile，清空代理环境并直连校园认证页，不污染日常浏览器 profile。
 + 后台耗电
   + Powertop 实测活动 Chrome renderer 与 Clash Verge 是较高唤醒来源。只保留一个代理核心、关闭闲置标签页，比同时常驻多个代理 GUI 更省电。
@@ -21,14 +20,13 @@
   + [PDF Arranger](https://github.com/pdfarranger/pdfarranger)：PDF 页面整理。
   + [Foliate](https://johnfactotum.github.io/foliate/) 与 [Readest](https://readest.com/)：电子书阅读。
   + [Sioyek](https://sioyek.info/)：PDF 阅读与研究导航。
-  + [Crow Translate](https://crow-translate.github.io/)：桌面翻译。
 
 ## 媒体
 
 + [`applications/media.nix`](../modules/home/applications/media.nix)
   + [OBS Studio](https://obsproject.com/) 使用 unstable 包，并加入 multi-RTMP、PipeWire 音频捕获和 VAAPI 插件。
   + [mpv](https://mpv.io/) 使用仓库内完整配置目录；同时安装 [FFmpeg](https://ffmpeg.org/) 与 MediaInfo。
-  + [Spotify](https://www.spotify.com/)、[yt-dlp](https://github.com/yt-dlp/yt-dlp)、[MusicFox](https://github.com/go-musicfox/go-musicfox) 和 [Netease Cloud Music GTK](https://github.com/gmg137/netease-cloud-music-gtk) 提供音乐与媒体获取。
+  + [yt-dlp](https://github.com/yt-dlp/yt-dlp) 负责媒体获取。
   + `trash-cli` 让脚本和终端删除操作进入回收站。
 
 ## 通信
@@ -40,7 +38,6 @@
 ## 下载与图片上传
 
 + [`applications/transfer.nix`](../modules/home/applications/transfer.nix)
-  + [Motrix](https://motrix.app/)：多协议下载。
   + [qBittorrent](https://www.qbittorrent.org/)：BitTorrent。
   + [PicGo](https://github.com/Molunerfinn/PicGo)：图片上传。
 

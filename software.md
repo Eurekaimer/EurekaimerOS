@@ -81,10 +81,8 @@
 | `obsidian` / `zotero` | 知识库 / 文献管理 | stable | **zotero 可选** |
 | `pdfarranger` | PDF 合并拆分 | stable | 保留 |
 | `foliate` / `readest` / `sioyek` | 电子书×2 + 论文 PDF | stable | **三选一/二**（sioyek 为默认 PDF） |
-| `crow-translate` | 翻译 | stable | **可选** |
 | OBS Studio（wrapOBS + 3 插件） | 录屏推流 | unstable | 保留 |
 | `mpv` / `ffmpeg` / `mediainfo` | 播放/转码/信息 | stable/unstable | 保留 |
-| `go-musicfox` | 网易云音乐终端版 | unstable | 保留 |
 | `trash-cli` / `yt-dlp` | 回收站 CLI / 视频下载 | stable | **trash-cli 可选**（与 trash-cleanup 脚本并存） |
 | `google-chrome` / `throne` | 浏览器 | stable | 保留 |
 | `clash-verge-rev` | Clash 图形客户端 | stable | 保留 |
@@ -112,7 +110,7 @@
 - **全部 KDE/Plasma 组件**：`services.desktopManager.plasma6`、SDDM（含旧主题 `sddm-mifeng/`）、`kdePackages.polkit-kde-agent-1`。
   - 保留 `kdePackages.fcitx5-qt`（fcitx5 的 Qt 输入法模块，非 KDE 桌面组件，删除会导致 Qt 应用无法输入中文）。
   - polkit 授权改为 `polkit-gnome`（自建 `polkit-auth-agent` 封装启动）。
-- **用户指定精简**：`motrix`、`helix`、`sunshine`、`spotify`、`netease-cloud-music-gtk`、`claude-code` / `claude-code-acp`（含其配置目录与激活脚本）。
+- **用户指定精简**：`motrix`、`helix`、`sunshine`、`spotify`、`netease-cloud-music-gtk`、`go-musicfox`（网易云终端版）、`crow-translate`、`claude-code` / `claude-code-acp`（含其配置目录与激活脚本）。
 - **人机协作文档**：`SKILL.md`、`home-layer-map.txt`、`system-layer-map.txt` 已删除。
 
 ## 可删/精简建议（仅建议，未执行 —— 由你决定）
@@ -125,7 +123,7 @@
 | 阅读器（foliate/readest/sioyek） | 功能重叠 | 保留 1-2 个 |
 | `wine` | 体积大；不打 Windows 程序可删 | 可选 |
 | `trash-cli` | 与 trash-cleanup 定时脚本并存 | 可选 |
-| `crow-translate` / `zotero` / `s-tui` | 非高频 | 可选 |
+| `zotero` / `s-tui` | 非高频 | 可选 |
 | 字体（lxgw/noto/sarasa/wqy 多套 CJK） | 占用空间 | 按需精简（影响观感） |
 
 > 执行方式：删掉对应模块中那一行即可，`eureka.software` 抽象保证无副作用。

@@ -36,10 +36,10 @@
 ## AI 与代理工具
 
 + [`development/agents.nix`](../modules/home/development/agents.nix)
-  + 从 unstable 安装 Claude Code、Codex 等快速更新工具。
+  + 从 unstable 安装 Codex 等快速更新工具。
   + 配置放在用户层，避免把个人工具链变成系统启动依赖。
 
-上游：[Claude Code](https://docs.anthropic.com/en/docs/claude-code/overview)、[OpenAI Codex](https://github.com/openai/codex)。
+上游：[OpenAI Codex](https://github.com/openai/codex)。
 
 ## R 与 Notebook
 

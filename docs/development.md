@@ -32,10 +32,10 @@
 ## AI tools
 
 + [`development/agents.nix`](../modules/home/development/agents.nix)
-  + Installs fast-moving tools such as Claude Code and Codex from unstable.
+  + Installs fast-moving tools such as Codex from unstable.
   + Keeping them in Home Manager avoids making personal tooling a system boot dependency.
 
-Upstream: [Claude Code](https://docs.anthropic.com/en/docs/claude-code/overview) and [OpenAI Codex](https://github.com/openai/codex).
+Upstream: [OpenAI Codex](https://github.com/openai/codex).
 
 ## R and notebooks
 

@@ -15,7 +15,6 @@
     pkgs.mediainfo                    # 媒体文件信息查看
     pkgs.trash-cli                    # 命令行回收站（trash-put）
     pkgs.yt-dlp                       # YouTube/视频下载
-    pkgs-unstable.go-musicfox         # 网易云音乐终端版（unstable）
   ];
 
   xdg.configFile."mpv" = {

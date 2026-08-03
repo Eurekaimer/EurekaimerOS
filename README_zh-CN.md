@@ -19,7 +19,7 @@
   + Niri 会话、截图和窗口规则
   + Noctalia、GTK、图标、核心用户工具和可选界面
 + [应用软件](docs/applications_zh-CN.md)
-  + Google Chrome 作为唯一配置的浏览器
+  + Chrome 与 Throne 作为声明的浏览器
   + 文档、媒体、通信、下载和默认应用
   + 主要软件的官方项目地址，用于说明来源并尊重上游贡献
 + [开发环境](docs/development_zh-CN.md)
@@ -90,7 +90,7 @@ sudo nixos-rebuild switch --flake .#nixos
 ## 当前关键决策
 
 + 中英文界面统一使用 LXGW WenKai Screen；终端和代码保留真正的等宽字体。
-+ Google Chrome 是唯一声明安装的浏览器；Firefox 和过期窗口规则已经移除。
++ Google Chrome 与 Throne 是声明的浏览器；Firefox 和过期窗口规则已经移除。
 + TLP 是唯一电源档位管理器。电池模式 CPU 上限为 50%，关闭 Turbo/HWP dynamic boost，并在电池切换时关闭蓝牙。
 + 默认使用稳定版软件包；快速更新的软件只使用 `flake.nix` 传下来的单一 `pkgs-unstable`。
 + 磁盘 UUID、代理和硬件配置与当前机器绑定，迁移前必须核对。

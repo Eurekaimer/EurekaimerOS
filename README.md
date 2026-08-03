@@ -19,7 +19,7 @@ A personal, host-aware NixOS configuration built around Niri, Noctalia, Home Man
   + Niri session, screenshots, and window rules
   + Noctalia, GTK, icons, core user tools, and optional UI modules
 + [Applications](docs/applications.md)
-  + Google Chrome as the only configured browser
+  + Chrome and Throne as the declared browsers
   + Documents, media, communication, transfer, and MIME defaults
   + Links crediting each major upstream project
 + [Development environment](docs/development.md)
