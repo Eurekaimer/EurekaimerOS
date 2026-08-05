@@ -79,4 +79,5 @@ in
     $DRY_RUN_CMD mkdir -p "${screenshotDir}"
   '';
   xdg.configFile."niri/config.kdl".source = ../config/niri-config/config.kdl;
+  xdg.configFile."hypr/hyprlock.conf".source = ../config/hyprlock-config/hyprlock.conf;
 }
