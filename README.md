@@ -4,7 +4,15 @@
 
 A personal, host-aware NixOS configuration built around Niri, Noctalia, Home Manager, and flakes. `/etc/nixos` is the live configuration; this repository is its long-lived, frequently synchronized source copy.
 
+Repository: [github.com/Eurekaimer/EurekaimerOS](https://github.com/Eurekaimer/EurekaimerOS)
+
 ![EurekaimerOS system showcase](img/system-showcase.png)
+
+The ReGreet login screen and the Hyprlock lock screen share the same wallpaper and greeting text:
+
+![ReGreet login screen](img/regreet-demo.png)
+
+![Hyprlock lock screen](img/hyprlock-demo.png)
 
 ## Choose a topic
 
@@ -98,9 +106,9 @@ sudo nixos-rebuild switch --flake .#nixos
 
 ## Current decisions
 
-+ UI and Kitty terminal text use LXGW WenKai Screen; Nerd Font remains available for glyph fallback.
-Google Chrome and Throne are the declared browsers; Firefox and its stale desktop rule are removed.
-+ TLP owns device power profiles; a one-minute 90%/50%/20% feedback controller targets six hours from current full-charge capacity, and idle sessions use adaptive suspend-then-hibernate.
-+ NixOS uses stable packages by default. Fast-moving applications consume the single `pkgs-unstable` instance passed down from `flake.nix`.
-+ Docker is enabled with Compose support and uses the local proxy for image pulls.
-+ Machine-specific disk UUIDs, proxy settings, and hardware configuration must be reviewed before using this setup on another host.
++ UI and terminal text use LXGW WenKai Screen; code keeps a true monospace fallback.
++ Google Chrome and Throne are the browsers; Firefox and its outdated desktop rule were removed.
++ TLP owns power profiles. A small controller samples the battery every minute and adjusts the 90%/50%/20% tiers, aiming for six hours at the current full-charge capacity; idle sessions use suspend-then-hibernate.
++ Stable packages by default. Only fast-moving applications draw from the single `pkgs-unstable` instance in `flake.nix`.
++ Docker is enabled with Compose support and pulls images through the local proxy.
++ Disk UUIDs, proxy settings, and hardware configuration are machine-specific — review them before using this setup on another host.

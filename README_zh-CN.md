@@ -4,7 +4,15 @@
 
 这是一个围绕 Niri、Noctalia、Home Manager 和 flakes 组织的个人 NixOS 配置。`/etc/nixos` 是当前运行配置，本仓库是需要经常同步的长期维护副本。
 
+仓库：[github.com/Eurekaimer/EurekaimerOS](https://github.com/Eurekaimer/EurekaimerOS)
+
 ![EurekaimerOS 系统展示](img/system-showcase.png)
+
+ReGreet 登录界面与 Hyprlock 锁屏共用同一张壁纸和问候语：
+
+![ReGreet 登录界面](img/regreet-demo.png)
+
+![Hyprlock 锁屏](img/hyprlock-demo.png)
 
 ## 按需选择文档
 
@@ -98,8 +106,9 @@ sudo nixos-rebuild switch --flake .#nixos
 
 ## 当前关键决策
 
-+ 中英文界面统一使用 LXGW WenKai Screen；终端和代码保留真正的等宽字体。
-+ Google Chrome 与 Throne 是声明的浏览器；Firefox 和过期窗口规则已经移除。
-+ TLP 负责设备电源档位；每分钟运行的 90%/50%/20% 分级反馈控制器以当前满充容量的 6 小时续航为目标，空闲时使用自适应 suspend-then-hibernate。
-+ 默认使用稳定版软件包；快速更新的软件只使用 `flake.nix` 传下来的单一 `pkgs-unstable`。
-+ 磁盘 UUID、代理和硬件配置与当前机器绑定，迁移前必须核对。
++ 界面与终端文字统一使用 LXGW WenKai Screen，代码保留真正的等宽字体回退。
++ 浏览器只保留 Google Chrome 与 Throne；Firefox 和过期的窗口规则已经移除。
++ TLP 负责电源档位。一个小控制器每分钟采样电量并调整 90%/50%/20% 分档，以当前满充容量续航 6 小时为目标；空闲时使用 suspend-then-hibernate。
++ 默认使用稳定版软件包；只有快速更新的软件从 `flake.nix` 中的单一 `pkgs-unstable` 取包。
++ 启用 Docker 与 Compose，镜像通过本地代理拉取。
++ 磁盘 UUID、代理和硬件配置都与当前机器绑定，迁移前必须核对。

@@ -43,4 +43,4 @@ sudo nixos-rebuild switch --flake .#nixos
 
 ## EurekaimerOS synchronization
 
-`/etc/nixos` is the live configuration. `/home/eurekaimer/Documents/GitHub/EurekaimerOS` is the long-lived repository. Sync only after successful verification, preserving the target repository's `.git`, LICENSE, and repository-only files; do not use deletion-based mirroring.
+`/etc/nixos` is the live configuration. `/home/eurekaimer/Documents/GitHub/EurekaimerOS` is the long-lived repository, hosted at <https://github.com/Eurekaimer/EurekaimerOS>. Sync only after successful verification, preserving the target repository's `.git`, LICENSE, and repository-only files; do not use deletion-based mirroring.
