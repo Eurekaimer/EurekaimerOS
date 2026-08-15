@@ -1,0 +1,93 @@
+--- a/Services/Hardware/BatteryService.qml
++++ b/Services/Hardware/BatteryService.qml
+@@ -21,6 +21,21 @@
+   readonly property real warningThreshold: Settings.data.systemMonitor.batteryWarningThreshold
+   readonly property real criticalThreshold: Settings.data.systemMonitor.batteryCriticalThreshold
+   readonly property string batteryIcon: getIcon(batteryPercentage, batteryCharging, batteryPluggedIn, batteryReady)
++  readonly property real targetRuntimeHours: 6.0
++  property real smoothedDischargeRate: 0
++
++  Timer {
++    interval: 30000
++    running: root.batteryReady && !root.batteryCharging && !root.batteryPluggedIn
++    repeat: true
++    triggeredOnStart: true
++    onTriggered: root.sampleDischargeRate()
++    onRunningChanged: {
++      if (!running) {
++        root.smoothedDischargeRate = 0;
++      }
++    }
++  }
+ 
+   readonly property var laptopBatteries: UPower.devices.values.filter(d => d.isLaptopBattery).sort((x, y) => {
+                                                                                                      // Force DisplayDevice to the top
+@@ -250,11 +265,48 @@
+     return match ? match.icon : "battery-off"; // New fallback icon clearly represent if nothing is true here.
+   }
+ 
++  function sampleDischargeRate() {
++    const device = primaryDevice;
++    if (!device || isBluetoothDevice(device) || device.changeRate === undefined) {
++      return;
++    }
++
++    const rate = Math.abs(device.changeRate);
++    if (!isFinite(rate) || rate <= 0) {
++      return;
++    }
++
++    smoothedDischargeRate = smoothedDischargeRate > 0
++        ? smoothedDischargeRate * 0.7 + rate * 0.3
++        : rate;
++  }
++
++  function getEstimatedTimeToEmpty(device) {
++    if (!device || isBluetoothDevice(device)) {
++      return device?.timeToEmpty || 0;
++    }
++
++    const energy = Number(device.energy || 0);
++    const fullEnergy = Number(device.energyCapacity || 0);
++    const measuredRate = device === primaryDevice && smoothedDischargeRate > 0
++        ? smoothedDischargeRate
++        : Math.abs(Number(device.changeRate || 0));
++    const targetRate = fullEnergy > 0 ? fullEnergy / targetRuntimeHours : 0;
++    const effectiveRate = Math.max(measuredRate, targetRate);
++
++    if (energy > 0 && effectiveRate > 0) {
++      return energy * 3600 / effectiveRate;
++    }
++    return device.timeToEmpty || 0;
++  }
++
+   function getRateText(device) {
+     if (!device || device.changeRate === undefined) {
+       return "";
+     }
+-    const rate = Math.abs(device.changeRate);
++    const rate = device === primaryDevice && smoothedDischargeRate > 0
++        ? smoothedDischargeRate
++        : Math.abs(device.changeRate);
+     if (device.timeToFull > 0) {
+       return I18n.tr("battery.charging-rate", {
+                        "rate": rate.toFixed(2)
+@@ -270,15 +322,16 @@
+     if (!isDeviceReady(device)) {
+       return I18n.tr("battery.no-battery-detected");
+     }
++    const estimatedTimeToEmpty = getEstimatedTimeToEmpty(device);
+     if (isPluggedIn(device)) {
+       return I18n.tr("battery.plugged-in");
+     } else if (device.timeToFull > 0) {
+       return I18n.tr("battery.time-until-full", {
+                        "time": Time.formatVagueHumanReadableDuration(device.timeToFull)
+                      });
+-    } else if (device.timeToEmpty > 0) {
++    } else if (estimatedTimeToEmpty > 0) {
+       return I18n.tr("battery.time-left", {
+-                       "time": Time.formatVagueHumanReadableDuration(device.timeToEmpty)
++                       "time": Time.formatVagueHumanReadableDuration(estimatedTimeToEmpty)
+                      });
+     }
+     return I18n.tr("common.idle");

@@ -44,14 +44,16 @@
 
 + [`power.nix`](../modules/system/power.nix)
   + 由 [TLP](https://linrunner.de/tlp/) 单独管理平台电源策略，强制关闭会与它争用的 power-profiles-daemon。
-  + 电池模式使用 `powersave` governor、`power` EPP、low-power 平台档位，关闭 Turbo 和 HWP dynamic boost。
-  + 电池模式 CPU 性能范围为 5%–50%；交流电保持 10%–100%。
+  + 根据当前满充能量计算 6 小时功耗预算，每分钟采样一次，并用 30% 新样本 + 70% 历史值的 EWMA 平滑；Intel HWP 上限采用乘法反馈收敛。
+  + 容量节点分为四档：90% 以上为 `30%–75%` 与 `balance_power` EPP，50%–90% 为 `20%–60%`，20%–50% 为 `15%–45%`，20% 及以下为 `10%–30%`；后三档使用 `power` EPP。
+  + 所有电池档位都使用 `powersave` governor、low-power 平台档位，并关闭 Turbo/HWP dynamic boost。
   + 电池模式启用 PCIe ASPM、设备 runtime PM、AHCI runtime PM、Wi-Fi 节能、声卡节能和 USB autosuspend。
   + 蓝牙不会再被 TLP 在开机或切换到电池供电时软阻塞，Noctalia 可正常控制开关。
-  + 首选 `deep` suspend，减少待机掉电；若特定固件恢复不稳定，应撤销该内核参数。
+  + Noctalia 使用同一套平滑保守估算：`剩余能量 / max(实测功率, 目标功率)`，因此显示值不会超过按当前电量折算的 6 小时目标。
+  + 首选 `deep` suspend，声明恢复用 swap，并使用 systemd 按电池余量自适应的 suspend-then-hibernate；合盖时电池供电使用该策略，交流电使用普通 suspend。
   + 安装 `powertop` 与 `s-tui` 作为诊断工具，不运行常驻自动调优服务。
 
-实机审查时，TLP 已处于 battery/low-power 状态，Turbo 已关闭。10 秒 Powertop 采样显示主要唤醒来源是活动中的 Chrome renderer、Clash Verge、显示合成和当前诊断进程，而不是 TLP 未生效。降低网页负载、关闭不用的标签页和只保留一个代理核心，通常比继续叠加内核参数更有效。
+实时状态写入 `/run/power-policy/status.json`。若浏览器或代理界面 renderer 持续高负载，即使 CPU 已到当前档位下限，实测续航仍会低于目标；控制器会如实显示该差距，也不会把电池损耗伪装成可由软件恢复。
 
 ## 存储
 

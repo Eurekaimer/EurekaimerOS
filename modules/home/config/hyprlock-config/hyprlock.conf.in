@@ -18,7 +18,7 @@ animations {
 background {
     monitor =
     color = rgba(23, 21, 34, 1.0)
-    path = /etc/nixos/img/login-wallpaper.png
+    path = @loginWallpaper@
 }
 
 # 顶部问候语（对应登录界面的「欢迎回来」）

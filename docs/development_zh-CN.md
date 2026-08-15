@@ -1,13 +1,17 @@
 # 开发环境
 
-入口 [`modules/home/development.nix`](../modules/home/development.nix) 组合 AI 工具、Neovim 和按语言拆分的工具链。开发工具属于用户环境，不进入全局系统 path。
+入口 [`modules/home/development.nix`](../modules/home/development.nix) 组合 Neovim 和按语言拆分的工具链。开发工具属于用户环境，不进入全局系统 path。
 
 ## 编辑器与通用 CLI
 
 + [`development/neovim.nix`](../modules/home/development/neovim.nix)
   + 管理 Neovim 与仓库内编辑器配置。
 + [`toolchain/editors.nix`](../modules/home/development/toolchain/editors.nix)
-  + [Zed](https://zed.dev/) 使用 unstable 版本；同时安装 [GitHub Desktop](https://desktop.github.com/)。
+  + 安装 VSCode 与 [GitHub Desktop](https://desktop.github.com/)。
+  + 语言、SSH、容器、Jupyter、LaTeX 和外观扩展只会在首次激活时复制到 `~/.vscode/extensions`。
+  + 复制后的扩展是普通可写用户文件；VSCode 可以自由安装、更新、禁用和卸载，Home Manager 后续不会把已卸载扩展恢复回来。
+  + `settings.json` 只写入一次初始值，之后可直接在 VSCode 中修改。界面缩放为 `1.5`，编辑器、终端和调试控制台字号分别为 18、17、16。
+  + 启动时关闭 Settings Sync，云端扩展和设置不会覆盖本地配置；`argv.json` 只保留 VSCode 支持的运行参数。
 + [`toolchain/cli.nix`](../modules/home/development/toolchain/cli.nix)
   + 安装 `fd`、`ripgrep` 等面向代码搜索和自动化的 CLI。
 + [`toolchain/nix.nix`](../modules/home/development/toolchain/nix.nix)
@@ -16,10 +20,10 @@
 ## 语言工具链
 
 + Python
-  + [`python.nix`](../modules/home/development/toolchain/python.nix) 安装 [uv](https://docs.astral.sh/uv/)、Jupyter 和 Pyright。
+  + [`python.nix`](../modules/home/development/toolchain/python.nix) 安装 [uv](https://docs.astral.sh/uv/) 和 Pyright；Notebook 使用项目级 uv 环境与首次写入的 VSCode Jupyter 扩展。
   + 不全局固定 `UV_PYTHON`；项目通过 `.python-version` 选择版本，必要时允许 uv 下载解释器。
 + JavaScript
-  + Node.js 22 与 [pnpm](https://pnpm.io/)。
+  + Node.js 22、[pnpm](https://pnpm.io/) 与 Bun。
 + Java
   + Maven、Gradle、JDT Language Server 和 IntelliJ IDEA OSS。
 + Go
@@ -33,15 +37,13 @@
 
 所有导入点集中在 [`development/toolchain.nix`](../modules/home/development/toolchain.nix)。新增语言时应新建独立文件并在此导入，避免一个巨大软件列表。
 
-## AI 与代理工具
+## Oh My Pi
 
-+ [`development/agents.nix`](../modules/home/development/agents.nix)
-  + 从 unstable 安装 Codex 等快速更新工具。
-  + 配置放在用户层，避免把个人工具链变成系统启动依赖。
+[`toolchain/javascript.nix`](../modules/home/development/toolchain/javascript.nix) 会在 `~/.bun` 中准备 Bun 1.3.14 和 `@oh-my-pi/pi-coding-agent` 17.3.4。`~/.local/bin/omp` 启动器明确使用用户目录中的 Bun，避免 `PATH` 前面的旧版 Nix Bun。`~/.omp` 中已有的 API profile 和凭据不会被覆盖。
 
-上游：[OpenAI Codex](https://github.com/openai/codex)。
+手动重装或更新可执行：
 
-## R 与 Notebook
-
-+ 统计与 Notebook 支持由 Nix wrapper 提供 R 包、R Markdown、Jupyter 和声明式 `R (Nix)` kernel。
-+ 重建后使用 `jupyter kernelspec list` 检查 `r-nix` 是否存在。
+```bash
+bun add -g @oh-my-pi/pi-coding-agent@17.3.4
+omp --version
+```

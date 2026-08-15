@@ -8,9 +8,10 @@
   + 安装 Xwayland Satellite、音量与亮度工具、Hyprlock、图片查看器、音量控制和 Polkit 认证代理（polkit-gnome）。
   + 安装 grim、slurp、wf-recorder、wl-clipboard，并创建 `~/Pictures/Screenshots`。
   + 生成 `niri-window-shot`：通过 Niri IPC 选择真实窗口 ID，再调用原生窗口截图，保留圆角、阴影和透明区域。
-  + 将 [`config/niri-config/config.kdl`](../modules/home/config/niri-config/config.kdl) 映射到 `~/.config/niri/config.kdl`。
+  + 以 user service 运行 swayidle：15 分钟锁屏、20 分钟熄屏；电量 ≤20%、20%–50%、50%–90%、>90% 时，分别在空闲 25/40/60/90 分钟后执行 suspend-then-hibernate。
+  + 将 [`config/niri-config/config.kdl.in`](../modules/home/config/niri-config/config.kdl.in) 映射到 `~/.config/niri/config.kdl`。
 + Niri 配置
-  + 启动 Fcitx 5、Polkit agent、Xwayland Satellite、托盘代理和 Noctalia。
+  + 启动 Fcitx 5、Polkit agent、Xwayland Satellite 和托盘代理；Noctalia 与 swayidle 由独立 user service 管理。
   + 管理输入、布局、动画、窗口规则和快捷键。
   + Chrome 画中画窗口自动浮动；Firefox 规则已移除。
   + 截图快捷键：`Print` 显示器、`Alt+Print` 当前窗口、`Mod+Alt+Print` 选择窗口、`Shift+Print` 区域。
@@ -20,8 +21,8 @@
 ## Noctalia
 
 + [`desktop/noctalia.nix`](../modules/home/desktop/noctalia.nix)
-  + 导入 Noctalia Home Manager 模块并加载仓库内 JSON 设置。
-+ [`config/noctalia-config/settings.json`](../modules/home/config/noctalia-config/settings.json)
+  + 导入 Noctalia Home Manager 模块、以 user service 运行，并应用仓库内的电池估算补丁。
++ [`config/noctalia-config/settings.json.in`](../modules/home/config/noctalia-config/settings.json.in)
   + 负责面板、通知、OSD、启动器和系统状态界面。
   + 默认界面字体显式设为 `LXGW WenKai Screen`；固定宽度内容保留系统 `monospace`。
   + 壁纸渲染已禁用，减少重复桌面合成；通知声音关闭。

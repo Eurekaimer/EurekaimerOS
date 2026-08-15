@@ -31,12 +31,15 @@
 
 + [`power.nix`](../modules/system/power.nix)
   + Uses [TLP](https://linrunner.de/tlp/) as the sole platform-profile owner and force-disables power-profiles-daemon.
-  + Battery mode uses powersave, `power` EPP, low-power platform profile, no Turbo/dynamic boost, and a 5%–50% CPU range.
+  + Derives a six-hour power budget from current full-charge energy, smooths one-minute power samples with a 30%/70% EWMA, and adjusts the Intel HWP ceiling with multiplicative feedback.
+  + Uses four capacity tiers: above 90% (`30%–75%`, `balance_power` EPP), 50%–90% (`20%–60%`), 20%–50% (`15%–45%`), and at or below 20% (`10%–30%`). The lower tiers use `power` EPP.
+  + Every battery tier uses the `powersave` governor, low-power platform profile, and disabled Turbo/dynamic boost.
   + Enables PCIe ASPM, runtime PM, Wi-Fi/audio power saving, and USB autosuspend on battery.
   + Leaves Bluetooth available at boot and across AC/battery transitions so desktop controls can toggle it normally.
-  + Prefers deep suspend and installs Powertop/s-tui for diagnostics.
+  + Noctalia applies the same smoothed, conservative `energy / max(measured rate, target rate)` estimate, so displayed time never exceeds the proportional six-hour target.
+  + Uses deep suspend, a declared resume swap partition, and systemd's battery-aware suspend-then-hibernate. Lid close uses it on battery and plain suspend on AC.
 
-A live sample confirmed TLP was active in battery/low-power mode. Active Chrome renderers, Clash Verge, display composition, and the diagnostic workload were the main wakeup sources; additional kernel tuning would not address those application workloads.
+Live status is published at `/run/power-policy/status.json`. Heavy browser or proxy-renderer workloads can keep the measured estimate below the target even at a tier's CPU floor; the controller does not hide that load or claim battery wear can be recovered in software.
 
 ## Storage, gaming, and virtualization
 

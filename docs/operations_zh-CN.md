@@ -14,24 +14,25 @@ nix build .#nixosConfigurations.nixos.config.system.build.toplevel --no-link
 sudo nixos-rebuild switch --flake .#nixos
 ```
 
-+ 本次字体、浏览器与电源修改已完成完整 toplevel 构建。构建输出中不再包含 Firefox desktop 文件，生成的 TLP 配置包含电池 CPU 5%–50% 和电池模式禁用蓝牙。
++ 已完成完整 toplevel 构建与实机切换，并验证自适应控制器、受 systemd 管理的 Noctalia/swayidle、恢复用 swap 和按电池余量休眠的配置。
 
 ## 修改位置速查
 
 + 字体、中文和输入法：[`modules/system/locale.nix`](../modules/system/locale.nix)
 + 登录界面和系统桌面服务：[`modules/system/desktop.nix`](../modules/system/desktop.nix)
 + GTK 字体与图标：[`modules/home/core/ui.nix`](../modules/home/core/ui.nix)
-+ Niri：[`modules/home/config/niri-config/config.kdl`](../modules/home/config/niri-config/config.kdl)
-+ Noctalia：[`modules/home/config/noctalia-config/settings.json`](../modules/home/config/noctalia-config/settings.json)
++ Niri：[`modules/home/config/niri-config/config.kdl.in`](../modules/home/config/niri-config/config.kdl.in)
++ Noctalia：[`modules/home/config/noctalia-config/settings.json.in`](../modules/home/config/noctalia-config/settings.json.in)
 + 应用：[`modules/home/applications/`](../modules/home/applications/)
 + 电源：[`modules/system/power.nix`](../modules/system/power.nix)
 
 ## 电源诊断
 
-+ 查看 TLP 状态：`sudo tlp-stat -s -p -b`
-+ 采样耗电：`sudo powertop --time=10 --csv=/tmp/powertop.csv`
-+ 先检查应用唤醒、显示亮度、代理和浏览器标签页，再考虑更激进的内核参数。
-+ 当前机器电池满充容量约为设计容量的 85%；这是可用续航下降的一部分，不能仅靠调度配置恢复。
++ 查看控制器：`cat /run/power-policy/status.json`
++ 查看 TLP：`sudo tlp-stat -s -p -b`
++ 查看受管理的桌面服务：`systemctl --user status swayidle noctalia-shell`
++ 采样耗电：`sudo powertop --time=10 --csv=/tmp/powertop.csv`；先检查应用唤醒、显示亮度、代理和浏览器标签页，再考虑内核调优。
++ 当前电池满充容量约为设计容量的 86.5%；调度可以降低功耗，但不能恢复这部分物理损耗。
 
 ## 恢复与迁移
 

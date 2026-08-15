@@ -30,8 +30,8 @@
     fontDir.enable = true;
 
     packages = with pkgs; [
-      lxgw-wenkai-screen
-      nerd-fonts.jetbrains-mono
+      lxgw-wenkai
+      nerd-fonts.fantasque-sans-mono
       wqy_microhei
       wqy_zenhei
       noto-fonts-cjk-sans
@@ -44,16 +44,16 @@
       defaultFonts = {
         emoji = [ "Noto Color Emoji" ];
         monospace = [
-          "JetBrains Mono"
-          "Sarasa Mono SC"
+          "FantasqueSansM Nerd Font Mono"
+          "LXGW WenKai Mono"
           "Noto Sans Mono CJK SC"
         ];
         sansSerif = [
-          "LXGW WenKai Screen"
+          "LXGW WenKai"
           "Noto Sans CJK SC"
         ];
         serif = [
-          "LXGW WenKai Screen"
+          "LXGW WenKai"
           "Noto Serif CJK SC"
         ];
       };

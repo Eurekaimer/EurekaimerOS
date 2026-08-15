@@ -27,8 +27,8 @@
   gtk = {
     enable = true;
     font = {
-      name = "LXGW WenKai Screen";
-      package = pkgs.lxgw-wenkai-screen;
+      name = "LXGW WenKai";
+      package = pkgs.lxgw-wenkai;
       size = 11;
     };
     iconTheme = {
@@ -36,9 +36,12 @@
       package = pkgs.papirus-icon-theme;
     };
 
-    cursorTheme = {
-      name = "Bibata-Modern-Ice";
-      package = pkgs.bibata-cursors;
-    };
+  };
+  home.pointerCursor = {
+    name = "Bibata-Modern-Ice";
+    package = pkgs.bibata-cursors;
+    size = 24;
+    gtk.enable = true;
+    x11.enable = true;
   };
 }

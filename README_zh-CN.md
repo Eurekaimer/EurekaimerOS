@@ -39,21 +39,24 @@ flake.nix
 │   ├── nixpkgs-unstable
 │   ├── home-manager
 │   ├── noctalia
+│   ├── komari-call
 │   ├── lexigraph
-│   └── llm-agents
+│   └── hot100-assistant
 └── nixosConfigurations.nixos
     ├── hosts/nixos/configuration.nix
     │   ├── hardware-configuration.nix
     │   ├── host-local.nix
     │   ├── proxy-local.nix
     │   ├── modules/system/system.nix
+    │   ├── modules/system/software.nix
     │   └── modules/system/graphics-intel.nix
     └── home-manager.users.eurekaimer
         └── home/eurekaimer/home.nix
             ├── modules/home/desktop.nix
             ├── modules/home/core.nix
             ├── modules/home/development.nix
-            └── modules/home/applications.nix
+            ├── modules/home/applications.nix
+            └── modules/home/software.nix
 
 docs/
 ├── index.md / index_zh-CN.md
@@ -87,10 +90,16 @@ nix build .#nixosConfigurations.nixos.config.system.build.toplevel --no-link
 sudo nixos-rebuild switch --flake .#nixos
 ```
 
++ 将克隆内容部署到 `/etc/nixos`，并自动为当前机器重新生成硬件配置：
+
+```bash
+./deploy.sh
+```
+
 ## 当前关键决策
 
 + 中英文界面统一使用 LXGW WenKai Screen；终端和代码保留真正的等宽字体。
 + Google Chrome 与 Throne 是声明的浏览器；Firefox 和过期窗口规则已经移除。
-+ TLP 是唯一电源档位管理器。电池模式 CPU 上限为 50%，关闭 Turbo/HWP dynamic boost，并在电池切换时关闭蓝牙。
++ TLP 负责设备电源档位；每分钟运行的 90%/50%/20% 分级反馈控制器以当前满充容量的 6 小时续航为目标，空闲时使用自适应 suspend-then-hibernate。
 + 默认使用稳定版软件包；快速更新的软件只使用 `flake.nix` 传下来的单一 `pkgs-unstable`。
 + 磁盘 UUID、代理和硬件配置与当前机器绑定，迁移前必须核对。

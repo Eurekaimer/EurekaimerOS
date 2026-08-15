@@ -3,17 +3,15 @@
 // ==========================================
 prefer-no-csd
 
-// 桌面壁纸：使用仓库 img/wallpaper-nozomi.png（部署后位于 /etc/nixos/img/）
-spawn-at-startup "sh" "-c" "sleep 1 && swww img /etc/nixos/img/wallpaper-nozomi.png --transition-type wipe"
+// 桌面壁纸由 Home Manager 从仓库资源替换。
+spawn-at-startup "sh" "-c" "sleep 1 && swww img @desktopWallpaper@ --transition-type wipe"
 
 spawn-at-startup "sh" "-c" "systemctl --user import-environment WAYLAND_DISPLAY DISPLAY XDG_CURRENT_DESKTOP XDG_SESSION_TYPE GTK_IM_MODULE QT_IM_MODULE SDL_IM_MODULE GLFW_IM_MODULE INPUT_METHOD XMODIFIERS NIXOS_OZONE_WL; dbus-update-activation-environment --systemd WAYLAND_DISPLAY DISPLAY XDG_CURRENT_DESKTOP XDG_SESSION_TYPE GTK_IM_MODULE QT_IM_MODULE SDL_IM_MODULE GLFW_IM_MODULE INPUT_METHOD XMODIFIERS NIXOS_OZONE_WL"
 spawn-at-startup "fcitx5" "-d"
 spawn-at-startup "polkit-auth-agent"
 spawn-at-startup "xwayland-satellite"
 spawn-at-startup "xembedsniproxy"
-spawn-at-startup "noctalia-shell"
-// 空闲省电：4 分钟锁屏，5 分钟熄屏；鼠标/键盘活动自动亮屏
-spawn-at-startup "sh" "-c" "swayidle -w timeout 240 'hyprlock' timeout 300 'niri msg action power-off-monitors' resume 'niri msg action power-on-monitors'"
+// 空闲锁屏、熄屏与电池分级挂起由 Home Manager 的 swayidle user service 管理。
 
 environment {
     LANG "zh_CN.UTF-8"
@@ -42,6 +40,13 @@ input {
         tap
         natural-scroll
     }
+}
+
+cursor {
+    xcursor-theme "Bibata-Modern-Ice"
+    xcursor-size 24
+    hide-when-typing
+    hide-after-inactive-ms 3000
 }
 
 // ==========================================
@@ -126,6 +131,9 @@ binds {
     // --- 核心应用启动 ---
     Mod+Shift+Slash hotkey-overlay-title="帮助：显示快捷键" { show-hotkey-overlay; }
     Mod+Return hotkey-overlay-title="启动：终端 Kitty" { spawn "kitty"; }
+    Mod+Y hotkey-overlay-title="启动：文件管理器 Yazi" { spawn "kitty" "-e" "yazi"; }
+    Mod+O hotkey-overlay-title="启动：Obsidian" { spawn "obsidian"; }
+    Mod+V hotkey-overlay-title="启动：Visual Studio Code" { spawn "code"; }
     Mod+R hotkey-overlay-title="输入法：切换 Fcitx5" { spawn "fcitx5-remote" "-t"; }
 
     // Noctalia 官方推荐 IPC 方式
@@ -143,7 +151,7 @@ binds {
 
     // --- 窗口操作 ---
     Mod+Q hotkey-overlay-title="窗口：关闭当前窗口" { close-window; }
-    Mod+V hotkey-overlay-title="窗口：切换浮动/平铺" { toggle-window-floating; }
+    Mod+Shift+Space hotkey-overlay-title="窗口：切换浮动/平铺" { toggle-window-floating; }
     Mod+F hotkey-overlay-title="窗口：最大化当前列" { maximize-column; }
     Mod+Shift+F hotkey-overlay-title="窗口：全屏当前窗口" { fullscreen-window; }
 

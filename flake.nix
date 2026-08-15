@@ -11,8 +11,12 @@
     };
 
     lexigraph = {
-      url = "path:/home/eurekaimer/Documents/GitHub/lexigraph";
+      url = "github:Eurekaimer/lexigraph/3a562809ede3132916ebed592a9fc2ea88ef6098";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
+    };
+    hot100-assistant = {
+      url = "github:Eurekaimer/hot100-assistant/82cf08aabceadc706c98d433bbf78a992899c706";
+      flake = false;
     };
 
     noctalia = {
@@ -25,9 +29,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    llm-agents = {
-      url = "github:numtide/llm-agents.nix";
-    };
 
   };
 
@@ -44,8 +45,17 @@
         inherit system;
         config.allowUnfree = true;
       };
+      pkgs = nixpkgs.legacyPackages.${system};
     in
     {
+      checks.${system}.source-hygiene = pkgs.runCommand "source-hygiene" { } ''
+        if find ${self} -type l -lname '/nix/store/*' -print -quit | grep -q .; then
+          echo "absolute /nix/store symlink found in flake source" >&2
+          exit 1
+        fi
+        touch "$out"
+      '';
+
       nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
         inherit system;
         specialArgs = { inherit inputs pkgs-unstable; };

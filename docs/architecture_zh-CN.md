@@ -3,7 +3,7 @@
 ## 配置流向
 
 + [`flake.nix`](../flake.nix)
-  + 固定 `nixpkgs` 25.11、`nixpkgs-unstable`、Home Manager、Noctalia、Lexigraph 和 llm-agents 输入。
+  + 固定 `nixpkgs` 25.11、`nixpkgs-unstable`、Home Manager、Noctalia、Komari Call、Lexigraph，以及非 flake 的 Hot100 源码输入。
   + 只在这里导入一次 `nixpkgs-unstable`，生成 `pkgs-unstable`。
   + 将 `pkgs-unstable` 同时通过 `specialArgs` 和 `home-manager.extraSpecialArgs` 传给下层模块。
   + 只导出一台 `x86_64-linux` 主机：`nixosConfigurations.nixos`。
@@ -17,6 +17,17 @@
   + Home Manager 用户入口，固定用户名、主目录和 `home.stateVersion`。
   + 聚合桌面、核心工具、开发环境和日常应用。
   + 关闭 Home Manager 自己的 fontconfig，避免与系统层字体 XML 重复。
+
+```mermaid
+flowchart TD
+  F[flake 输入 + flake.lock] --> H[hosts/nixos]
+  H --> S[modules/system]
+  H --> HM[Home Manager modules/home]
+  S --> ES[eureka.software.system]
+  HM --> EH[eureka.software.home]
+  ES --> SP[environment.systemPackages]
+  EH --> HP[home.packages]
+```
 
 ## 模块边界
 
@@ -34,13 +45,14 @@
 + 默认使用稳定版 `pkgs`。
   + 系统基础和大部分应用跟随 NixOS 25.11，减少整体更新风险。
 + 只对确实需要新版本的软件使用 `pkgs-unstable`。
-  + 当前包括 Noctalia、OBS、mpv、部分通信软件、编辑器和 AI 工具。
+  + 当前包括 Noctalia、OBS、mpv、部分通信软件和编辑器。
   + 模块只接收 `pkgs-unstable` 参数，禁止再次导入 unstable nixpkgs，避免同一配置出现多套不一致实例。
 
 ## 扩展方法
 
 + 新增主机
   + 新建 `hosts/<name>/`，保留独立硬件配置，并在 `flake.nix` 增加对应 `nixosConfigurations.<name>`。
++ 从外部克隆运行 [`deploy.sh`](../deploy.sh)，自动重建当前机器的硬件模块、验证暂存系统，并原子替换 `/etc/nixos`。
 + 新增系统功能
   + 在 `modules/system/` 新建单一职责模块，再从 `system.nix` 导入。
 + 新增用户应用

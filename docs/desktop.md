@@ -8,9 +8,10 @@ The user desktop entry point is [`modules/home/desktop.nix`](../modules/home/des
   + Installs Xwayland Satellite, audio/brightness controls, Hyprlock, an image viewer, and a Polkit authentication agent (polkit-gnome).
   + Installs grim, slurp, wf-recorder, and wl-clipboard, and creates `~/Pictures/Screenshots`.
   + Generates `niri-window-shot`, which obtains a real window ID through Niri IPC and preserves rounded corners, shadows, and transparency.
-  + Maps [`config/niri-config/config.kdl`](../modules/home/config/niri-config/config.kdl) to `~/.config/niri/config.kdl`.
+  + Runs swayidle as a user service: lock after 15 minutes, turn the display off after 20 minutes, then suspend-then-hibernate after 25/40/60/90 idle minutes for the ≤20%, 20%–50%, 50%–90%, and >90% tiers.
+  + Maps [`config/niri-config/config.kdl.in`](../modules/home/config/niri-config/config.kdl.in) to `~/.config/niri/config.kdl`.
 + Niri configuration
-  + Starts Fcitx 5, the Polkit agent, Xwayland Satellite, the tray proxy, and Noctalia.
+  + Starts Fcitx 5, the Polkit agent, Xwayland Satellite, and the tray proxy; Noctalia and swayidle are separate user services.
   + Owns input, layout, animation, window-rule, and keybinding behavior.
   + Google Chrome picture-in-picture windows float automatically; the obsolete Firefox rule was removed.
   + Screenshot bindings: `Print` for a monitor, `Alt+Print` for the focused window, `Mod+Alt+Print` to pick a window, and `Shift+Print` for a region.
@@ -20,8 +21,8 @@ Upstream: [Niri](https://niri-wm.github.io/niri/) and [Xwayland Satellite](https
 ## Noctalia
 
 + [`desktop/noctalia.nix`](../modules/home/desktop/noctalia.nix)
-  + Imports the Noctalia Home Manager module and loads the repository-owned JSON settings.
-+ [`config/noctalia-config/settings.json`](../modules/home/config/noctalia-config/settings.json)
+  + Imports the Noctalia Home Manager module, runs it as a user service, and applies the repository battery-estimate patch.
++ [`config/noctalia-config/settings.json.in`](../modules/home/config/noctalia-config/settings.json.in)
   + Controls the panel, notifications, OSD, launcher, and status surfaces.
   + Uses `LXGW WenKai Screen` for normal UI text while fixed-width text keeps the system `monospace` family.
   + Disables Noctalia wallpaper rendering and notification sounds.

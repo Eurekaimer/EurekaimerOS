@@ -1,4 +1,4 @@
-{ pkgs, pkgs-unstable, ... }:
+{ lib, pkgs, pkgs-unstable, ... }:
 
 {
   eureka.software.home = [
@@ -18,7 +18,11 @@
   ];
 
   xdg.configFile."mpv" = {
-    source = ../config/mpv-config;
+    source = lib.cleanSourceWith {
+      src = ../config/mpv-config;
+      filter = path: type:
+        type == "directory" || !(lib.hasInfix ".backup" (baseNameOf path));
+    };
     recursive = true;
   };
 }

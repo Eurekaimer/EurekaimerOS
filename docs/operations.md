@@ -14,24 +14,25 @@ nix build .#nixosConfigurations.nixos.config.system.build.toplevel --no-link
 sudo nixos-rebuild switch --flake .#nixos
 ```
 
-+ The complete NixOS toplevel was built after the font, browser, power, and Docker changes. Generated TLP settings keep the 5%–50% battery CPU range without blocking Bluetooth.
++ A complete toplevel build and live switch verified the adaptive controller, managed Noctalia/swayidle services, resume swap, and battery-aware sleep configuration.
 
 ## Where to edit
 
 + Fonts, locale, and input method: [`modules/system/locale.nix`](../modules/system/locale.nix)
 + Login and system desktop services: [`modules/system/desktop.nix`](../modules/system/desktop.nix)
 + GTK fonts and icons: [`modules/home/core/ui.nix`](../modules/home/core/ui.nix)
-+ Niri: [`modules/home/config/niri-config/config.kdl`](../modules/home/config/niri-config/config.kdl)
-+ Noctalia: [`modules/home/config/noctalia-config/settings.json`](../modules/home/config/noctalia-config/settings.json)
++ Niri: [`modules/home/config/niri-config/config.kdl.in`](../modules/home/config/niri-config/config.kdl.in)
++ Noctalia: [`modules/home/config/noctalia-config/settings.json.in`](../modules/home/config/noctalia-config/settings.json.in)
 + Applications: [`modules/home/applications/`](../modules/home/applications/)
 + Power: [`modules/system/power.nix`](../modules/system/power.nix)
 
 ## Power diagnostics
 
++ Inspect the controller: `cat /run/power-policy/status.json`.
 + Inspect TLP: `sudo tlp-stat -s -p -b`.
-+ Capture a sample: `sudo powertop --time=10 --csv=/tmp/powertop.csv`.
-+ Inspect application wakeups, display brightness, proxy clients, and browser tabs before adding aggressive kernel parameters.
-+ This machine reports full-charge capacity at about 85% of design capacity. Scheduling changes cannot recover that physical capacity loss.
++ Inspect managed desktop services: `systemctl --user status swayidle noctalia-shell`.
++ Capture a sample: `sudo powertop --time=10 --csv=/tmp/powertop.csv`; check application wakeups, display brightness, proxy clients, and browser tabs before adding kernel tuning.
++ This battery currently holds about 86.5% of design capacity. Scheduling can reduce consumption, but cannot recover that physical loss.
 
 ## Recovery and migration
 

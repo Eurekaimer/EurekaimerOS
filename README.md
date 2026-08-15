@@ -39,21 +39,24 @@ flake.nix
 │   ├── nixpkgs-unstable
 │   ├── home-manager
 │   ├── noctalia
+│   ├── komari-call
 │   ├── lexigraph
-│   └── llm-agents
+│   └── hot100-assistant
 └── nixosConfigurations.nixos
     ├── hosts/nixos/configuration.nix
     │   ├── hardware-configuration.nix
     │   ├── host-local.nix
     │   ├── proxy-local.nix
     │   ├── modules/system/system.nix
+    │   ├── modules/system/software.nix
     │   └── modules/system/graphics-intel.nix
     └── home-manager.users.eurekaimer
         └── home/eurekaimer/home.nix
             ├── modules/home/desktop.nix
             ├── modules/home/core.nix
             ├── modules/home/development.nix
-            └── modules/home/applications.nix
+            ├── modules/home/applications.nix
+            └── modules/home/software.nix
 
 docs/
 ├── index.md / index_zh-CN.md
@@ -87,11 +90,17 @@ nix build .#nixosConfigurations.nixos.config.system.build.toplevel --no-link
 sudo nixos-rebuild switch --flake .#nixos
 ```
 
++ Install a clone into `/etc/nixos` with hardware regenerated for the current machine:
+
+```bash
+./deploy.sh
+```
+
 ## Current decisions
 
 + UI and Kitty terminal text use LXGW WenKai Screen; Nerd Font remains available for glyph fallback.
 Google Chrome and Throne are the declared browsers; Firefox and its stale desktop rule are removed.
-+ TLP is the sole power-profile owner. Battery mode caps CPU performance at 50% and disables Turbo/dynamic boost without blocking Bluetooth.
++ TLP owns device power profiles; a one-minute 90%/50%/20% feedback controller targets six hours from current full-charge capacity, and idle sessions use adaptive suspend-then-hibernate.
 + NixOS uses stable packages by default. Fast-moving applications consume the single `pkgs-unstable` instance passed down from `flake.nix`.
 + Docker is enabled with Compose support and uses the local proxy for image pulls.
 + Machine-specific disk UUIDs, proxy settings, and hardware configuration must be reviewed before using this setup on another host.

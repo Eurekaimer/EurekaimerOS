@@ -2,10 +2,22 @@
 
 入口 [`modules/home/applications.nix`](../modules/home/applications.nix) 按用途拆分应用。这里列出仓库实际声明的软件及其官方项目地址；Nix 软件包版本由 flake 输入锁定。
 
+## Komari Call
+
++ flake 输入 `komari-call` 提供终端聊天程序。直接运行 `komari-call` 一定会先进入 TUI；缺少或已有错误的 API Key 都不会再阻止界面启动。
++ 在 TUI 内输入 `/login`、`/login deepseek` 或 `/login opencode-go`。Key 会以圆点隐藏，验证成功后写入系统 Keyring。
++ 若要使用 OpenCode Go 套餐而不是 DeepSeek，启动前执行：
+
+  ```bash
+  komari-call config --provider opencode-go --model deepseek-v4-flash
+  ```
+
++ `komari-call models --provider opencode-go` 会检查保存的 Go 凭据并列出套餐当前可用模型。
+
 ## 浏览器与网络
 
 + [`applications/web.nix`](../modules/home/applications/web.nix)
-  + [Google Chrome](https://www.google.com/chrome/) 与 [Throne](https://github.com/throneproj/Throne) 是声明的浏览器；Firefox 已从系统配置移除。
+  + [Google Chrome](https://www.google.com/chrome/) 与 [Throne](https://github.com/throneproj/Throne) 是声明的浏览器。
   + [Clash Verge Rev](https://github.com/clash-verge-rev/clash-verge-rev) 和 [Throne](https://github.com/throneproj/Throne) 提供代理图形界面。
   + `campus-login` 生成隔离的临时 Chrome profile，清空代理环境并直连校园认证页，不污染日常浏览器 profile。
 + 后台耗电

@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)"
+# shellcheck source=deploy-common.sh
+source "$script_dir/deploy-common.sh"
+
+begin_partial
+copy_item modules/system/power.nix
+finish_partial
