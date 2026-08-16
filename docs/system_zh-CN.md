@@ -13,15 +13,17 @@
 + [`packages.nix`](../modules/system/packages.nix)
   + 聚合基础 CLI、网络、监控、归档和 DOS 工具。
   + 浏览器不在系统层安装；Google Chrome 由 Home Manager 管理。
++ [`kernel.nix`](../modules/system/kernel.nix)
+  + 固定 Linux 6.12 LTS；换内核只需在该文件改一行。
 
 ## 中文环境与字体
 
 + [`locale.nix`](../modules/system/locale.nix)
   + 默认区域为 `zh_CN.UTF-8`，同时保留 `en_US.UTF-8`。
   + 使用 [Fcitx 5](https://fcitx-im.org/wiki/Fcitx_5) 及 Rime、Mozc、GTK/Qt 前端，并导出 Wayland 应用所需输入法环境变量。
-  + 安装 LXGW WenKai Screen、Noto CJK、文泉驿、Sarasa、JetBrains Mono Nerd Font 和 Noto Color Emoji。
-  + `LXGW WenKai Screen` 是 sans-serif、serif、常见中文 Windows 字体别名和 Noto Sans 的首选，覆盖中英文界面。
-  + Kitty 终端使用 `LXGW WenKai Screen`；JetBrains Mono/Sarasa Mono 保留为代码与字形回退。
+  + 安装 LXGW WenKai（含常规、Screen 与 Mono 字族）、Noto CJK、文泉驿、Sarasa、Fantasque Sans Mono Nerd Font 和 Noto Color Emoji。
+  + LXGW WenKai 是 sans-serif、serif 的首选；Noto Sans 与常见中文 Windows 字体别名（宋体、微软雅黑、等线、黑体、楷体、仿宋等）prefer LXGW WenKai Screen，覆盖中英文界面。
+  + 系统等宽字体顺序为 Fantasque Sans Mono Nerd Font、LXGW WenKai Mono、Noto Sans Mono CJK SC；Kitty 显式使用 Fantasque Sans Mono Nerd Font。
 + [`desktop.nix`](../modules/system/desktop.nix)
   + ReGreet 登录界面显式使用 LXGW，确保登录前也有一致的中文显示。
 
@@ -37,6 +39,8 @@
 
 + [`graphics.nix`](../modules/system/graphics.nix)
   + 启用 NixOS 图形栈并安装 `libva-utils` 便于验证硬件解码。
++ [`hosts/nixos/hardware-extra.nix`](../hosts/nixos/hardware-extra.nix)
+  + 主机 GPU 钩子：Intel 版导入下面的图形模块；`deploy-full.sh` 在新机器上按探测到的 GPU 厂商交换该文件（默认 generic，检测到 Intel iGPU 时恢复 Intel 版）。
 + [`graphics-intel.nix`](../modules/system/graphics-intel.nix)
   + 仅由当前 Intel iGPU 主机导入，安装 Intel Media Driver、旧 Intel VAAPI 驱动和 libva。
 
@@ -51,7 +55,8 @@
   + 蓝牙不会再被 TLP 在开机或切换到电池供电时软阻塞，Noctalia 可正常控制开关。
   + Noctalia 使用同一套平滑保守估算：`剩余能量 / max(实测功率, 目标功率)`，因此显示值不会超过按当前电量折算的 6 小时目标。
   + 首选 `deep` suspend，声明恢复用 swap，并使用 systemd 按电池余量自适应的 suspend-then-hibernate；合盖时电池供电使用该策略，交流电使用普通 suspend。
-  + 安装 `powertop` 与 `s-tui` 作为诊断工具，不运行常驻自动调优服务。
+  + 安装 `powertop` 作为诊断工具，不运行常驻自动调优服务；`thermald` 与 TLP 并行运行，负责温度控制。
+  + `boot.resumeDevice` 与 `swapDevices` 的 UUID 是机器专属，新机器部署前必须核对。
 
 实时状态写入 `/run/power-policy/status.json`。若浏览器或代理界面 renderer 持续高负载，即使 CPU 已到当前档位下限，实测续航仍会低于目标；控制器会如实显示该差距，也不会把电池损耗伪装成可由软件恢复。
 

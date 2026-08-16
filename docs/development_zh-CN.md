@@ -28,6 +28,8 @@
   + Maven、Gradle、JDT Language Server 和 IntelliJ IDEA OSS。
 + Go
   + Go、gopls 与 Delve。
++ Rust
+  + cargo、clippy、rust-analyzer、rustc 和 rustfmt；`RUST_SRC_PATH` 指向固定的 rustlib 源码。
 + C/C++
   + Bear、Clang tools、CMake 及编译调试工具。
 + LaTeX

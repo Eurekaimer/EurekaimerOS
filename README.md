@@ -4,8 +4,6 @@
 
 A personal, host-aware NixOS configuration built around Niri, Noctalia, Home Manager, and flakes. `/etc/nixos` is the live configuration; this repository is its long-lived, frequently synchronized source copy.
 
-Repository: [github.com/Eurekaimer/EurekaimerOS](https://github.com/Eurekaimer/EurekaimerOS)
-
 ![EurekaimerOS system showcase](img/system-showcase.png)
 
 The ReGreet login screen and the Hyprlock lock screen share the same wallpaper and greeting text:
@@ -25,10 +23,10 @@ The ReGreet login screen and the Hyprlock lock screen share the same wallpaper a
   + TLP power policy, storage, gaming, and virtualization
 + [Desktop and UI](docs/desktop.md)
   + Niri session, screenshots, and window rules
-  + Noctalia, GTK, icons, core user tools, and optional UI modules
+  + Noctalia, GTK, icons, and core user tools
 + [Applications](docs/applications.md)
   + Chrome and Throne as the declared browsers
-  + Documents, media, communication, transfer, and MIME defaults
+  + Documents, media, file manager, communication, transfer, and MIME defaults
   + Links crediting each major upstream project
 + [Development environment](docs/development.md)
   + Editors, CLI tools, language toolchains, notebooks, and AI tools
@@ -53,11 +51,11 @@ flake.nix
 └── nixosConfigurations.nixos
     ├── hosts/nixos/configuration.nix
     │   ├── hardware-configuration.nix
+    │   ├── hardware-extra.nix
     │   ├── host-local.nix
     │   ├── proxy-local.nix
     │   ├── modules/system/system.nix
-    │   ├── modules/system/software.nix
-    │   └── modules/system/graphics-intel.nix
+    │   └── modules/system/software.nix
     └── home-manager.users.eurekaimer
         └── home/eurekaimer/home.nix
             ├── modules/home/desktop.nix
@@ -69,7 +67,17 @@ flake.nix
 docs/
 ├── index.md / index_zh-CN.md
 └── <topic>.md / <topic>_zh-CN.md
+
+scripts/
+├── deploy-full.sh
+├── deploy-preserve-hardware.sh
+├── deploy-desktop.sh
+├── deploy-power.sh
+├── deploy-software.sh
+└── deploy-common.sh
 ```
+
+> `host-generic.nix`, `proxy-disabled.nix`, and `hardware-extra-generic.nix` are the fresh-machine defaults that `deploy-full.sh` swaps into `hosts/nixos/` on a new machine.
 
 + [`flake.nix`](flake.nix)
   + Pins stable and unstable package sets and builds `nixosConfigurations.nixos`.
@@ -98,15 +106,29 @@ nix build .#nixosConfigurations.nixos.config.system.build.toplevel --no-link
 sudo nixos-rebuild switch --flake .#nixos
 ```
 
-+ Install a clone into `/etc/nixos` with hardware regenerated for the current machine:
++ Deploy a fresh clone on a new machine — regenerates the hardware configuration and applies portable host/proxy defaults (proxy stays disabled until one is configured):
 
 ```bash
-./deploy.sh
+./scripts/deploy-full.sh
 ```
+
++ Redeploy this machine keeping its existing hardware and host files:
+
+```bash
+./scripts/deploy-preserve-hardware.sh
+```
+
++ Push only one area into an existing `/etc/nixos`:
+
+```bash
+./scripts/deploy-desktop.sh   # or deploy-power.sh / deploy-software.sh
+```
+
+After a deploy script, switch with `sudo nixos-rebuild switch --flake /etc/nixos#nixos`.
 
 ## Current decisions
 
-+ UI and terminal text use LXGW WenKai Screen; code keeps a true monospace fallback.
++ UI text prefers LXGW WenKai; the greeter, lock screen, and shell use LXGW WenKai Screen; the terminal uses Fantasque Sans Mono Nerd Font with LXGW WenKai Mono fallback.
 + Google Chrome and Throne are the browsers; Firefox and its outdated desktop rule were removed.
 + TLP owns power profiles. A small controller samples the battery every minute and adjusts the 90%/50%/20% tiers, aiming for six hours at the current full-charge capacity; idle sessions use suspend-then-hibernate.
 + Stable packages by default. Only fast-moving applications draw from the single `pkgs-unstable` instance in `flake.nix`.

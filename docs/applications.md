@@ -31,11 +31,16 @@
 + [`applications/documents.nix`](../modules/home/applications/documents.nix)
   + [PDF Arranger](https://github.com/pdfarranger/pdfarranger), [Foliate](https://johnfactotum.github.io/foliate/), [Readest](https://readest.com/), and [Sioyek](https://sioyek.info/).
 
+## File manager
+
++ [`applications/file-manager.nix`](../modules/home/applications/file-manager.nix)
+  + [PCManFM](https://wiki.lxde.org/en/PCManFM) as the lightweight GTK3 file manager; terminal-side browsing stays with Yazi.
+
 ## Media
 
 + [`applications/media.nix`](../modules/home/applications/media.nix)
   + [OBS Studio](https://obsproject.com/) from unstable with multi-RTMP, PipeWire audio capture, and VAAPI plugins.
-  + [mpv](https://mpv.io/) with the repository-owned configuration, plus [FFmpeg](https://ffmpeg.org/) and MediaInfo.
+  + [mpv](https://mpv.io/) from unstable with the repository-owned configuration, plus [FFmpeg](https://ffmpeg.org/) and MediaInfo.
   + [yt-dlp](https://github.com/yt-dlp/yt-dlp) for media acquisition.
   + `trash-cli` keeps command-line deletions recoverable.
 

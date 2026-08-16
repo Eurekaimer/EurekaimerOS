@@ -1,11 +1,11 @@
 # Desktop and User Interface
 
-The user desktop entry point is [`modules/home/desktop.nix`](../modules/home/desktop.nix). Niri and Noctalia are active; Rofi and Waybar remain optional so a second launcher or panel is not started accidentally.
+The user desktop entry point is [`modules/home/desktop.nix`](../modules/home/desktop.nix). Niri and Noctalia are the only shell components; no second launcher or panel is started.
 
 ## Niri session
 
 + [`desktop/niri.nix`](../modules/home/desktop/niri.nix)
-  + Installs Xwayland Satellite, audio/brightness controls, Hyprlock, an image viewer, and a Polkit authentication agent (polkit-gnome).
+  + Installs Xwayland Satellite, audio/brightness tools (pamixer, brightnessctl), a volume mixer (pavucontrol), Hyprlock, an image viewer, and a Polkit authentication agent (polkit-gnome).
   + Installs grim, slurp, wf-recorder, and wl-clipboard, and creates `~/Pictures/Screenshots`.
   + Generates `niri-window-shot`, which obtains a real window ID through Niri IPC and preserves rounded corners, shadows, and transparency.
   + Runs swayidle as a user service: lock after 15 minutes, turn the display off after 20 minutes, then suspend-then-hibernate after 25/40/60/90 idle minutes for the ≤20%, 20%–50%, 50%–90%, and >90% tiers.
@@ -25,14 +25,14 @@ Upstream: [Niri](https://niri-wm.github.io/niri/) and [Xwayland Satellite](https
 + [`config/noctalia-config/settings.json.in`](../modules/home/config/noctalia-config/settings.json.in)
   + Controls the panel, notifications, OSD, launcher, and status surfaces.
   + Uses `LXGW WenKai Screen` for normal UI text while fixed-width text keeps the system `monospace` family.
-  + Disables Noctalia wallpaper rendering and notification sounds.
+  + Wallpaper rendering in Noctalia is disabled and notification sounds are off; the Niri session sets the wallpaper with swww.
 
 Upstream: [Noctalia Shell](https://docs.noctalia.dev/) and [Quickshell](https://quickshell.org/).
 
 ## GTK, icons, and fonts
 
 + [`core/ui.nix`](../modules/home/core/ui.nix)
-  + Sets the GTK 2/3/4 font to LXGW WenKai Screen 11.
+  + Sets the GTK 2/3/4 font to LXGW WenKai 11.
   + Uses Papirus Dark icons and the Bibata Modern Ice cursor.
   + Keeps XDG user directories at stable English paths.
 
@@ -42,16 +42,9 @@ Upstream: [GTK](https://www.gtk.org/), [Papirus](https://github.com/PapirusDevel
 
 + [`modules/home/core.nix`](../modules/home/core.nix)
   + Shell utilities and Zsh support.
-  + Kitty configuration; the terminal retains JetBrainsMono Nerd Font for alignment and icon glyphs.
+  + Kitty configuration; the terminal uses Fantasque Sans Mono Nerd Font (size 18) for code alignment and icon glyphs.
   + Fastfetch presentation settings.
   + Yazi terminal file manager.
   + A declarative user service for trash cleanup.
 
 Upstream: [Kitty](https://sw.kovidgoyal.net/kitty/), [Yazi](https://yazi-rs.github.io/), and [Fastfetch](https://github.com/fastfetch-cli/fastfetch).
-
-## Optional UI modules
-
-+ [`desktop/rofi.nix`](../modules/home/desktop/rofi.nix)
-  + Not imported by the current desktop entry; its retained theme uses LXGW.
-+ [`desktop/waybar.nix`](../modules/home/desktop/waybar.nix)
-  + The service is disabled; its retained CSS uses LXGW text with a Nerd Font icon fallback.

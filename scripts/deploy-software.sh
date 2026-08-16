@@ -17,5 +17,4 @@ copy_item modules/home/development.nix
 copy_item modules/home/development
 copy_item modules/home/config/mpv-config
 copy_item modules/home/config/nvim-config
-copy_item modules/home/config/agents
 finish_partial

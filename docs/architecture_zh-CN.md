@@ -8,7 +8,7 @@
   + 将 `pkgs-unstable` 同时通过 `specialArgs` 和 `home-manager.extraSpecialArgs` 传给下层模块。
   + 只导出一台 `x86_64-linux` 主机：`nixosConfigurations.nixos`。
 + [`hosts/nixos/configuration.nix`](../hosts/nixos/configuration.nix)
-  + 主机入口，组合硬件、主机本地参数、代理、通用系统模块、Intel 图形模块和 Lexigraph。
+  + 主机入口，组合硬件（hardware-configuration.nix + hardware-extra.nix）、主机本地参数、代理、通用系统模块和 Lexigraph。
   + `hardware-configuration.nix`、`host-local.nix`、`proxy-local.nix` 都属于机器或网络相关配置，不应直接复制到另一台机器。
 + [`modules/system/system.nix`](../modules/system/system.nix)
   + 聚合系统级模块：基础设施、用户、区域、桌面、电源、图形、挂载、游戏、虚拟化和系统软件包。
@@ -52,7 +52,7 @@ flowchart TD
 
 + 新增主机
   + 新建 `hosts/<name>/`，保留独立硬件配置，并在 `flake.nix` 增加对应 `nixosConfigurations.<name>`。
-+ 从外部克隆运行 [`deploy.sh`](../deploy.sh)，自动重建当前机器的硬件模块、验证暂存系统，并原子替换 `/etc/nixos`。
++ 新机器从外部克隆运行 [`scripts/deploy-full.sh`](../scripts/deploy-full.sh)：重建硬件模块、套用可移植主机/代理默认值并探测 GPU 厂商；`deploy-preserve-hardware.sh` 保留目标机硬件与主机文件重新部署；`deploy-*.sh` 局部脚本只推送单一区域。
 + 新增系统功能
   + 在 `modules/system/` 新建单一职责模块，再从 `system.nix` 导入。
 + 新增用户应用

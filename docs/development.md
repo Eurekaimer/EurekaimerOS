@@ -24,6 +24,8 @@
   + Maven, Gradle, JDT Language Server, and IntelliJ IDEA OSS.
 + Go
   + Go, gopls, and Delve.
++ Rust
+  + cargo, clippy, rust-analyzer, rustc, and rustfmt; `RUST_SRC_PATH` points at the pinned rustlib sources.
 + C/C++
   + Bear, Clang tools, CMake, and compiler/debugger tooling.
 + LaTeX

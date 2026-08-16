@@ -33,11 +33,16 @@
   + [Foliate](https://johnfactotum.github.io/foliate/) 与 [Readest](https://readest.com/)：电子书阅读。
   + [Sioyek](https://sioyek.info/)：PDF 阅读与研究导航。
 
+## 文件管理器
+
++ [`applications/file-manager.nix`](../modules/home/applications/file-manager.nix)
+  + [PCManFM](https://wiki.lxde.org/en/PCManFM)：轻量 GTK3 图形文件管理器；终端侧文件浏览仍由 Yazi 负责。
+
 ## 媒体
 
 + [`applications/media.nix`](../modules/home/applications/media.nix)
   + [OBS Studio](https://obsproject.com/) 使用 unstable 包，并加入 multi-RTMP、PipeWire 音频捕获和 VAAPI 插件。
-  + [mpv](https://mpv.io/) 使用仓库内完整配置目录；同时安装 [FFmpeg](https://ffmpeg.org/) 与 MediaInfo。
+  + [mpv](https://mpv.io/)（unstable）使用仓库内完整配置目录；同时安装 [FFmpeg](https://ffmpeg.org/) 与 MediaInfo。
   + [yt-dlp](https://github.com/yt-dlp/yt-dlp) 负责媒体获取。
   + `trash-cli` 让脚本和终端删除操作进入回收站。
 

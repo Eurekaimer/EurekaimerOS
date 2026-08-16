@@ -1,7 +1,7 @@
 # EurekaimerOS 软件清单
 
 > 本清单与配置同步维护，汇总仓库中声明**全部软件与服务**（系统级 + 用户级）。
-> 最后更新：2026-08-15。
+> 最后更新：2026-08-16。
 
 ## 管理方式：`eureka.software` 抽象
 
@@ -53,8 +53,8 @@
 ### 编辑器与开发（development/）
 | 包 | 用途 | 渠道 | 建议 |
 |---|---|---|---|
-| `neovim`（+22 插件） | 主力编辑器 | stable | 保留 |
-| `vscode`（首次写入 29 个可变扩展） | 编辑器；扩展可自由安装/卸载，关闭云同步 | unstable | 保留 |
+| `neovim`（+24 插件） | 主力编辑器 | stable | 保留 |
+| `vscode`（首次写入 28 个可变扩展） | 编辑器；扩展可自由安装/卸载，关闭云同步 | unstable | 保留 |
 | `jetbrains.idea-oss` | Java IDE | unstable | **可选** |
 | `github-desktop` | GitHub 图形客户端 | stable | **可删**（与 gh CLI 重叠） |
 | `fd` / `ripgrep` / `sqlite` | 搜索/数据库 CLI | stable | 保留 |
@@ -91,7 +91,7 @@
 ### 桌面（desktop/）
 | 包 | 用途 | 渠道 | 建议 |
 |---|---|---|---|
-| `xwayland-satellite` / `pamixer` / `brightnessctl` / `hyprlock` / `imv` / `pavucontrol` | 会话工具/锁屏/图片查看/音量 | stable | 保留 |
+| `xwayland-satellite` / `pamixer` / `brightnessctl` / `hyprlock` / `imv` / `pavucontrol` / `swayidle` | 会话工具/锁屏/图片查看/音量/空闲挂起 | stable | 保留 |
 | `polkit-auth-agent`（基于 polkit-gnome 的封装） | 系统授权弹窗 | stable | 保留 |
 | `grim` / `slurp` / `wf-recorder` / `wl-clipboard` | 截图/录屏/剪贴板 | stable | 保留 |
 | `niri-window-shot`（自建脚本） | 窗口截图 | — | 保留 |
@@ -99,7 +99,7 @@
 
 ## 系统服务（配置启用，非软件包）
 
-`niri`（Wayland 合成器）、`regreet`+`greetd`+`labwc`（登录）、`fcitx5`（输入法，含 rime/mozc/中文扩展）、`pipewire`（音频）、`tlp`+`thermald`（电源）、`docker`、`libvirtd`+`qemu`（虚拟化）、`steam`+`gamemode`（游戏）、`networkmanager`（网络）、`nix-ld`、`systemd-boot`（引导）、`swww`（壁纸）、CUPS（打印）、蓝牙、UPower、GVfs、UDisks2、`home-manager`、`zsh`。
+`niri`（Wayland 合成器）、`regreet`+`greetd`+`labwc`（登录）、`fcitx5`（输入法，含 rime/mozc/中文扩展）、`pipewire`（音频）、`tlp`+`thermald`（电源）、`docker`、`libvirtd`+`qemu`（虚拟化）、`steam`+`gamemode`（游戏）、`networkmanager`（网络）、`nix-ld`、`systemd-boot`（引导）、`swww`（壁纸）、CUPS（打印）、蓝牙、UPower、GVfs、UDisks2、`home-manager`、`zsh`、polkit（系统授权）、`swayidle`（空闲锁屏与分级挂起，用户服务）。
 
 
 ## 相关文件速查
