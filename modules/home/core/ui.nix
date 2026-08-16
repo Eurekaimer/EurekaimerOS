@@ -35,7 +35,6 @@
       name = "Papirus-Dark";
       package = pkgs.papirus-icon-theme;
     };
-
   };
   home.pointerCursor = {
     name = "Bibata-Modern-Ice";

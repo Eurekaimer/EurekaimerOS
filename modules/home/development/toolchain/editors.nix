@@ -29,7 +29,6 @@ let
     };
   };
 
-
   # Copied once into the user's extension directory; never managed afterwards.
   initialVscodeExtensions =
     (with pkgs-unstable.vscode-extensions; [

@@ -101,14 +101,24 @@ let
     '';
   };
 
+  # Polkit 认证代理（轻量替代 KDE 的 polkit-kde-agent-1）
+  polkitAgent = pkgs.writeShellApplication {
+    name = "polkit-auth-agent";
+    runtimeInputs = [ pkgs.polkit_gnome ];
+    text = ''
+      exec ${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1 "$@"
+    '';
+  };
+
   niriSessionPackages = with pkgs; [
     xwayland-satellite
+    xembed-sni-proxy  # 系统托盘代理（xembedsniproxy，niri 启动时 spawn）
     pamixer
     brightnessctl
     hyprlock
     imv
     pavucontrol
-    polkitAgent        # Polkit 认证代理（替代 KDE agent，见上方 let）
+    polkitAgent        # Polkit 认证代理（替代 KDE agent）
     swayidle           # 空闲锁屏、熄屏与分级挂起（由 systemd user service 管理）
   ];
 
@@ -124,14 +134,6 @@ let
     battery-idle-suspend
     adaptive-swayidle
   ];
-  # Polkit 认证代理（轻量替代 KDE 的 polkit-kde-agent-1）
-  polkitAgent = pkgs.writeShellApplication {
-    name = "polkit-auth-agent";
-    runtimeInputs = [ pkgs.polkit_gnome ];
-    text = ''
-      exec ${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1 "$@"
-    '';
-  };
 
 in
 {
@@ -151,7 +153,6 @@ in
     Install.WantedBy = [ "graphical-session.target" ];
   };
 
-  services.swayosd.enable = false;
   home.activation.createScreenshotsDir = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     $DRY_RUN_CMD mkdir -p "${screenshotDir}"
   '';

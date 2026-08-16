@@ -53,7 +53,7 @@
           "displayMode": "onhover",
           "iconColor": "none",
           "id": "Volume",
-          "middleClickCommand": "pwvucontrol || pavucontrol",
+          "middleClickCommand": "pavucontrol",
           "textColor": "none"
         },
         {
@@ -325,12 +325,10 @@
     "clipboardWrapText": true,
     "enableClipboardSmartIcons": true,
     "enableClipboardChips": true,
-    "clipboardWatchTextCommand": "wl-paste --type text --watch cliphist store",
-    "clipboardWatchImageCommand": "wl-paste --type image --watch cliphist store",
     "position": "center",
     "pinnedApps": [],
     "sortByMostUsed": true,
-    "terminalCommand": "alacritty -e",
+    "terminalCommand": "kitty -e",
     "customLaunchPrefixEnabled": false,
     "customLaunchPrefix": "",
     "viewMode": "list",

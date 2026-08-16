@@ -91,7 +91,7 @@
 ### 桌面（desktop/）
 | 包 | 用途 | 渠道 | 建议 |
 |---|---|---|---|
-| `xwayland-satellite` / `pamixer` / `brightnessctl` / `hyprlock` / `imv` / `pavucontrol` / `swayidle` | 会话工具/锁屏/图片查看/音量/空闲挂起 | stable | 保留 |
+| `xwayland-satellite` / `xembed-sni-proxy` / `pamixer` / `brightnessctl` / `hyprlock` / `imv` / `pavucontrol` / `swayidle` | 会话工具/托盘代理/锁屏/图片查看/音量/空闲挂起 | stable | 保留 |
 | `polkit-auth-agent`（基于 polkit-gnome 的封装） | 系统授权弹窗 | stable | 保留 |
 | `grim` / `slurp` / `wf-recorder` / `wl-clipboard` | 截图/录屏/剪贴板 | stable | 保留 |
 | `niri-window-shot`（自建脚本） | 窗口截图 | — | 保留 |

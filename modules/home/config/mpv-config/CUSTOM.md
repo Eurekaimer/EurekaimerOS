@@ -24,14 +24,12 @@
 │   ├── thumbfast.lua     #   进度条缩略图预览
 │   ├── evafast.lua       #   右键按住临时快进
 │   ├── autodeint.lua     #   自动反交错
-│   ├── webtorrent 相关    #   磁力链接 / 种子播放
 │   └── inputevent.lua    #   命名输入事件
 └── script-opts/          # 脚本配置
     ├── uosc.conf         #   UI 参数
     ├── memo.conf         #   播放历史参数
     ├── evafast.conf      #   快进参数
-    ├── thumbfast.conf    #   缩略图参数
-    └── webtorrent.conf   #   BT 下载参数
+    └── thumbfast.conf    #   缩略图参数
 ```
 
 ---
@@ -126,7 +124,6 @@
 | `Downmix-Audio-7.1` | 7.1 声道 | lavfi 声道映射 | 立体声下混 |
 | `audio-filter` | 声道数 > 2 | dynaudnorm 滤镜 | 动态响度均衡 |
 | `Anime` | 路径含 `Anime` | deband=yes, sub-scale=0.75 | 动画优化 |
-| `Webtorrent-Entries` | webtorrent 播放 | memo-enabled=no | 隐藏种子历史 |
 | `Timeline-Fullscreen` | 全屏 | uosc timeline_size=56 | 全屏进度条加厚 |
 | `Timeline-Windowed` | 窗口模式 | uosc timeline_size=40 | 窗口进度条收窄 |
 
@@ -176,7 +173,6 @@
 | `Alt+K` | 字幕缩小 |
 | `z` | 字幕提前 0.1s |
 | `Z` | 字幕延后 0.1s |
-| `Alt+B` | 在线下载字幕 |
 
 ### 音频
 
@@ -206,7 +202,6 @@
 | `s` | 截图 (含字幕) |
 | `S` | 截图 (纯视频) |
 | `Ctrl+S` | 截图 (含窗口) |
-| `p` | WebTorrent 信息 |
 | `/` | 控制台 |
 
 ### 右键菜单结构
@@ -301,16 +296,6 @@
 | `spawn_first` | yes | 加载时预生成 |
 | `hwdec` | yes | 硬件解码缩略图 |
 | `network` | yes | 网络视频也生成 |
-
-### webtorrent.conf — BT 下载
-
-| 参数 | 值 | 说明 |
-|------|---|------|
-| `path` | ~/ | 下载目录 |
-| `maxConns` | 100 | 最大连接数 |
-| `utp` | yes | μTP 协议 |
-| `dht` | yes | DHT 网络 |
-| `lsd` | yes | 本地发现 |
 
 ---
 

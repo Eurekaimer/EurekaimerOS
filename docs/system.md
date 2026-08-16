@@ -62,6 +62,7 @@ Live status is published at `/run/power-policy/status.json`. Heavy browser or pr
 
 + `hardware-configuration.nix`: regenerate on another machine.
 + `host-local.nix`: current-machine values.
++ `hardware-extra.nix`: per-host GPU hook, swapped by `deploy-full.sh` (Intel version on this machine).
 + `proxy-local.nix`: daily network proxy entry.
 
 [中文版](system_zh-CN.md)
