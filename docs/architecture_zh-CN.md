@@ -6,8 +6,8 @@
   + 固定 `nixpkgs` 25.11、`nixpkgs-unstable`、Home Manager、Noctalia、Komari Call、Lexigraph，以及非 flake 的 Hot100 源码输入。
   + 只在这里导入一次 `nixpkgs-unstable`，生成 `pkgs-unstable`。
   + 将 `pkgs-unstable` 同时通过 `specialArgs` 和 `home-manager.extraSpecialArgs` 传给下层模块。
-  + 读取 `hosts/nixos/software-selection.nix`，并把同一个纯属性集传给 NixOS 与 Home Manager。
-  + 只导出一台 `x86_64-linux` 主机：`nixosConfigurations.nixos`。
+  + 读取 `hosts/nixos/settings.nix` 与 `software-selection.nix`，将同一份主机参数和软件选择传给 NixOS 与 Home Manager。
+  + 导出当前为 `x86_64-linux` 的 `nixosConfigurations.nixos`。
 + [`hosts/nixos/configuration.nix`](../hosts/nixos/configuration.nix)
   + 主机入口，组合硬件（hardware-configuration.nix + hardware-extra.nix）、主机本地参数、代理和通用系统模块。
   + `hardware-configuration.nix`、`host-local.nix`、`proxy-local.nix` 都属于机器或网络相关配置，不应直接复制到另一台机器。
@@ -44,7 +44,8 @@ flowchart TD
   + 用户软件、XDG 配置、桌面快捷键、编辑器和语言工具链放在这里。
   + `config/` 保存由 Home Manager 映射到 `~/.config` 的真实配置目录。
 + 主机层 `hosts/nixos/`
-  + 只保存这一台设备独有的信息，例如硬件扫描结果、恢复 swap、磁盘或代理参数。
+  + `settings.nix` 集中用户、语言、兼容基线和个人模块默认值。
+  + `host-local.nix`、`hardware-configuration.nix`、`hardware-extra.nix` 和 `proxy-local.nix` 保存仓库所有者已验证的真实机器/网络信息。
   + `software-selection.nix` 也是主机选择数据；它不包含包实现。
 
 ## 通用模块与个人模块
@@ -66,7 +67,7 @@ flowchart TD
 
 + 新增主机
   + 新建 `hosts/<name>/`，保留独立硬件配置，并在 `flake.nix` 增加对应 `nixosConfigurations.<name>`。
-+ 新机器从外部克隆运行 [`scripts/deploy-full.sh`](../scripts/deploy-full.sh)：重建硬件模块、套用可移植主机/代理默认值并探测 GPU 厂商；`deploy-preserve-hardware.sh` 保留目标机硬件与主机文件重新部署；`deploy-*.sh` 局部脚本只推送单一区域。
++ 完整恢复仓库所有者当前机器时使用 `deploy-owner.sh`。其他机器使用 [`scripts/deploy-full.sh`](../scripts/deploy-full.sh)：重建硬件模块并套用可移植主机/代理默认值；GPU 必须通过 `generate-hardware.sh` 显式选择，脚本不自动探测。
 + 使用 [`scripts/select-software.sh`](../scripts/select-software.sh) 在现有分类边界上选择模块；选择规则见 [软件选择与配置生成](software-selection_zh-CN.md)。
 + 新增系统功能
   + 在 `modules/system/` 新建单一职责模块，再从 `system.nix` 导入。

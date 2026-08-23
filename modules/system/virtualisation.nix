@@ -8,14 +8,6 @@
 lib.mkMerge [
   (lib.mkIf softwareSelection.system.virtualisation.docker {
     virtualisation.docker.enable = true;
-
-    # Pull images through the host proxy.  This remains a host-local policy;
-    # proxy-local.nix documents and owns the matching endpoint.
-    systemd.services.docker.environment = {
-      HTTP_PROXY = "http://127.0.0.1:7897";
-      HTTPS_PROXY = "http://127.0.0.1:7897";
-      NO_PROXY = "localhost,127.0.0.1,::1";
-    };
   })
 
   (lib.mkIf softwareSelection.system.virtualisation.virtualMachines {

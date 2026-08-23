@@ -1,10 +1,11 @@
-{ pkgs, ... }:
+{ hostSettings, lib, pkgs, ... }:
 
 let
   # Override this at runtime when the media stack lives elsewhere.  Keeping the
   # historical path as a default preserves the current machine's behaviour
   # without baking it into the generic shell module.
-  defaultProjectDirectory = "/home/eurekaimer/Videos/ASS";
+  defaultProjectDirectory = hostSettings.personal.dockerAss.projectDirectory;
+  endpointArguments = lib.escapeShellArgs hostSettings.personal.dockerAss.endpoints;
 in
 {
   eureka.software.home = [
@@ -28,9 +29,7 @@ in
         case "$action" in
           start|up)
             compose up -d
-            printf '%s\n' \
-              'ANI-RSS:     http://127.0.0.1:7789' \
-              'qBittorrent: http://127.0.0.1:8080'
+            printf '%s\n' ${endpointArguments}
             ;;
           stop|down|restart|ps)
             compose "$action"

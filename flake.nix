@@ -39,7 +39,8 @@
       ...
     }@inputs:
     let
-      system = "x86_64-linux";
+      hostSettings = import ./hosts/nixos/settings.nix;
+      system = hostSettings.system;
       # This is a plain attribute set rather than a NixOS/Home Manager module.
       # Passing the same value to both module systems keeps package choices in
       # one host-local file without coupling their option namespaces.
@@ -61,7 +62,9 @@
 
       nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
         inherit system;
-        specialArgs = { inherit inputs pkgs-unstable softwareSelection; };
+        specialArgs = {
+          inherit inputs hostSettings pkgs-unstable softwareSelection;
+        };
 
         modules = [
           ./hosts/nixos/configuration.nix
@@ -70,9 +73,9 @@
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
-            home-manager.users.eurekaimer = import ./home/eurekaimer/home.nix;
+            home-manager.users.${hostSettings.user.name} = import ./home/eurekaimer/home.nix;
             home-manager.extraSpecialArgs = {
-              inherit inputs pkgs-unstable softwareSelection;
+              inherit inputs hostSettings pkgs-unstable softwareSelection;
             };
             home-manager.backupFileExtension = "backup";
           }

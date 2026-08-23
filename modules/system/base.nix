@@ -1,4 +1,4 @@
-{ lib, pkgs, ... }:
+{ hostSettings, lib, pkgs, ... }:
 
 {
   nix.settings = {
@@ -9,7 +9,7 @@
     ];
     trusted-users = [
       "root"
-      "eurekaimer"
+      hostSettings.user.name
     ];
     experimental-features = [
       "nix-command"
@@ -25,7 +25,7 @@
   # 需用 `nix-env --delete-generations +N`（+9 = 保留最近 9 个）。
   system.activationScripts.pruneGenerations = lib.stringAfter [ "var" ] ''
     ${pkgs.nix}/bin/nix-env -p /nix/var/nix/profiles/system --delete-generations +9 || true
-    ${pkgs.nix}/bin/nix-env -p /home/eurekaimer/.local/state/nix/profiles/home-manager --delete-generations +9 || true
+    ${pkgs.nix}/bin/nix-env -p ${lib.escapeShellArg "${hostSettings.user.homeDirectory}/.local/state/nix/profiles/home-manager"} --delete-generations +9 || true
     ${pkgs.nix}/bin/nix-collect-garbage || true
   '';
 
@@ -36,7 +36,7 @@
   networking.networkmanager.enable = true;
   programs.nix-ld.enable = true;
 
-  time.timeZone = "Asia/Shanghai";
+  time.timeZone = hostSettings.locale.timeZone;
   nixpkgs.config.allowUnfree = true;
-  system.stateVersion = "25.11";
+  system.stateVersion = hostSettings.stateVersion.nixos;
 }

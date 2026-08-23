@@ -6,6 +6,8 @@
   imports =
     [
       ./base.nix
+      ./host-options.nix
+      ./proxy.nix
       ./kernel.nix
       ./users.nix
       ./locale.nix

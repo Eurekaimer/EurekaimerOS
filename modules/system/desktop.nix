@@ -1,5 +1,6 @@
 {
   lib,
+  hostSettings,
   pkgs,
   softwareSelection,
   ...
@@ -40,7 +41,7 @@ in
       widget.clock = {
         format = "%Y年%m月%d日  %H:%M";
         resolution = "1s";
-        locale = "zh_CN.UTF-8";
+        locale = hostSettings.locale.default;
       };
     };
     font = {

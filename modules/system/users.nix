@@ -1,13 +1,15 @@
 {
   lib,
+  hostSettings,
   pkgs,
   softwareSelection,
   ...
 }:
 
 {
-  users.users.eurekaimer = {
+  users.users.${hostSettings.user.name} = {
     isNormalUser = true;
+    uid = hostSettings.user.uid;
     shell = pkgs.zsh;
     extraGroups =
       [

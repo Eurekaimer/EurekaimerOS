@@ -1,26 +1,63 @@
-{ ... }:
+{ hostSettings, ... }:
 
 {
   # Host-specific settings for this machine.
-  networking.hostName = "nixos";
-
+  networking.hostName = hostSettings.hostName;
   networking.firewall = {
     enable = false;
     allowedTCPPorts = [ 21301 ];
     allowedUDPPorts = [ 21301 ];
   };
 
-  # USB storage quirk for this specific hardware adapter.
+  # Verified quirks for the repository owner's current laptop.
   boot.kernelParams = [
     "usb-storage.quirks=0x0bda:0x9210:u"
-    # 核显帧缓冲压缩：降低显示相关内存带宽与功耗（Intel iGPU 安全项）
     "i915.enable_fbc=1"
   ];
 
-  # Resume storage is hardware data. Keeping it here prevents deploy-full.sh
-  # from carrying this machine's UUID into a generic host configuration.
   boot.resumeDevice = "/dev/disk/by-uuid/5a54b4dc-0a71-4d17-b452-d025c4f50110";
   swapDevices = [
     { device = "/dev/disk/by-uuid/5a54b4dc-0a71-4d17-b452-d025c4f50110"; }
+  ];
+
+  # Add only values verified on the target machine. Example:
+  # eureka.host.mounts = [{
+  #   mountPoint = "/mnt/data";
+  #   device = "/dev/disk/by-uuid/<UUID>";
+  #   fsType = "ntfs3";
+  #   userOwned = true;
+  #   options = [ "nofail" "x-systemd.automount" "windows_names" ];
+  # }];
+  eureka.host.mounts = [
+    {
+      mountPoint = "/mnt/Rina";
+      device = "/dev/disk/by-uuid/A000D74300D71EDA";
+      fsType = "ntfs3";
+      userOwned = true;
+      options = [
+        "nofail"
+        "x-systemd.automount"
+        "x-systemd.idle-timeout=5min"
+        "force"
+        "dmask=022"
+        "fmask=133"
+        "windows_names"
+      ];
+    }
+    {
+      mountPoint = "/mnt/Eureka";
+      device = "/dev/disk/by-uuid/8402CA3202CA28CE";
+      fsType = "ntfs3";
+      userOwned = true;
+      options = [
+        "nofail"
+        "x-systemd.automount"
+        "x-systemd.idle-timeout=5min"
+        "force"
+        "dmask=022"
+        "fmask=133"
+        "windows_names"
+      ];
+    }
   ];
 }

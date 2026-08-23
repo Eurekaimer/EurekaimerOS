@@ -5,8 +5,8 @@
 + [`flake.nix`](../flake.nix)
   + Pins NixOS 25.11, unstable nixpkgs, Home Manager, Noctalia, Komari Call, Lexigraph, and the non-flake Hot100 source.
   + Imports unstable once as `pkgs-unstable` and passes it to NixOS and Home Manager modules through special arguments.
-  + Reads `hosts/nixos/software-selection.nix` and passes the same plain attribute set to both module systems.
-  + Exposes one `x86_64-linux` host: `nixosConfigurations.nixos`.
+  + Reads `hosts/nixos/settings.nix` and `software-selection.nix`, then passes the same host values and package choices to both module systems.
+  + Exposes one host, currently `x86_64-linux`, as `nixosConfigurations.nixos`.
 + [`hosts/nixos/configuration.nix`](../hosts/nixos/configuration.nix)
   + Combines hardware (`hardware-configuration.nix` + `hardware-extra.nix`), host-local/proxy files, and the shared system module.
   + Hardware, local, and proxy files are machine-specific and must be reviewed before reuse.
@@ -41,7 +41,8 @@ flowchart TD
   + User applications, XDG files, desktop behavior, editors, and language tools.
   + `modules/home/config/` holds real configuration directories that Home Manager maps to `~/.config`.
 + `hosts/nixos/`
-  + Values tied to this machine or network, including resume swap identifiers.
+  + `settings.nix` centralizes user identity, locale, compatibility baselines, and personal-module defaults.
+  + `host-local.nix`, `hardware-configuration.nix`, `hardware-extra.nix`, and `proxy-local.nix` preserve the owner's verified machine/network values.
   + `software-selection.nix` is host choice data; it does not implement packages.
 
 ## Generic and personal modules
@@ -60,7 +61,7 @@ flowchart TD
 ## Extension points
 
 + Add a host under `hosts/<name>/` and a matching `nixosConfigurations.<name>` output.
-+ Use [`scripts/deploy-full.sh`](../scripts/deploy-full.sh) from an external clone on a new machine (regenerates hardware, applies portable host/proxy defaults, detects GPU vendor); `deploy-preserve-hardware.sh` redeploys keeping the target's hardware and host files; the `deploy-*.sh` partial scripts push single areas.
++ Use `deploy-owner.sh` for an exact restoration of the committed owner machine. Use [`scripts/deploy-full.sh`](../scripts/deploy-full.sh) on another machine; it regenerates hardware and applies portable host/proxy defaults, while GPU extras must be selected explicitly with `generate-hardware.sh`. `deploy-preserve-hardware.sh` keeps the target's existing host files.
 + Use [`scripts/select-software.sh`](../scripts/select-software.sh) to choose modules at the existing category boundaries; see [Software selection](software-selection.md).
 + Add a root-owned feature under `modules/system/` and import it from `system.nix`.
 + Add a user application to the appropriate `modules/home/applications/` category.

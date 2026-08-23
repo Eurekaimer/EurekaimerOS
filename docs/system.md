@@ -33,7 +33,7 @@
 ## Graphics
 
 + [`graphics.nix`](../modules/system/graphics.nix) enables the graphics stack and installs VAAPI diagnostics.
-+ [`hardware-extra.nix`](../hosts/nixos/hardware-extra.nix) hooks host GPU extras; `deploy-full.sh` swaps it per detected vendor on new machines (generic default, Intel when an Intel iGPU is detected).
++ [`hardware-extra.nix`](../hosts/nixos/hardware-extra.nix) preserves the owner's Intel GPU extras. On another machine, `generate-hardware.sh` asks explicitly for Generic or Intel and never detects the vendor automatically.
 + [`graphics-intel.nix`](../modules/system/graphics-intel.nix) adds Intel media/VAAPI drivers only for this host.
 
 ## Power
@@ -54,7 +54,7 @@ Live status is published at `/run/power-policy/status.json`. Heavy browser or pr
 
 ## Storage
 
-+ [`mounts.nix`](../modules/system/mounts.nix) automounts two host-specific NTFS3 data volumes (`/mnt/Rina` and `/mnt/Eureka`) by UUID and unmounts them after five idle minutes. Verify UUIDs and the `force` option before reuse.
++ [`host-local.nix`](../hosts/nixos/host-local.nix) declares the owner's two NTFS3 volumes (`/mnt/Rina` and `/mnt/Eureka`) by UUID. [`mounts.nix`](../modules/system/mounts.nix) renders those declarations and derives UID/GID from `settings.nix`.
 
 ## Gaming and virtualization
 
@@ -67,7 +67,8 @@ See [Software selection](software-selection.md) for every system switch and its 
 
 + `hardware-configuration.nix`: regenerate on another machine.
 + `host-local.nix`: hostname, firewall, quirks, and resume swap UUID for this machine.
-+ `hardware-extra.nix`: per-host GPU hook, swapped by `deploy-full.sh` (Intel version on this machine).
-+ `proxy-local.nix`: daily network proxy entry.
++ `hardware-extra.nix`: explicit per-host GPU hook (Intel on the owner machine).
++ `proxy-local.nix`: one daily proxy declaration consumed by Nix, the user environment, and Docker.
++ `settings.nix`: centralized owner identity, locale, state versions, and personal-module defaults.
 
 [中文版](system_zh-CN.md)

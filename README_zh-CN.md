@@ -69,6 +69,7 @@ flake.nix
     │   ├── hardware-extra.nix
     │   ├── host-local.nix
     │   ├── proxy-local.nix
+    │   ├── settings.nix
     │   ├── software-selection.nix
     │   ├── modules/system/system.nix
     │   ├── modules/system/personal.nix
@@ -91,6 +92,7 @@ scripts/
 ├── generate-hardware.sh
 ├── software-report.sh
 ├── deploy-full.sh
+├── deploy-owner.sh
 ├── deploy-preserve-hardware.sh
 ├── deploy-desktop.sh
 ├── deploy-power.sh
@@ -98,7 +100,7 @@ scripts/
 └── deploy-common.sh
 ```
 
-> `host-generic.nix`、`proxy-disabled.nix` 与 `hardware-extra-generic.nix` 是新机器默认值，由 `deploy-full.sh` 部署时交换到位。
+> 仓库保留仓库所有者真实的机器配置。`deploy-owner.sh` 会原样恢复这些值；其他机器应使用 `deploy-full.sh`，它会换成安全的通用主机/代理声明，而且绝不会猜测 GPU 驱动。
 
 + [`flake.nix`](flake.nix)
   + 固定 stable/unstable 软件包输入并构建 `nixosConfigurations.nixos`。
@@ -115,19 +117,25 @@ scripts/
 
 ## 构建
 
-+ 如果准备直接从 clone 构建，先重新生成当前机器的硬件配置（旧文件会自动备份）：
++ 如果要完美复现仓库所有者当前机器，直接部署仓库已保存的硬件、UUID、Intel 图形、代理与偏好：
+
+```bash
+./scripts/deploy-owner.sh
+```
+
++ 如果目标是其他硬件，先运行双语硬件生成脚本并明确选择 Generic 或 Intel（旧文件会自动备份）：
 
 ```bash
 ./scripts/generate-hardware.sh
 ```
 
-+ 然后运行双语软件选择向导。它会生成并覆盖当前主机的声明式选择文件，并可在最后帮助运行 rebuild：
++ 需要改变软件组合时，再运行双语软件选择向导。它会原子覆盖声明式选择文件，并可在最后帮助运行 rebuild：
 
 ```bash
 ./scripts/select-software.sh
 ```
 
-不要在尚未生成并核对本机硬件配置时选择 `rebuild switch`。如果使用后面的 `deploy-full.sh` 流程，它会在部署阶段重新生成硬件文件。
+其他机器在尚未生成并核对硬件与图形模块前，不要选择 `rebuild switch`。Oh My Pi 与固定版本 Bun 是强制基础能力，向导不会将其移除。
 
 + 只验证构建，不切换当前系统：
 
@@ -147,7 +155,7 @@ sudo nixos-rebuild switch --flake .#nixos
 ./scripts/deploy-full.sh
 ```
 
-+ 本机重装：保留目标机现有的硬件与主机文件，重新部署：
++ 已安装目标的重新部署：保留目标目录中现有的硬件与主机文件：
 
 ```bash
 ./scripts/deploy-preserve-hardware.sh

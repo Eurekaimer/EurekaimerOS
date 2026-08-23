@@ -42,7 +42,7 @@
 + [`graphics.nix`](../modules/system/graphics.nix)
   + 启用 NixOS 图形栈并安装 `libva-utils` 便于验证硬件解码。
 + [`hosts/nixos/hardware-extra.nix`](../hosts/nixos/hardware-extra.nix)
-  + 主机 GPU 钩子：Intel 版导入下面的图形模块；`deploy-full.sh` 在新机器上按探测到的 GPU 厂商交换该文件（默认 generic，检测到 Intel iGPU 时恢复 Intel 版）。
+  + 保存仓库所有者的 Intel GPU 扩展。其他机器运行 `generate-hardware.sh` 时必须显式选择 Generic 或 Intel，脚本不自动探测。
 + [`graphics-intel.nix`](../modules/system/graphics-intel.nix)
   + 仅由当前 Intel iGPU 主机导入，安装 Intel Media Driver、旧 Intel VAAPI 驱动和 libva。
 
@@ -69,9 +69,9 @@
 ## 存储
 
 + [`mounts.nix`](../modules/system/mounts.nix)
-  + 按 UUID 声明 `/mnt/Rina` 与 `/mnt/Eureka` 两个 NTFS3 数据卷。
+  + 将 `host-local.nix` 中按 UUID 声明的 `/mnt/Rina` 与 `/mnt/Eureka` 渲染为 NixOS 文件系统配置。
   + 使用 systemd automount、`nofail` 和 5 分钟空闲卸载，不阻塞系统启动。
-  + UUID、UID/GID 和 `force` 选项都与当前主机强绑定；迁移前必须核对，脏 NTFS 卷应优先在 Windows 中运行 `chkdsk`。
+  + UUID 与 `force` 选项是当前主机信息；UID/GID 从 `settings.nix` 统一取值。迁移前必须核对，脏 NTFS 卷应优先在 Windows 中运行 `chkdsk`。
 
 ## 游戏和虚拟化
 
@@ -91,4 +91,6 @@
 + [`hosts/nixos/host-local.nix`](../hosts/nixos/host-local.nix)
   + 保存当前机器的主机名、防火墙、USB/GPU quirks 与恢复 swap UUID。
 + [`hosts/nixos/proxy-local.nix`](../hosts/nixos/proxy-local.nix)
-  + 保存日常网络代理入口；恢复系统时应先确保基本网络可用，再应用完整配置。
+  + 保存单一日常代理声明，由 Nix、用户环境与 Docker 共用；恢复系统时应先确保基本网络可用。
++ [`hosts/nixos/settings.nix`](../hosts/nixos/settings.nix)
+  + 集中保存所有者用户信息、语言/时区、state version 与个人模块默认参数。

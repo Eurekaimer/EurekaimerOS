@@ -36,12 +36,14 @@ command -v nix >/dev/null 2>&1 || {
 
 flake="$repo_root#nixosConfigurations.nixos.config"
 system_path="$flake.environment.systemPackages"
-home_path="$flake.home-manager.users.eurekaimer.home.packages"
+home_users_path="$flake.home-manager.users"
 count_expression='packages: builtins.toString (builtins.length packages)'
 name_expression='packages: map (package: package.pname or package.name) packages'
+home_count_expression='users: builtins.toString (builtins.length (builtins.concatLists (map (user: user.home.packages) (builtins.attrValues users))))'
+home_name_expression='users: map (package: package.pname or package.name) (builtins.concatLists (map (user: user.home.packages) (builtins.attrValues users)))'
 
 system_count="$(nix eval --raw "$system_path" --apply "$count_expression")"
-home_count="$(nix eval --raw "$home_path" --apply "$count_expression")"
+home_count="$(nix eval --raw "$home_users_path" --apply "$home_count_expression")"
 total_count=$((system_count + home_count))
 
 printf '%-24s %s\n' \
@@ -53,5 +55,5 @@ if $show_list; then
   printf '\nSystem packages:\n'
   nix eval "$system_path" --apply "$name_expression"
   printf '\nHome Manager packages:\n'
-  nix eval "$home_path" --apply "$name_expression"
+  nix eval "$home_users_path" --apply "$home_name_expression"
 fi

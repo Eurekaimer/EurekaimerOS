@@ -69,6 +69,7 @@ flake.nix
     │   ├── hardware-extra.nix
     │   ├── host-local.nix
     │   ├── proxy-local.nix
+    │   ├── settings.nix
     │   ├── software-selection.nix
     │   ├── modules/system/system.nix
     │   ├── modules/system/personal.nix
@@ -91,6 +92,7 @@ scripts/
 ├── generate-hardware.sh
 ├── software-report.sh
 ├── deploy-full.sh
+├── deploy-owner.sh
 ├── deploy-preserve-hardware.sh
 ├── deploy-desktop.sh
 ├── deploy-power.sh
@@ -98,7 +100,7 @@ scripts/
 └── deploy-common.sh
 ```
 
-> `host-generic.nix`, `proxy-disabled.nix`, and `hardware-extra-generic.nix` are the fresh-machine defaults that `deploy-full.sh` swaps into `hosts/nixos/` on a new machine.
+> The repository keeps the owner's real machine settings. `deploy-owner.sh` restores those values exactly. For another machine, `deploy-full.sh` replaces the host and proxy declarations with safe portable defaults and never guesses the GPU driver.
 
 + [`flake.nix`](flake.nix)
   + Pins stable and unstable package sets and builds `nixosConfigurations.nixos`.
@@ -115,19 +117,25 @@ scripts/
 
 ## Rebuild
 
-+ When building directly from the clone, regenerate this machine's hardware module first (the previous file is backed up):
++ To reproduce the repository owner's current machine exactly, deploy the committed hardware, UUIDs, Intel extras, proxy, and preferences as-is:
+
+```bash
+./scripts/deploy-owner.sh
+```
+
++ On different hardware, first run the bilingual hardware generator and explicitly choose Generic or Intel (the previous files are backed up):
 
 ```bash
 ./scripts/generate-hardware.sh
 ```
 
-+ Then run the bilingual software-selection wizard. It atomically replaces the host selection and can optionally run the rebuild:
++ Run the bilingual software-selection wizard when you want a different package set. It atomically replaces the selection file and can optionally run the rebuild:
 
 ```bash
 ./scripts/select-software.sh
 ```
 
-Do not choose `rebuild switch` before generating and reviewing this machine's hardware module. The later `deploy-full.sh` workflow regenerates hardware during deployment instead.
+On another machine, do not choose `rebuild switch` before generating and reviewing its hardware and graphics modules. Oh My Pi and its pinned Bun runtime are mandatory and are never removed by the wizard.
 
 + Validate without activation:
 
@@ -147,7 +155,7 @@ sudo nixos-rebuild switch --flake .#nixos
 ./scripts/deploy-full.sh
 ```
 
-+ Redeploy this machine keeping its existing hardware and host files:
++ Redeploy an already-installed target while keeping that target's existing hardware and host files:
 
 ```bash
 ./scripts/deploy-preserve-hardware.sh

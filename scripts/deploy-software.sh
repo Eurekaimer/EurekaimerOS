@@ -10,11 +10,14 @@ copy_item flake.nix
 copy_item flake.lock
 # Deploy the choices made in this clone together with the selected modules.
 copy_item hosts/nixos/software-selection.nix
+copy_item hosts/nixos/settings.nix
 copy_item hosts/nixos/configuration.nix
 copy_item home/eurekaimer/home.nix
 copy_item modules/system/software.nix
 copy_item modules/system/personal.nix
 copy_item modules/system/system.nix
+copy_item modules/system/host-options.nix
+copy_item modules/system/proxy.nix
 copy_item modules/system/power.nix
 copy_item modules/system/power
 copy_item modules/system/users.nix

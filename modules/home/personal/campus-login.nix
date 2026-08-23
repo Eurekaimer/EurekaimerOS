@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ hostSettings, lib, pkgs, ... }:
 
 {
   # Nankai campus authentication helper.  It deliberately uses an isolated
@@ -45,7 +45,7 @@
           --proxy-server="direct://" \
           --proxy-bypass-list="*" \
           --new-window \
-          "https://netauth.nankai.edu.cn/"
+          ${lib.escapeShellArg hostSettings.personal.campusLoginUrl}
       '';
     })
   ];

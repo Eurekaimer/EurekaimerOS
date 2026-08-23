@@ -31,7 +31,7 @@ print_rebuild() {
 }
 
 deploy_full() {
-  local hardware_mode=$1
+  local deployment_profile=$1
   local stage="${target}.deploy.$$"
   local backup="${target}.backup-$(date +%Y%m%d-%H%M%S)"
   local old_moved=false
@@ -51,16 +51,20 @@ deploy_full() {
   as_root rm -rf -- "$stage/.git" "$stage/result"
   as_root find "$stage" -name '*.backup*' -delete
 
-  # New machines start without this computer's mounts, proxy, or kernel quirks.
-  as_root cp -- "$repo_root/hosts/nixos/host-generic.nix" \
-    "$stage/hosts/nixos/host-local.nix"
-  as_root cp -- "$repo_root/hosts/nixos/proxy-disabled.nix" \
-    "$stage/hosts/nixos/proxy-local.nix"
-  as_root cp -- "$repo_root/hosts/nixos/hardware-extra-generic.nix" \
-    "$stage/hosts/nixos/hardware-extra.nix"
+  case "$deployment_profile" in
+    owner)
+      # Exact repository reproduction for the owner: keep the committed
+      # hardware, UUIDs, quirks, mounts, proxy, and explicit Intel extras.
+      ;;
+    portable)
+      # A different machine must not inherit this computer's identifiers or
+      # network policy. The GPU module still comes from the user's explicit
+      # generate-hardware.sh choice; it is never inferred here.
+      as_root cp -- "$repo_root/hosts/nixos/host-generic.nix" \
+        "$stage/hosts/nixos/host-local.nix"
+      as_root cp -- "$repo_root/hosts/nixos/proxy-disabled.nix" \
+        "$stage/hosts/nixos/proxy-local.nix"
 
-  case "$hardware_mode" in
-    regenerate)
       hardware_source="${EUREKAIMEROS_HARDWARE_CONFIG:-}"
       if [[ -z "$hardware_source" ]]; then
         for candidate in \
@@ -82,16 +86,6 @@ deploy_full() {
         as_root nixos-generate-config --show-hardware-config |
           as_root tee "$stage/hosts/nixos/hardware-configuration.nix" >/dev/null
       fi
-
-      for vendor_file in /sys/class/drm/card*/device/vendor; do
-        [[ -r "$vendor_file" ]] || continue
-        read -r vendor < "$vendor_file"
-        if [[ "$vendor" == 0x8086 ]]; then
-          as_root cp -- "$repo_root/hosts/nixos/hardware-extra.nix" \
-            "$stage/hosts/nixos/hardware-extra.nix"
-          break
-        fi
-      done
       ;;
     preserve)
       if [[ ! -f "$target/hosts/nixos/hardware-configuration.nix" ]]; then
@@ -106,7 +100,7 @@ deploy_full() {
       done
       ;;
     *)
-      echo "Unknown hardware mode: $hardware_mode" >&2
+      echo "Unknown deployment profile: $deployment_profile" >&2
       exit 1
       ;;
   esac

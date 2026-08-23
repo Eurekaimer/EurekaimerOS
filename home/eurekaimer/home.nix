@@ -1,4 +1,4 @@
-{ ... }:
+{ hostSettings, ... }:
 
 {
   imports = [
@@ -10,9 +10,9 @@
     ../../modules/home/software.nix
   ];
 
-  home.username = "eurekaimer";
-  home.homeDirectory = "/home/eurekaimer";
-  home.stateVersion = "25.11";
+  home.username = hostSettings.user.name;
+  home.homeDirectory = hostSettings.user.homeDirectory;
+  home.stateVersion = hostSettings.stateVersion.homeManager;
   home.sessionPath = [ "$HOME/.local/bin" ];
 
   # Fontconfig is managed at the system level via modules/system/locale.nix.
