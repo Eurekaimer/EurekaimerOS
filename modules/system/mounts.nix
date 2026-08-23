@@ -1,35 +1,22 @@
-{ ... }:
-
 {
-  fileSystems."/mnt/Rina" = {
-    device = "/dev/disk/by-uuid/A000D74300D71EDA";
-    fsType = "ntfs3";
-    options = [
-      "nofail"
-      "x-systemd.automount"
-      "x-systemd.idle-timeout=5min"
-      "force"
-      "uid=1000"
-      "gid=100"
-      "dmask=022"
-      "fmask=133"
-      "windows_names"
-    ];
-  };
+  config,
+  hostSettings,
+  lib,
+  ...
+}:
 
-  fileSystems."/mnt/Eureka" = {
-    device = "/dev/disk/by-uuid/8402CA3202CA28CE";
-    fsType = "ntfs3";
-    options = [
-      "nofail"
-      "x-systemd.automount"
-      "x-systemd.idle-timeout=5min"
-      "force"
-      "uid=1000"
-      "gid=100"
-      "dmask=022"
-      "fmask=133"
-      "windows_names"
-    ];
-  };
+let
+  renderMount = mount:
+    lib.nameValuePair mount.mountPoint {
+      inherit (mount) device fsType;
+      options = mount.options ++ lib.optionals mount.userOwned [
+        "uid=${toString hostSettings.user.uid}"
+        "gid=${toString hostSettings.user.gid}"
+      ];
+    };
+in
+{
+  # The repository default is empty. Add machine-specific entries only in
+  # hosts/nixos/host-local.nix; deploy-full.sh never invents UUIDs.
+  fileSystems = builtins.listToAttrs (map renderMount config.eureka.host.mounts);
 }

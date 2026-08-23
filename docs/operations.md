@@ -19,9 +19,33 @@ sudo nixos-rebuild switch --flake .#nixos
 
 ## Deployment
 
-All [`scripts/`](../scripts/) tools stage the new files, atomically replace the target, and keep a timestamped backup:
+### Recommended flow after cloning
 
-+ `./scripts/deploy-full.sh` — first deployment on a new machine. Regenerates `hardware-configuration.nix` and swaps `host-local.nix`, `proxy-local.nix`, and `hardware-extra.nix` for the portable defaults (`host-generic.nix`, `proxy-disabled.nix`, `hardware-extra-generic.nix`); when an Intel iGPU is detected it restores the Intel graphics module.
+For an exact restoration of the repository owner's machine, keep the committed
+hardware scan, disk UUIDs, Intel extras, proxy, and preferences:
+
+```bash
+./scripts/deploy-owner.sh
+sudo nixos-rebuild switch --flake /etc/nixos#nixos
+```
+
+For a different machine:
+
+```bash
+./scripts/generate-hardware.sh  # choose language, then Generic or Intel
+./scripts/select-software.sh    # bilingual selection and optional rebuild
+./scripts/software-report.sh    # evaluate current package counts
+./scripts/deploy-full.sh        # portable host/proxy defaults + new hardware
+```
+
+`generate-hardware.sh` defaults to `hosts/nixos/hardware-configuration.nix`, validates output, backs up both destinations, and writes the explicitly selected GPU template to `hardware-extra.nix`. `--output PATH` and `--graphics-output PATH` select other destinations. Non-interactive use requires `--language zh|en --graphics generic|intel`. It never guesses a GPU or edits data disks, resume swap, proxy, or USB quirks.
+
+`select-software.sh` atomically generates `hosts/nixos/software-selection.nix`. See [Software selection](software-selection.md) for arguments and module mappings.
+
+The existing `deploy-*.sh` tools stage files, atomically replace their target, and keep a timestamped backup:
+
++ `./scripts/deploy-owner.sh` — exact owner recovery. Keeps every committed machine-specific value, including disk/swap UUIDs, Intel extras, quirks, mounts, and proxy.
++ `./scripts/deploy-full.sh` — first deployment on a different machine. Regenerates `hardware-configuration.nix` and swaps only `host-local.nix` and `proxy-local.nix` for portable defaults. It preserves the GPU template explicitly chosen in the clone.
 + `./scripts/deploy-preserve-hardware.sh` — redeploys this machine keeping the target's hardware and host files.
 + `./scripts/deploy-desktop.sh` / `deploy-power.sh` / `deploy-software.sh` — push a single area into an existing `/etc/nixos`; replaced items are backed up to a timestamped `.partial-backup-*` directory.
 + `EUREKAIMEROS_TARGET=/path` overrides the deployment target (default `/etc/nixos`).
@@ -30,11 +54,14 @@ After any deploy script, activate with `sudo nixos-rebuild switch --flake /etc/n
 
 ### Fresh-clone checklist
 
-1. Install NixOS and create the user `eurekaimer` — `users.nix` and `home.nix` hard-code this username.
-2. Clone the repository and run `./scripts/deploy-full.sh`.
-3. Review the machine-specific values by hand: the resume swap UUID in `power.nix`, the NTFS UUIDs in `mounts.nix`, and the USB quirks in `host-local.nix`.
-4. The proxy starts disabled (`proxy-disabled.nix`); once a proxy on 127.0.0.1:7897 is available, enable `proxy-local.nix` and the Docker proxy.
-5. Switch with `sudo nixos-rebuild switch --flake /etc/nixos#nixos`. Binary caches (USTC, Tsinghua, official) are preconfigured in `base.nix`.
+1. Edit `hosts/nixos/settings.nix` if the username, home directory, locale, or personal-module defaults differ.
+2. Run `./scripts/generate-hardware.sh` and explicitly choose Generic or Intel; configure NVIDIA manually.
+3. Run `./scripts/select-software.sh` and choose file generation only at the final prompt.
+4. Run `./scripts/deploy-full.sh`; it copies the choices into `/etc/nixos`, applies generic host/proxy values, and regenerates hardware in the staged target.
+5. Add only verified resume, disk UUID, firewall, and USB values to `host-local.nix`. The proxy starts disabled; enable the single `eureka.host.proxy` declaration only after the endpoint exists.
+6. Run `sudo nixos-rebuild switch --flake /etc/nixos#nixos`.
+
+When building directly from the clone instead of deploying to `/etc/nixos`, run `generate-hardware.sh` first, review host values, and then let the selection wizard rebuild the clone.
 
 ## Where to edit
 
@@ -44,7 +71,7 @@ After any deploy script, activate with `sudo nixos-rebuild switch --flake /etc/n
 + Niri: [`modules/home/config/niri-config/config.kdl.in`](../modules/home/config/niri-config/config.kdl.in)
 + Noctalia: [`modules/home/config/noctalia-config/settings.json.in`](../modules/home/config/noctalia-config/settings.json.in)
 + Applications: [`modules/home/applications/`](../modules/home/applications/)
-+ Power: [`modules/system/power.nix`](../modules/system/power.nix)
++ Power entry: [`modules/system/power.nix`](../modules/system/power.nix); focused policies: [`modules/system/power/`](../modules/system/power/)
 
 ## Power diagnostics
 
@@ -58,9 +85,9 @@ After any deploy script, activate with `sudo nixos-rebuild switch --flake /etc/n
 
 + In a live ISO or first boot, restore a working binary cache and network before applying the complete flake.
 + On new hardware, regenerate `hardware-configuration.nix` and verify disk UUIDs, the Intel graphics module, proxy settings, and username.
-+ Deploy scripts only replace portable files; machine-specific values — the resume swap UUID in `power.nix`, the NTFS UUIDs in `mounts.nix`, the username in `users.nix`/`home.nix` — are never touched and must be reviewed on new hardware.
++ The owner profile intentionally preserves all committed machine values. The portable profile replaces host UUID/quirk/mount and proxy declarations, but preserves the explicit GPU choice. User and locale values live in `settings.nix` and must be reviewed for a different user.
 + `system.stateVersion` and `home.stateVersion` are compatibility baselines; do not change them merely because nixpkgs was upgraded.
-+ If `mem_sleep_default=deep` causes resume failures, remove it from [`power.nix`](../modules/system/power.nix) and rebuild.
++ If `mem_sleep_default=deep` causes resume failures, remove it from [`power/sleep.nix`](../modules/system/power/sleep.nix) and rebuild.
 
 ## EurekaimerOS synchronization
 

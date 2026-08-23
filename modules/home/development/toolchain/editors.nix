@@ -3,6 +3,7 @@
   lib,
   pkgs,
   pkgs-unstable,
+  softwareSelection,
   ...
 }:
 
@@ -29,38 +30,64 @@ let
     };
   };
 
-  # Copied once into the user's extension directory; never managed afterwards.
+  # Base UI and remote extensions belong to the editor itself. Language and
+  # container extensions follow the same switches as their actual toolchains.
+  baseVscodeExtensions = with pkgs-unstable.vscode-extensions; [
+    enkia.tokyo-night
+    oderwat.indent-rainbow
+    pkief.material-icon-theme
+    ms-ceintl.vscode-language-pack-zh-hans
+    ms-vscode.remote-explorer
+    ms-vscode-remote.remote-ssh
+    ms-vscode-remote.remote-ssh-edit
+  ];
+
   initialVscodeExtensions =
-    (with pkgs-unstable.vscode-extensions; [
-      james-yu.latex-workshop
-      llvm-vs-code-extensions.vscode-clangd
-      enkia.tokyo-night
-      oderwat.indent-rainbow
-      pkief.material-icon-theme
-      ms-ceintl.vscode-language-pack-zh-hans
-      ms-python.debugpy
-      ms-python.python
-      ms-python.vscode-pylance
-      ms-toolsai.jupyter
-      ms-toolsai.jupyter-keymap
-      ms-toolsai.jupyter-renderers
-      ms-toolsai.vscode-jupyter-cell-tags
-      ms-toolsai.vscode-jupyter-slideshow
-      ms-vscode.cmake-tools
-      ms-vscode.remote-explorer
-      ms-vscode-remote.remote-containers
-      ms-vscode-remote.remote-ssh
-      ms-vscode-remote.remote-ssh-edit
-      vadimcn.vscode-lldb
-      redhat.java
-      vscjava.vscode-gradle
-      vscjava.vscode-java-debug
-      vscjava.vscode-java-dependency
-      vscjava.vscode-java-pack
-      vscjava.vscode-java-test
-      vscjava.vscode-maven
-    ])
-    ++ [ hot100Assistant ];
+    baseVscodeExtensions
+    ++ lib.optionals softwareSelection.home.development.python (
+      with pkgs-unstable.vscode-extensions;
+      [
+        ms-python.debugpy
+        ms-python.python
+        ms-python.vscode-pylance
+        ms-toolsai.jupyter
+        ms-toolsai.jupyter-keymap
+        ms-toolsai.jupyter-renderers
+        ms-toolsai.vscode-jupyter-cell-tags
+        ms-toolsai.vscode-jupyter-slideshow
+      ]
+    )
+    ++ lib.optionals softwareSelection.home.development.cpp (
+      with pkgs-unstable.vscode-extensions;
+      [
+        llvm-vs-code-extensions.vscode-clangd
+        ms-vscode.cmake-tools
+        vadimcn.vscode-lldb
+      ]
+    )
+    ++ lib.optionals softwareSelection.system.virtualisation.docker (
+      with pkgs-unstable.vscode-extensions;
+      [
+        ms-vscode-remote.remote-containers
+      ]
+    )
+    ++ lib.optionals softwareSelection.home.development.java (
+      with pkgs-unstable.vscode-extensions;
+      [
+        redhat.java
+        vscjava.vscode-gradle
+        vscjava.vscode-java-debug
+        vscjava.vscode-java-dependency
+        vscjava.vscode-java-pack
+        vscjava.vscode-java-test
+        vscjava.vscode-maven
+      ]
+    )
+    ++ lib.optionals softwareSelection.home.development.latex (
+      with pkgs-unstable.vscode-extensions;
+      [ james-yu.latex-workshop ]
+    )
+    ++ lib.optionals softwareSelection.personal.hot100Assistant [ hot100Assistant ];
 
   vscodeExtensionSeed = pkgs.symlinkJoin {
     name = "vscode-extension-seed";
@@ -83,21 +110,25 @@ let
   };
 
   vscodeDefaultSettings = pkgs.writeText "vscode-default-settings.json" (
-    builtins.toJSON {
-      "window.zoomLevel" = 1.5;
-      "editor.fontSize" = 18;
-      "terminal.integrated.fontSize" = 17;
-      "debug.console.fontSize" = 16;
-      "workbench.colorTheme" = "Tokyo Night";
-      "workbench.iconTheme" = "material-icon-theme";
-      "latex-workshop.view.pdf.viewer" = "tab";
-      "latex-workshop.synctex.afterBuild.enabled" = true;
-      "latex-workshop.latex.autoBuild.run" = "onSave";
-      "latex-workshop.latex.recipe.default" = "lastUsed";
-      "latex-workshop.latex.clean.enabled" = true;
-      "latex-workshop.latex.clean.subfolder.enabled" = true;
-      "latex-workshop.latex.clean.method" = "onBuilt";
-    }
+    builtins.toJSON (
+      {
+        "window.zoomLevel" = 1.5;
+        "editor.fontSize" = 18;
+        "terminal.integrated.fontSize" = 17;
+        "debug.console.fontSize" = 16;
+        "workbench.colorTheme" = "Tokyo Night";
+        "workbench.iconTheme" = "material-icon-theme";
+      }
+      // lib.optionalAttrs softwareSelection.home.development.latex {
+        "latex-workshop.view.pdf.viewer" = "tab";
+        "latex-workshop.synctex.afterBuild.enabled" = true;
+        "latex-workshop.latex.autoBuild.run" = "onSave";
+        "latex-workshop.latex.recipe.default" = "lastUsed";
+        "latex-workshop.latex.clean.enabled" = true;
+        "latex-workshop.latex.clean.subfolder.enabled" = true;
+        "latex-workshop.latex.clean.method" = "onBuilt";
+      }
+    )
   );
 
   vscodeDefaultArgv = pkgs.writeText "vscode-argv.json" ''
@@ -115,21 +146,30 @@ in
   };
 
   home.activation.seedMutableVscodeExtensions = lib.hm.dag.entryAfter [ "linkGeneration" ] ''
-    marker="$HOME/.local/state/eurekaimeros/vscode-extension-seed-v1"
+    legacy_marker="$HOME/.local/state/eurekaimeros/vscode-extension-seed-v1"
+    marker_dir="$HOME/.local/state/eurekaimeros/vscode-extension-seeds"
     extension_dir="$HOME/.vscode/extensions"
-    if [[ ! -e "$marker" ]]; then
-      ${pkgs.coreutils}/bin/mkdir -p "$extension_dir"
-      for source in ${vscodeExtensionSeed}/share/vscode/extensions/*; do
-        name="$(${pkgs.coreutils}/bin/basename "$source")"
-        destination="$extension_dir/$name"
-        if [[ ! -e "$destination" ]]; then
-          resolved="$(${pkgs.coreutils}/bin/readlink -f "$source")"
-          ${pkgs.coreutils}/bin/cp -a --no-preserve=mode,ownership -- "$resolved" "$destination"
-          ${pkgs.coreutils}/bin/chmod -R u+rwX -- "$destination"
-        fi
-      done
-      ${pkgs.coreutils}/bin/install -D -m 0644 /dev/null "$marker"
-    fi
+    ${pkgs.coreutils}/bin/mkdir -p "$extension_dir" "$marker_dir"
+    for source in ${vscodeExtensionSeed}/share/vscode/extensions/*; do
+      name="$(${pkgs.coreutils}/bin/basename "$source")"
+      marker="$marker_dir/$name"
+      destination="$extension_dir/$name"
+      [[ -e "$marker" ]] && continue
+
+      # The old scheme seeded every language at once. During migration, record
+      # the current selection without restoring extensions the user removed.
+      if [[ -e "$legacy_marker" ]]; then
+        ${pkgs.coreutils}/bin/install -m 0644 /dev/null "$marker"
+        continue
+      fi
+
+      if [[ ! -e "$destination" ]]; then
+        resolved="$(${pkgs.coreutils}/bin/readlink -f "$source")"
+        ${pkgs.coreutils}/bin/cp -a --no-preserve=mode,ownership -- "$resolved" "$destination"
+        ${pkgs.coreutils}/bin/chmod -R u+rwX -- "$destination"
+      fi
+      ${pkgs.coreutils}/bin/install -m 0644 /dev/null "$marker"
+    done
   '';
 
 

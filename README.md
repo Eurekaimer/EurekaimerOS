@@ -30,11 +30,26 @@ The ReGreet login screen and the Hyprlock lock screen share the same wallpaper a
   + Links crediting each major upstream project
 + [Development environment](docs/development.md)
   + Editors, CLI tools, language toolchains, notebooks, and AI tools
++ [Software selection](docs/software-selection.md)
+  + Bilingual CLI wizard, category switches, atomic replacement, and optional rebuild
++ [Personal modules](docs/personal.md)
+  + Boundaries for Lexigraph, Komari Call, Nankai authentication, and docker-ass
 + [Build and maintenance](docs/operations.md)
   + Rebuild and verification commands
   + Recovery, migration, power diagnostics, and EurekaimerOS synchronization
 + [Complete documentation index](docs/index.md)
   + English and Chinese navigation for every section
+
+## Software inventory and counts
+
+[`software.md`](software.md) is the single complete inventory of declared packages, services, sources, purposes, and selection switches. Update the owning module and this inventory together whenever software changes.
+
+Generate counts from the evaluated configuration rather than maintaining a second manual total:
+
+```bash
+./scripts/software-report.sh          # system, Home Manager, and total counts
+./scripts/software-report.sh --list   # also print evaluated package names
+```
 
 ## Repository map
 
@@ -54,7 +69,10 @@ flake.nix
     │   ├── hardware-extra.nix
     │   ├── host-local.nix
     │   ├── proxy-local.nix
+    │   ├── settings.nix
+    │   ├── software-selection.nix
     │   ├── modules/system/system.nix
+    │   ├── modules/system/personal.nix
     │   └── modules/system/software.nix
     └── home-manager.users.eurekaimer
         └── home/eurekaimer/home.nix
@@ -62,6 +80,7 @@ flake.nix
             ├── modules/home/core.nix
             ├── modules/home/development.nix
             ├── modules/home/applications.nix
+            ├── modules/home/personal.nix
             └── modules/home/software.nix
 
 docs/
@@ -69,7 +88,11 @@ docs/
 └── <topic>.md / <topic>_zh-CN.md
 
 scripts/
+├── select-software.sh
+├── generate-hardware.sh
+├── software-report.sh
 ├── deploy-full.sh
+├── deploy-owner.sh
 ├── deploy-preserve-hardware.sh
 ├── deploy-desktop.sh
 ├── deploy-power.sh
@@ -77,7 +100,7 @@ scripts/
 └── deploy-common.sh
 ```
 
-> `host-generic.nix`, `proxy-disabled.nix`, and `hardware-extra-generic.nix` are the fresh-machine defaults that `deploy-full.sh` swaps into `hosts/nixos/` on a new machine.
+> The repository keeps the owner's real machine settings. `deploy-owner.sh` restores those values exactly. For another machine, `deploy-full.sh` replaces the host and proxy declarations with safe portable defaults and never guesses the GPU driver.
 
 + [`flake.nix`](flake.nix)
   + Pins stable and unstable package sets and builds `nixosConfigurations.nixos`.
@@ -93,6 +116,26 @@ scripts/
   + Bilingual explanations of this repository's own configuration.
 
 ## Rebuild
+
++ To reproduce the repository owner's current machine exactly, deploy the committed hardware, UUIDs, Intel extras, proxy, and preferences as-is:
+
+```bash
+./scripts/deploy-owner.sh
+```
+
++ On different hardware, first run the bilingual hardware generator and explicitly choose Generic or Intel (the previous files are backed up):
+
+```bash
+./scripts/generate-hardware.sh
+```
+
++ Run the bilingual software-selection wizard when you want a different package set. It atomically replaces the selection file and can optionally run the rebuild:
+
+```bash
+./scripts/select-software.sh
+```
+
+On another machine, do not choose `rebuild switch` before generating and reviewing its hardware and graphics modules. Oh My Pi and its pinned Bun runtime are mandatory and are never removed by the wizard.
 
 + Validate without activation:
 
@@ -112,7 +155,7 @@ sudo nixos-rebuild switch --flake .#nixos
 ./scripts/deploy-full.sh
 ```
 
-+ Redeploy this machine keeping its existing hardware and host files:
++ Redeploy an already-installed target while keeping that target's existing hardware and host files:
 
 ```bash
 ./scripts/deploy-preserve-hardware.sh

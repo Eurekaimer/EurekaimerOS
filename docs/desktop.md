@@ -41,6 +41,7 @@ Upstream: [GTK](https://www.gtk.org/), [Papirus](https://github.com/PapirusDevel
 ## Core user tools
 
 + [`modules/home/core.nix`](../modules/home/core.nix)
+  + Uses `softwareSelection.home.core` to select the following categories while each category file stays independent.
   + Shell utilities and Zsh support.
   + Kitty configuration; the terminal uses Fantasque Sans Mono Nerd Font (size 18) for code alignment and icon glyphs.
   + Fastfetch presentation settings.
@@ -48,3 +49,5 @@ Upstream: [GTK](https://www.gtk.org/), [Papirus](https://github.com/PapirusDevel
   + A declarative user service for trash cleanup.
 
 Upstream: [Kitty](https://sw.kovidgoyal.net/kitty/), [Yazi](https://yazi-rs.github.io/), and [Fastfetch](https://github.com/fastfetch-cli/fastfetch).
+
+Niri and Noctalia define the current EurekaimerOS desktop and are not optional package categories. Their surrounding core tools can be trimmed through the [software-selection wizard](software-selection.md).

@@ -14,8 +14,8 @@ spawn-at-startup "xembedsniproxy"
 // 空闲锁屏、熄屏与电池分级挂起由 Home Manager 的 swayidle user service 管理。
 
 environment {
-    LANG "zh_CN.UTF-8"
-    LC_ALL "zh_CN.UTF-8"
+    LANG "@locale@"
+    LC_ALL "@locale@"
     GTK_IM_MODULE "fcitx"
     QT_IM_MODULE "fcitx"
     SDL_IM_MODULE "fcitx"

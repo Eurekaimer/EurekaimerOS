@@ -1,5 +1,6 @@
 {
   lib,
+  hostSettings,
   pkgs,
   ...
 }:
@@ -158,6 +159,7 @@ in
   '';
   xdg.configFile."niri/config.kdl".source = pkgs.replaceVars ../config/niri-config/config.kdl.in {
     desktopWallpaper = ../../../img/wallpaper-nozomi.png;
+    locale = hostSettings.locale.default;
   };
   xdg.configFile."hypr/hyprlock.conf".source = pkgs.replaceVars ../config/hyprlock-config/hyprlock.conf.in {
     loginWallpaper = ../../../img/login-wallpaper.png;
