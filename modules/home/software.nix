@@ -8,6 +8,8 @@
 # 设计动机与 modules/system/software.nix 相同：
 #   - 增删软件只改对应模块的一行；
 #   - 新增分类 = 新建模块文件 + 在对应聚合器里加一行 import；
+#   - 分类开关集中在 hosts/nixos/software-selection.nix，模块仍只负责
+#     自己的软件与配置；
 #   - 系统级与用户级软件分层清晰（system → environment.systemPackages，
 #     home → home.packages）。
 { lib, config, ... }:

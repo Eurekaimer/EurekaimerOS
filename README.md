@@ -30,11 +30,26 @@ The ReGreet login screen and the Hyprlock lock screen share the same wallpaper a
   + Links crediting each major upstream project
 + [Development environment](docs/development.md)
   + Editors, CLI tools, language toolchains, notebooks, and AI tools
++ [Software selection](docs/software-selection.md)
+  + Bilingual CLI wizard, category switches, atomic replacement, and optional rebuild
++ [Personal modules](docs/personal.md)
+  + Boundaries for Lexigraph, Komari Call, Nankai authentication, and docker-ass
 + [Build and maintenance](docs/operations.md)
   + Rebuild and verification commands
   + Recovery, migration, power diagnostics, and EurekaimerOS synchronization
 + [Complete documentation index](docs/index.md)
   + English and Chinese navigation for every section
+
+## Software inventory and counts
+
+[`software.md`](software.md) is the single complete inventory of declared packages, services, sources, purposes, and selection switches. Update the owning module and this inventory together whenever software changes.
+
+Generate counts from the evaluated configuration rather than maintaining a second manual total:
+
+```bash
+./scripts/software-report.sh          # system, Home Manager, and total counts
+./scripts/software-report.sh --list   # also print evaluated package names
+```
 
 ## Repository map
 
@@ -54,7 +69,9 @@ flake.nix
     │   ├── hardware-extra.nix
     │   ├── host-local.nix
     │   ├── proxy-local.nix
+    │   ├── software-selection.nix
     │   ├── modules/system/system.nix
+    │   ├── modules/system/personal.nix
     │   └── modules/system/software.nix
     └── home-manager.users.eurekaimer
         └── home/eurekaimer/home.nix
@@ -62,6 +79,7 @@ flake.nix
             ├── modules/home/core.nix
             ├── modules/home/development.nix
             ├── modules/home/applications.nix
+            ├── modules/home/personal.nix
             └── modules/home/software.nix
 
 docs/
@@ -69,6 +87,9 @@ docs/
 └── <topic>.md / <topic>_zh-CN.md
 
 scripts/
+├── select-software.sh
+├── generate-hardware.sh
+├── software-report.sh
 ├── deploy-full.sh
 ├── deploy-preserve-hardware.sh
 ├── deploy-desktop.sh
@@ -93,6 +114,20 @@ scripts/
   + Bilingual explanations of this repository's own configuration.
 
 ## Rebuild
+
++ When building directly from the clone, regenerate this machine's hardware module first (the previous file is backed up):
+
+```bash
+./scripts/generate-hardware.sh
+```
+
++ Then run the bilingual software-selection wizard. It atomically replaces the host selection and can optionally run the rebuild:
+
+```bash
+./scripts/select-software.sh
+```
+
+Do not choose `rebuild switch` before generating and reviewing this machine's hardware module. The later `deploy-full.sh` workflow regenerates hardware during deployment instead.
 
 + Validate without activation:
 

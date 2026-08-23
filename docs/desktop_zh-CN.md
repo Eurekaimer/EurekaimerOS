@@ -41,6 +41,7 @@
 ## 核心用户工具
 
 + [`modules/home/core.nix`](../modules/home/core.nix)
+  + 根据 `softwareSelection.home.core` 选择以下分类，分类文件本身仍保持独立。
   + Shell：Zsh 辅助工具及常用命令。
   + Kitty：从仓库映射终端配置；终端使用 Fantasque Sans Mono Nerd Font，保证代码列对齐和图标字形。
   + Fastfetch：映射展示配置。
@@ -48,3 +49,5 @@
   + Trash cleanup：声明用户级清理服务，集中处理回收站策略。
 
 上游：[Kitty](https://sw.kovidgoyal.net/kitty/)、[Yazi](https://yazi-rs.github.io/)、[Fastfetch](https://github.com/fastfetch-cli/fastfetch)。
+
+Niri 与 Noctalia 是 EurekaimerOS 当前桌面本身，不属于可选软件分类；其周边核心工具可以通过[软件选择向导](software-selection_zh-CN.md)裁剪。

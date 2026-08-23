@@ -16,4 +16,11 @@
     # 核显帧缓冲压缩：降低显示相关内存带宽与功耗（Intel iGPU 安全项）
     "i915.enable_fbc=1"
   ];
+
+  # Resume storage is hardware data. Keeping it here prevents deploy-full.sh
+  # from carrying this machine's UUID into a generic host configuration.
+  boot.resumeDevice = "/dev/disk/by-uuid/5a54b4dc-0a71-4d17-b452-d025c4f50110";
+  swapDevices = [
+    { device = "/dev/disk/by-uuid/5a54b4dc-0a71-4d17-b452-d025c4f50110"; }
+  ];
 }

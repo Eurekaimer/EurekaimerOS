@@ -19,7 +19,24 @@ sudo nixos-rebuild switch --flake .#nixos
 
 ## 部署
 
-[`scripts/`](../scripts/) 工具集统一先暂存新文件，再原子替换目标目录并保留带时间戳的备份：
+### 克隆后的推荐流程
+
+```bash
+# 1. 生成当前机器硬件模块；不会修改其他主机专属文件
+./scripts/generate-hardware.sh
+
+# 2. 运行中文/英文软件选择向导，并在结尾选择是否 rebuild
+./scripts/select-software.sh
+
+# 3. 随时检查当前选择产生的软件数量
+./scripts/software-report.sh
+```
+
+`generate-hardware.sh` 默认写入 `hosts/nixos/hardware-configuration.nix`，写入前验证结果并备份旧文件。`--output PATH` 可指定其他位置，`--sudo`/`--no-sudo` 可控制生成命令权限。它不会推测或覆盖 GPU extras、数据盘、swap、代理和 USB quirks。
+
+`select-software.sh` 原子生成 `hosts/nixos/software-selection.nix`。完整参数与开关对应关系见[软件选择与配置生成](software-selection_zh-CN.md)。
+
+现有 `deploy-*.sh` 工具统一先暂存新文件，再原子替换目标目录并保留带时间戳的备份：
 
 + `./scripts/deploy-full.sh` — 新机器首次部署：重新生成 `hardware-configuration.nix`，并把 `host-local.nix`、`proxy-local.nix`、`hardware-extra.nix` 换成可移植默认值（`host-generic.nix`、`proxy-disabled.nix`、`hardware-extra-generic.nix`）；检测到 Intel iGPU 时恢复 Intel 图形模块。
 + `./scripts/deploy-preserve-hardware.sh` — 本机重装：保留目标机的硬件与主机文件。
@@ -31,10 +48,13 @@ sudo nixos-rebuild switch --flake .#nixos
 ### 新机器 checklist
 
 1. 安装 NixOS 并创建用户 `eurekaimer` —— `users.nix` 与 `home.nix` 固定该用户名。
-2. 克隆仓库并运行 `./scripts/deploy-full.sh`。
-3. 人工核对机器专属值：`power.nix` 中的恢复 swap UUID、`mounts.nix` 的 NTFS UUID、`host-local.nix` 的 USB quirks。
-4. 代理默认禁用（`proxy-disabled.nix`）；配置好 127.0.0.1:7897 的代理后再启用 `proxy-local.nix` 与 Docker 代理。
-5. 用 `sudo nixos-rebuild switch --flake /etc/nixos#nixos` 切换。二进制缓存（中科大/清华/官方）已在 `base.nix` 预配置。
+2. 克隆仓库，运行 `./scripts/select-software.sh`，在最后选择“只生成配置”。
+3. 运行 `./scripts/deploy-full.sh`；它会把选择一同部署到 `/etc/nixos`，并在暂存目录中重新生成硬件配置。
+4. 人工核对机器专属值：`host-local.nix` 中的恢复 swap UUID 与 USB quirks、`mounts.nix` 的 NTFS UUID。
+5. 代理默认禁用；配置好 127.0.0.1:7897 的代理后再启用 `proxy-local.nix` 与 Docker 代理。
+6. 运行 `sudo nixos-rebuild switch --flake /etc/nixos#nixos`。
+
+如果不使用 `/etc/nixos` 部署而是直接从 clone 构建，则先运行 `generate-hardware.sh`，核对主机值，再运行选择向导并从向导执行 rebuild。
 
 ## 修改位置速查
 
@@ -44,7 +64,7 @@ sudo nixos-rebuild switch --flake .#nixos
 + Niri：[`modules/home/config/niri-config/config.kdl.in`](../modules/home/config/niri-config/config.kdl.in)
 + Noctalia：[`modules/home/config/noctalia-config/settings.json.in`](../modules/home/config/noctalia-config/settings.json.in)
 + 应用：[`modules/home/applications/`](../modules/home/applications/)
-+ 电源：[`modules/system/power.nix`](../modules/system/power.nix)
++ 电源入口：[`modules/system/power.nix`](../modules/system/power.nix)；具体策略：[`modules/system/power/`](../modules/system/power/)
 
 ## 电源诊断
 
@@ -58,9 +78,9 @@ sudo nixos-rebuild switch --flake .#nixos
 
 + Live ISO 或首次启动时，先配置可用二进制缓存和网络，再应用完整 flake。
 + 新机器必须重新生成 `hardware-configuration.nix`，并核对磁盘 UUID、Intel 图形模块、代理和用户名。
-+ 部署脚本只替换可移植文件；机器专属值——`power.nix` 的恢复 swap UUID、`mounts.nix` 的 NTFS UUID、`users.nix`/`home.nix` 的用户名——不会被触碰，新机器上必须人工核对。
++ 部署脚本只替换可移植文件；机器专属值——`host-local.nix` 的恢复 swap UUID、`mounts.nix` 的 NTFS UUID、`users.nix`/`home.nix` 的用户名——不会被触碰，新机器上必须人工核对。
 + `system.stateVersion` 与 `home.stateVersion` 表示兼容基线，不应因为升级 nixpkgs 就随意修改。
-+ 若 `mem_sleep_default=deep` 导致恢复失败，在 [`power.nix`](../modules/system/power.nix) 中移除该参数后重新构建。
++ 若 `mem_sleep_default=deep` 导致恢复失败，在 [`power/sleep.nix`](../modules/system/power/sleep.nix) 中移除该参数后重新构建。
 
 ## 与 EurekaimerOS 同步
 

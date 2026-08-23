@@ -12,6 +12,7 @@
   + 声明日常用户及其 shell、管理员和虚拟化相关用户组。
 + [`packages.nix`](../modules/system/packages.nix)
   + 聚合基础 CLI、网络、监控、归档和 DOS 工具。
+  + 每个分类的导入由 `softwareSelection.system.packages` 控制；具体包仍留在原分类文件。
   + 浏览器不在系统层安装；Google Chrome 由 Home Manager 管理。
 + [`kernel.nix`](../modules/system/kernel.nix)
   + 固定 Linux 6.12 LTS；换内核只需在该文件改一行。
@@ -34,6 +35,7 @@
   + 不安装 KDE/Plasma 组件，Niri 是唯一的桌面会话。
   + PipeWire 同时启用 ALSA、32 位 ALSA 和 PulseAudio 兼容层。
   + UDisks 的 NTFS 参数拒绝对脏卷强制挂载，优先要求在 Windows 中修复文件系统。
+  + 打印与蓝牙可以分别关闭；Niri、登录、音频和基础桌面服务仍是本桌面配置的核心。
 
 ## 图形
 
@@ -47,16 +49,20 @@
 ## 电源管理
 
 + [`power.nix`](../modules/system/power.nix)
-  + 由 [TLP](https://linrunner.de/tlp/) 单独管理平台电源策略，强制关闭会与它争用的 power-profiles-daemon。
+  + 保留原有电源分类入口，只按 `softwareSelection.system.power.*` 聚合下面五个单一职责模块。
++ [`power/tlp.nix`](../modules/system/power/tlp.nix)
+  + 由 [TLP](https://linrunner.de/tlp/) 单独管理平台电源策略，强制关闭会与它争用的 power-profiles-daemon，并负责 CPU、ASPM、runtime PM、Wi-Fi、声卡与 USB 基础调优。
++ [`power/adaptive-policy.nix`](../modules/system/power/adaptive-policy.nix)
   + 根据当前满充能量计算 6 小时功耗预算，每分钟采样一次，并用 30% 新样本 + 70% 历史值的 EWMA 平滑；Intel HWP 上限采用乘法反馈收敛。
   + 容量节点分为四档：90% 以上为 `30%–75%` 与 `balance_power` EPP，50%–90% 为 `20%–60%`，20%–50% 为 `15%–45%`，20% 及以下为 `10%–30%`；后三档使用 `power` EPP。
   + 所有电池档位都使用 `powersave` governor、low-power 平台档位，并关闭 Turbo/HWP dynamic boost。
-  + 电池模式启用 PCIe ASPM、设备 runtime PM、AHCI runtime PM、Wi-Fi 节能、声卡节能和 USB autosuspend。
-  + 蓝牙不会再被 TLP 在开机或切换到电池供电时软阻塞，Noctalia 可正常控制开关。
   + Noctalia 使用同一套平滑保守估算：`剩余能量 / max(实测功率, 目标功率)`，因此显示值不会超过按当前电量折算的 6 小时目标。
-  + 首选 `deep` suspend，声明恢复用 swap，并使用 systemd 按电池余量自适应的 suspend-then-hibernate；合盖时电池供电使用该策略，交流电使用普通 suspend。
-  + 安装 `powertop` 作为诊断工具，不运行常驻自动调优服务；`thermald` 与 TLP 并行运行，负责温度控制。
-  + `boot.resumeDevice` 与 `swapDevices` 的 UUID 是机器专属，新机器部署前必须核对。
++ [`power/sleep.nix`](../modules/system/power/sleep.nix)
+  + 首选 `deep` suspend，并使用 systemd 按电池余量自适应的 suspend-then-hibernate；合盖时电池供电使用该策略，交流电使用普通 suspend。
++ [`power/thermal.nix`](../modules/system/power/thermal.nix) 与 [`power/diagnostics.nix`](../modules/system/power/diagnostics.nix)
+  + 分别启用 thermald 温控与按需使用的 powertop，不运行常驻 powertop 自动调优。
++ [`hosts/nixos/host-local.nix`](../hosts/nixos/host-local.nix)
+  + 保存恢复 swap UUID；通用部署会替换本文件，因此不会把旧机器 UUID 带到新机器。
 
 实时状态写入 `/run/power-policy/status.json`。若浏览器或代理界面 renderer 持续高负载，即使 CPU 已到当前档位下限，实测续航仍会低于目标；控制器会如实显示该差距，也不会把电池损耗伪装成可由软件恢复。
 
@@ -73,14 +79,16 @@
   + 配置 [Steam](https://store.steampowered.com/about/)、[GameMode](https://github.com/FeralInteractive/gamemode)、MangoHud 和 Wine。
   + Steam 使用 CEF GPU compositing 兼容参数处理 Niri/Xwayland 黑屏。
 + [`virtualisation.nix`](../modules/system/virtualisation.nix)
-  + 启用 Docker/Compose，并为镜像拉取配置本机代理。
-  + 同时启用 [libvirt](https://libvirt.org/)、[virt-manager](https://virt-manager.org/)、QEMU、swtpm、SPICE USB 重定向和 Windows virtio 驱动；显式关闭当前工作流不需要的 `virtchd`。
+  + Docker/Compose 与完整虚拟机环境是两个独立开关。
+  + Docker 为镜像拉取配置本机代理；虚拟机开关负责 [libvirt](https://libvirt.org/)、[virt-manager](https://virt-manager.org/)、QEMU、swtpm、SPICE USB 重定向和 Windows virtio 驱动。
+
+系统层所有开关及其实现位置见 [软件选择与配置生成](software-selection_zh-CN.md)。
 
 ## 主机专属文件
 
 + [`hosts/nixos/hardware-configuration.nix`](../hosts/nixos/hardware-configuration.nix)
   + 来自 `nixos-generate-config`，换机器时重新生成。
 + [`hosts/nixos/host-local.nix`](../hosts/nixos/host-local.nix)
-  + 保存当前机器本地参数。
+  + 保存当前机器的主机名、防火墙、USB/GPU quirks 与恢复 swap UUID。
 + [`hosts/nixos/proxy-local.nix`](../hosts/nixos/proxy-local.nix)
   + 保存日常网络代理入口；恢复系统时应先确保基本网络可用，再应用完整配置。

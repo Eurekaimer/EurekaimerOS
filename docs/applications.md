@@ -2,24 +2,13 @@
 
 [`modules/home/applications.nix`](../modules/home/applications.nix) groups applications by purpose. The links below identify the upstream projects; exact package revisions remain pinned by the flake.
 
-## Komari Call
-
-+ The `komari-call` flake input provides the terminal chat client. Starting `komari-call` always enters the TUI; a missing or invalid credential no longer blocks startup.
-+ Inside the TUI, use `/login`, `/login deepseek`, or `/login opencode-go`. The key is masked, validated, and then stored in the system keyring.
-+ To select the OpenCode Go subscription rather than DeepSeek before launch:
-
-  ```bash
-  komari-call config --provider opencode-go --model deepseek-v4-flash
-  ```
-
-+ `komari-call models --provider opencode-go` checks the saved Go credential and lists the models available to that subscription.
+> Lexigraph, Komari Call, campus-login, and docker-ass now live under [Personal modules](personal.md). This page documents reusable application categories only.
 
 ## Browser and networking
 
 + [`applications/web.nix`](../modules/home/applications/web.nix)
   + [Google Chrome](https://www.google.com/chrome/) and [Throne](https://github.com/throneproj/Throne) are the declared browsers.
   + [Clash Verge Rev](https://github.com/clash-verge-rev/clash-verge-rev) and [Throne](https://github.com/throneproj/Throne) provide proxy GUIs.
-  + The generated `campus-login` command clears proxy variables and starts Chrome with an isolated temporary profile for campus authentication.
 + Power note
   + Powertop identified active Chrome renderers and Clash Verge among the largest wakeup sources during the sample. Closing idle tabs and running one proxy core is more useful than stacking extra kernel tunables.
 
@@ -59,4 +48,7 @@
 
 + [`applications/mime-defaults.nix`](../modules/home/applications/mime-defaults.nix)
   + Generates generic MIME defaults so desktop databases do not disagree.
+  + Disabling documents removes Sioyek/Foliate handlers; the Niri-provided imv image handler remains valid.
   + Change defaults in this module rather than manually editing `~/.config/mimeapps.list`.
+
+Every application category is independently selectable; see [Software selection](software-selection.md) for the complete mapping.

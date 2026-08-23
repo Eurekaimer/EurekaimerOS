@@ -7,4 +7,5 @@ source "$script_dir/deploy-common.sh"
 
 begin_partial
 copy_item modules/system/power.nix
+copy_item modules/system/power
 finish_partial

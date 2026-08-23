@@ -1,4 +1,9 @@
-{ pkgs, ... }:
+{
+  lib,
+  pkgs,
+  softwareSelection,
+  ...
+}:
 
 let
   loginWallpaper = ../../img/login-wallpaper.png;
@@ -54,7 +59,9 @@ in
   };
   services.xserver.xkb.layout = "us";
 
-  services.printing.enable = true;
+  # Printing and Bluetooth are useful on the main laptop but are optional on
+  # lean installations and machines without the corresponding hardware.
+  services.printing.enable = softwareSelection.system.desktop.printing;
   security.rtkit.enable = true;
 
   services.pipewire = {
@@ -64,10 +71,11 @@ in
     pulse.enable = true;
   };
 
-  hardware.bluetooth.enable = true;
-
-  # 蓝牙默认开启（日常使用蓝牙外设；待机功耗可忽略，省电重点在屏幕与后台）
-  hardware.bluetooth.powerOnBoot = true;
+  hardware.bluetooth = lib.mkIf softwareSelection.system.desktop.bluetooth {
+    enable = true;
+    # 日常使用蓝牙外设；待机功耗可忽略，省电重点在屏幕与后台。
+    powerOnBoot = true;
+  };
 
   services.upower.enable = true;
 }

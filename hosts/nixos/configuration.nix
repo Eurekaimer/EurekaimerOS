@@ -1,4 +1,4 @@
-{ inputs, ... }:
+{ ... }:
 
 {
   imports = [
@@ -10,6 +10,5 @@
     # apply the repository configuration via nixos-rebuild.
     ./proxy-local.nix
     ../../modules/system/system.nix
-    inputs.lexigraph.nixosModules.default
   ];
 }
