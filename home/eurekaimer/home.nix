@@ -1,4 +1,4 @@
-{ hostSettings, ... }:
+{ config, hostSettings, ... }:
 
 {
   imports = [
@@ -14,6 +14,11 @@
   home.homeDirectory = hostSettings.user.homeDirectory;
   home.stateVersion = hostSettings.stateVersion.homeManager;
   home.sessionPath = [ "$HOME/.local/bin" ];
+
+  xdg.dataFile."eurekaimeros/img" = {
+    source = ../../img;
+    recursive = true;
+  };
 
   # Fontconfig is managed at the system level via modules/system/locale.nix.
   # Disabling it here avoids a conflict with the system-level font

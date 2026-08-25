@@ -1,5 +1,6 @@
 {
   lib,
+  config,
   hostSettings,
   pkgs,
   ...
@@ -113,7 +114,7 @@ let
 
   niriSessionPackages = with pkgs; [
     xwayland-satellite
-    xembed-sni-proxy  # 系统托盘代理（xembedsniproxy，niri 启动时 spawn）
+    kdePackages.plasma-workspace  # 系统托盘代理（xembedsniproxy，niri 启动时 spawn）
     pamixer
     brightnessctl
     hyprlock
@@ -158,10 +159,10 @@ in
     $DRY_RUN_CMD mkdir -p "${screenshotDir}"
   '';
   xdg.configFile."niri/config.kdl".source = pkgs.replaceVars ../config/niri-config/config.kdl.in {
-    desktopWallpaper = ../../../img/wallpaper-nozomi.png;
+    desktopWallpaper = "${config.xdg.dataHome}/eurekaimeros/img/wallpaper-nozomi.png";
     locale = hostSettings.locale.default;
   };
   xdg.configFile."hypr/hyprlock.conf".source = pkgs.replaceVars ../config/hyprlock-config/hyprlock.conf.in {
-    loginWallpaper = ../../../img/login-wallpaper.png;
+    loginWallpaper = "${config.xdg.dataHome}/eurekaimeros/img/login-wallpaper.png";
   };
 }

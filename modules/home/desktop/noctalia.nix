@@ -1,4 +1,4 @@
-{ inputs, pkgs, ... }:
+{ config, inputs, pkgs, ... }:
 
 {
   imports = [
@@ -14,7 +14,7 @@
       ];
     });
     settings = pkgs.replaceVars ../config/noctalia-config/settings.json.in {
-      wallpaperDirectory = ../../../img;
+      wallpaperDirectory = "${config.xdg.dataHome}/eurekaimeros/img";
     };
   };
 }
